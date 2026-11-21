@@ -405,7 +405,7 @@ async function fetchPlants() {
   }
 }
 
-// Render Plant Cards
+// Render Plant Cards (Strongly Mobile Responsive 2-Column Grid)
 function renderPlantsGrid(plants) {
   const grid = document.getElementById('plants-grid');
   if (!grid) return;
@@ -426,65 +426,65 @@ function renderPlantsGrid(plants) {
     const mainImg = plant.images[0] || 'https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=800';
     const anglesCount = plant.images.length || 1;
 
-    let sunlightLabel = '☀️ Full Sun';
-    if (plant.sunlight === 'partial_shade') sunlightLabel = '⛅ Partial Shade';
+    let sunlightLabel = '☀️ Sun';
+    if (plant.sunlight === 'partial_shade') sunlightLabel = '⛅ Shade';
     if (plant.sunlight === 'low_light') sunlightLabel = '🛋️ Indoor';
 
-    let waterLabel = '💧 Low Water';
-    if (plant.water === 'moderate') waterLabel = '💧💧 Moderate';
-    if (plant.water === 'high') waterLabel = '💧💧💧 High';
+    let waterLabel = '💧 Low';
+    if (plant.water === 'moderate') waterLabel = '💧 Moderate';
+    if (plant.water === 'high') waterLabel = '💧 High';
 
     return `
-      <div class="card-elevation rounded-2xl overflow-hidden flex flex-col group bg-white">
-        <div class="relative h-64 overflow-hidden bg-cream-100 cursor-pointer" onclick="openProductModal(${plant.id})">
+      <div class="card-elevation rounded-2xl overflow-hidden flex flex-col group bg-white shadow-xs">
+        <div class="relative h-40 sm:h-64 overflow-hidden bg-cream-100 cursor-pointer" onclick="openProductModal(${plant.id})">
           <img src="${mainImg}" alt="${plant.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
           
-          <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow">
-            <svg class="w-3 h-3 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+          <div class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-black/60 backdrop-blur-sm text-white text-[9px] sm:text-[10px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow">
+            <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
             <span>${anglesCount} Angles</span>
           </div>
 
           ${plant.featured ? `
-            <div class="absolute top-3 right-3 bg-terracotta text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow">
-              Best Seller
+            <div class="absolute top-2 right-2 sm:top-3 sm:right-3 bg-terracotta text-white text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full uppercase tracking-wider shadow">
+              Hot
             </div>
           ` : ''}
 
-          <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4">
+          <div class="hidden sm:flex absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity items-center justify-center p-4">
             <span class="bg-white/95 text-forest-900 text-xs font-bold px-4 py-2 rounded-xl shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">
               Inspect Angles & Pots
             </span>
           </div>
         </div>
 
-        <div class="p-5 flex-grow flex flex-col justify-between space-y-3">
+        <div class="p-3 sm:p-5 flex-grow flex flex-col justify-between space-y-2 sm:space-y-3">
           <div>
-            <div class="flex items-center justify-between text-[11px]">
-              <span class="text-charcoal-500 italic">${plant.botanical_name || ''}</span>
+            <div class="flex items-center justify-between text-[10px] sm:text-[11px]">
+              <span class="text-charcoal-500 italic truncate max-w-[90px] sm:max-w-none">${plant.botanical_name || ''}</span>
               <span class="font-semibold text-forest-700" dir="rtl">${plant.urdu_name || ''}</span>
             </div>
             
-            <h3 class="font-serif-luxury text-lg font-bold text-forest-900 hover:text-terracotta transition cursor-pointer" onclick="openProductModal(${plant.id})">
+            <h3 class="font-serif-luxury text-sm sm:text-lg font-bold text-forest-900 hover:text-terracotta transition cursor-pointer mt-0.5 line-clamp-1" onclick="openProductModal(${plant.id})">
               ${plant.name}
             </h3>
 
-            <div class="flex flex-wrap items-center gap-1.5 mt-2">
-              <span class="badge-care text-[10px]">${sunlightLabel}</span>
-              <span class="badge-care text-[10px]">${waterLabel}</span>
+            <div class="flex flex-wrap items-center gap-1 mt-1 sm:mt-2">
+              <span class="badge-care text-[9px] sm:text-[10px] px-1.5 py-0.5">${sunlightLabel}</span>
+              <span class="badge-care text-[9px] sm:text-[10px] px-1.5 py-0.5">${waterLabel}</span>
             </div>
           </div>
 
-          <div class="pt-3 border-t border-cream-100 flex items-center justify-between">
+          <div class="pt-2 sm:pt-3 border-t border-cream-100 flex items-center justify-between">
             <div>
-              <div class="text-[10px] text-charcoal-500 uppercase font-semibold">Starting at</div>
-              <div class="text-lg font-bold text-forest-900">Rs. ${plant.price.toLocaleString()}</div>
+              <div class="text-[9px] sm:text-[10px] text-charcoal-500 uppercase font-semibold">Price</div>
+              <div class="text-sm sm:text-lg font-bold text-forest-900">Rs. ${plant.price.toLocaleString()}</div>
             </div>
 
-            <div class="flex items-center gap-1.5">
-              <button onclick="openProductModal(${plant.id})" class="p-2 rounded-xl bg-cream-100 hover:bg-cream-200 text-forest-900 transition" title="View Angles & Options">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            <div class="flex items-center gap-1">
+              <button onclick="openProductModal(${plant.id})" class="p-1.5 sm:p-2 rounded-xl bg-cream-100 hover:bg-cream-200 text-forest-900 transition" title="View Angles & Options">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
               </button>
-              <button onclick="quickAddToCart(${plant.id})" class="bg-forest-800 hover:bg-forest-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-sm flex items-center gap-1">
+              <button onclick="quickAddToCart(${plant.id})" class="bg-forest-800 hover:bg-forest-700 text-white text-[10px] sm:text-xs font-bold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition shadow-sm flex items-center gap-1">
                 <span>+ Add</span>
               </button>
             </div>
@@ -568,6 +568,9 @@ function openProductModal(id) {
 
   const modal = document.getElementById('product-modal');
   modal.classList.remove('hidden');
+
+  const hdr = document.getElementById('modal-header-name');
+  if (hdr) hdr.innerText = plant.name;
 
   document.getElementById('modal-title').innerText = plant.name;
   document.getElementById('modal-botanical').innerText = plant.botanical_name || '';
@@ -788,6 +791,43 @@ function updateCartBadge() {
   const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const badge = document.getElementById('cart-count-badge');
   if (badge) badge.innerText = totalCount;
+  const mobileBadge = document.getElementById('cart-count-badge-mobile');
+  if (mobileBadge) mobileBadge.innerText = totalCount;
+}
+
+// Mobile Filter Drawer Handlers
+function openMobileFilterDrawer() {
+  document.getElementById('mobile-filter-drawer-backdrop')?.classList.remove('hidden');
+  const drawer = document.getElementById('mobile-filter-drawer');
+  if (drawer) {
+    drawer.classList.remove('translate-y-full');
+    drawer.classList.add('translate-y-0');
+  }
+}
+
+function closeMobileFilterDrawer() {
+  document.getElementById('mobile-filter-drawer-backdrop')?.classList.add('hidden');
+  const drawer = document.getElementById('mobile-filter-drawer');
+  if (drawer) {
+    drawer.classList.remove('translate-y-0');
+    drawer.classList.add('translate-y-full');
+  }
+}
+
+function syncMobileFilter(type, value) {
+  if (type === 'sunlight') {
+    const radio = document.querySelector(`input[name="sunlight_filter"][value="${value}"]`);
+    if (radio) radio.checked = true;
+  } else if (type === 'water') {
+    const radio = document.querySelector(`input[name="water_filter"][value="${value}"]`);
+    if (radio) radio.checked = true;
+  } else if (type === 'pet') {
+    const check = document.getElementById('pet-friendly-check');
+    if (check) check.checked = !!value;
+  } else if (type === 'hardy') {
+    const check = document.getElementById('lahore-hardy-check');
+    if (check) check.checked = !!value;
+  }
 }
 
 function renderCart() {

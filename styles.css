@@ -1,4 +1,4 @@
-/* styles.css - Lahore Botanica & Landscaping Theme */
+/* styles.css - Lahore Botanica & Landscaping Theme (Strongly Mobile Responsive) */
 :root {
   --forest-900: #0C2419;
   --forest-800: #133E2B;
@@ -17,21 +17,35 @@
   --sage-200: #D2DFD4;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--cream-50);
   color: var(--charcoal-900);
   overflow-x: hidden;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .font-serif-luxury {
   font-family: 'Playfair Display', Georgia, serif;
 }
 
-/* Custom Scrollbar */
+/* Hide scrollbar for clean touch carousels */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Scrollbar for desktop */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--cream-100);
@@ -46,38 +60,47 @@ body {
 
 /* Glassmorphism & Elevation */
 .glass-header {
-  background: rgba(251, 249, 245, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(251, 249, 245, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.glass-nav-bar {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--cream-200);
+  box-shadow: 0 -4px 20px rgba(12, 36, 25, 0.08);
 }
 
 .card-elevation {
   background: #FFFFFF;
   border: 1px solid var(--cream-200);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-elevation:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 32px -8px rgba(19, 62, 43, 0.08);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -6px rgba(19, 62, 43, 0.09);
   border-color: var(--forest-600);
 }
 
-/* Plant Multi-Angle Gallery Zoom */
+/* Plant Multi-Angle Gallery */
 .gallery-main-img {
   transition: transform 0.3s ease;
 }
 .gallery-container:hover .gallery-main-img {
-  transform: scale(1.04);
+  transform: scale(1.03);
 }
 
-/* Before / After Landscaping Slider */
+/* Before / After Landscaping Slider - Touch Ergonomics */
 .ba-container {
   position: relative;
   overflow: hidden;
   user-select: none;
   cursor: ew-resize;
   border-radius: 1rem;
+  touch-action: pan-y;
 }
 
 .ba-before {
@@ -100,6 +123,7 @@ body {
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   z-index: 20;
   transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .ba-handle-circle {
@@ -107,15 +131,15 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   background: #FFFFFF;
   color: var(--forest-800);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
   font-weight: bold;
 }
 
@@ -123,45 +147,51 @@ body {
 .badge-care {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem 0.65rem;
+  gap: 0.25rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   background: var(--sage-100);
   color: var(--forest-800);
   border: 1px solid var(--sage-200);
+  white-space: nowrap;
 }
 
 .badge-terracotta {
   background: var(--terracotta-light);
   color: var(--terracotta-dark);
-  border: 1px solid rgba(200, 109, 81, 0.2);
+  border: 1px solid rgba(200, 109, 81, 0.25);
 }
 
 /* Modal Smooth Animations */
 .modal-enter {
-  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: modalFadeIn 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes modalFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.96) translateY(12px);
+    transform: translateY(20px) scale(0.97);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-/* WhatsApp Ripple Effect */
+/* Mobile Slide-Up Filter Drawer */
+#mobile-filter-drawer {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* WhatsApp Button */
 .btn-whatsapp {
   background-color: #25D366;
   color: #FFFFFF;
   transition: all 0.2s ease;
 }
-.btn-whatsapp:hover {
+.btn-whatsapp:hover, .btn-whatsapp:active {
   background-color: #20BA59;
   transform: translateY(-1px);
   box-shadow: 0 8px 16px -4px rgba(37, 211, 102, 0.35);
