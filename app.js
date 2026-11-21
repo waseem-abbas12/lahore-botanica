@@ -1,6 +1,320 @@
 // app.js - Fast Storefront, Multi-Angle Shopify-Style Modal, Cart & Landscaping Slider
+const FALLBACK_PLANTS = [
+  {
+    id: 1,
+    name: 'Fiddle Leaf Fig',
+    botanical_name: 'Ficus Lyrata',
+    urdu_name: 'فڈل لیف فکس',
+    category: 'indoor',
+    price: 3200,
+    stock: 25,
+    description: 'Lahore ke modern homes aur drawing rooms ka shandaar statement plant. Iske baray violin-shape leaves interior ko luxury look dete hain. Bright indirect light pasand karta hai.',
+    sunlight: 'partial_shade',
+    water: 'moderate',
+    difficulty: 'Moderate',
+    pet_friendly: 0,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1597055181300-e3633a207518?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Medium (2-3 ft)', price_delta: 0 },
+        { name: 'Large Specimen (4-5 ft)', price_delta: 2400 },
+        { name: 'Executive Tree (6+ ft)', price_delta: 4800 }
+      ],
+      pots: [
+        { name: 'Standard Nursery Grower Pot', price_delta: 0 },
+        { name: 'Handcrafted Terracotta Clay Pot', price_delta: 750 },
+        { name: 'Luxury White Ceramic Planter', price_delta: 1450 }
+      ]
+    },
+    featured: 1
+  },
+  {
+    id: 2,
+    name: 'Motia / Arabian Jasmine',
+    botanical_name: 'Jasminum Sambac',
+    urdu_name: 'موتیا کا پودا',
+    category: 'flowering',
+    price: 850,
+    stock: 60,
+    description: 'Lahore ki khushbu aur riwayat ka ahem hissa. Iske sufed phool shaam ko intihai dilkash khushbu phelaate hain. Garmi aur dhoop ko asani se bardasht karta hai.',
+    sunlight: 'full_sun',
+    water: 'moderate',
+    difficulty: 'Easy',
+    pet_friendly: 1,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1592150621744-aca64f48394a?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Standard Bush (1.5 ft)', price_delta: 0 },
+        { name: 'Mature Bush with Flower Buds', price_delta: 450 }
+      ],
+      pots: [
+        { name: 'Nursery Bag / Pot', price_delta: 0 },
+        { name: 'Desi Red Clay Gamla (12-inch)', price_delta: 350 }
+      ]
+    },
+    featured: 1
+  },
+  {
+    id: 3,
+    name: 'Monstera Deliciosa (Swiss Cheese)',
+    botanical_name: 'Monstera Deliciosa',
+    urdu_name: 'مانسٹرا ڈیلیکوسا',
+    category: 'indoor',
+    price: 2800,
+    stock: 18,
+    description: 'Dunya ka sab se mashhoor tropical indoor plant. Iske natural cuts walay patte gharon aur offices mein visual architectural look paida karte hain. Low maintenance plant hai.',
+    sunlight: 'partial_shade',
+    water: 'low',
+    difficulty: 'Easy',
+    pet_friendly: 0,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Medium (4-5 leaves)', price_delta: 0 },
+        { name: 'Large with Moss Stick (3-4 ft)', price_delta: 1950 }
+      ],
+      pots: [
+        { name: 'Grower Pot', price_delta: 0 },
+        { name: 'Ribbed Terracotta Pot', price_delta: 850 },
+        { name: 'Matte Black Designer Planter', price_delta: 1600 }
+      ]
+    },
+    featured: 1
+  },
+  {
+    id: 4,
+    name: 'Bougainvillea (Kagazi Phool)',
+    botanical_name: 'Bougainvillea Spectabilis',
+    urdu_name: 'بوگن ویلیا / کاغذی پھول',
+    category: 'flowering',
+    price: 1200,
+    stock: 40,
+    description: 'Lahore ki shadeed dhoop aur garmi ka champion climber. Magenta, Red aur Orange phoolon se bhari bel jo deewaron, gates aur terraces ko behad khoobsurat banati hai.',
+    sunlight: 'full_sun',
+    water: 'low',
+    difficulty: 'Easy',
+    pet_friendly: 1,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Medium Trellis Creeper (3 ft)', price_delta: 0 },
+        { name: 'Established Tall Creeper (6 ft)', price_delta: 900 }
+      ],
+      pots: [
+        { name: 'Nursery Container', price_delta: 0 },
+        { name: 'Large Clay Planter', price_delta: 600 }
+      ]
+    },
+    featured: 1
+  },
+  {
+    id: 5,
+    name: 'Royal Date Palm (Landscape Specimen)',
+    botanical_name: 'Phoenix Dactylifera',
+    urdu_name: 'کھجور کا درخت (لینڈ سکیپ)',
+    category: 'trees_palms',
+    price: 18500,
+    stock: 12,
+    description: 'Villas, Farmhouses aur boundary walls ke liye luxury landscape palm tree. Fully root-trained, Lahore ke mosam me 100% kamyab. Installation aur fertilizer support sath shamil hai.',
+    sunlight: 'full_sun',
+    water: 'low',
+    difficulty: 'Easy',
+    pet_friendly: 1,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Medium Trunk (6-8 ft Trunk)', price_delta: 0 },
+        { name: 'Mature Architectural Trunk (10-12 ft)', price_delta: 14000 }
+      ],
+      pots: [
+        { name: 'Field Balled & Burlapped (Ready for Soil Planting)', price_delta: 0 },
+        { name: 'Giant Concrete Landscape Planter', price_delta: 4500 }
+      ]
+    },
+    featured: 1
+  },
+  {
+    id: 6,
+    name: 'Snake Plant (Sansevieria Laurentii)',
+    botanical_name: 'Dracaena Trifasciata',
+    urdu_name: 'سنیک پلانٹ',
+    category: 'indoor',
+    price: 1450,
+    stock: 45,
+    description: 'Ghar ke andar hawa saaf karne wala no. 1 plant (NASA Certified). Agar 3 haftay paani na dein tab bhi khilta rehta hai. AC wale kamron ke liye best.',
+    sunlight: 'low_light',
+    water: 'low',
+    difficulty: 'Easy',
+    pet_friendly: 0,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1593482892290-f54927ae1bf6?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1572688484438-313a6e50c333?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Standard 3-Stem (1.5 ft)', price_delta: 0 },
+        { name: 'Lush Multi-Stem Clump (2.5 ft)', price_delta: 850 }
+      ],
+      pots: [
+        { name: 'Basic Nursery Pot', price_delta: 0 },
+        { name: 'Modern Fluted Ceramic Pot', price_delta: 950 }
+      ]
+    },
+    featured: 0
+  },
+  {
+    id: 7,
+    name: 'Areca Palm (Golden Cane)',
+    botanical_name: 'Dypsis Lutescens',
+    urdu_name: 'ایریکا پام',
+    category: 'trees_palms',
+    price: 2400,
+    stock: 30,
+    description: 'Lush, dense feathery foliage jo living rooms aur verandas ko tropical resort jaisi look deti hai. Natural humidifier hai jo indoor moisture behtar banata hai.',
+    sunlight: 'partial_shade',
+    water: 'moderate',
+    difficulty: 'Easy',
+    pet_friendly: 1,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1617173944883-6ffbd35d584d?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Dense Bush (3 ft)', price_delta: 0 },
+        { name: 'Tall Decorative Floor Specimen (5 ft)', price_delta: 1600 }
+      ],
+      pots: [
+        { name: 'Grower Pot', price_delta: 0 },
+        { name: 'Earthy Clay Pot with Tray', price_delta: 750 }
+      ]
+    },
+    featured: 0
+  },
+  {
+    id: 8,
+    name: 'Desi Lemon / Citrus Limon',
+    botanical_name: 'Citrus × Limon',
+    urdu_name: 'دیسی لیموں کا پودا',
+    category: 'fruit_herbs',
+    price: 950,
+    stock: 35,
+    description: 'Ghar ke lawn aur rooftop ke liye behad faidamand fruit plant. Saal mein 2 se 3 dafa rasbhare lassan-chilli compatible desi leemo deta hai.',
+    sunlight: 'full_sun',
+    water: 'moderate',
+    difficulty: 'Easy',
+    pet_friendly: 0,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Grafted Bush with initial fruits (2 ft)', price_delta: 0 },
+        { name: 'Mature Heavy Bearer (4 ft)', price_delta: 850 }
+      ],
+      pots: [
+        { name: 'Grower Polybag', price_delta: 0 },
+        { name: '14-Inch Terracotta Fruit Tub', price_delta: 650 }
+      ]
+    },
+    featured: 0
+  },
+  {
+    id: 9,
+    name: 'Desi Gulab (Fragrant Damask Rose)',
+    botanical_name: 'Rosa Damascena',
+    urdu_name: 'دیسی گلاب',
+    category: 'flowering',
+    price: 650,
+    stock: 50,
+    description: 'Khaalis desi mehkta hua gulab. Iske phoolon se arq-e-gulab aur gulkand banta hai. Lahore ke baghaat ki shaan aur hamesha bahaar phool.',
+    sunlight: 'full_sun',
+    water: 'moderate',
+    difficulty: 'Easy',
+    pet_friendly: 1,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1496062031456-07b8f162a322?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Bloomed Stem Plant', price_delta: 0 },
+        { name: 'Twin Cluster Specimen', price_delta: 400 }
+      ],
+      pots: [
+        { name: 'Nursery Bag', price_delta: 0 },
+        { name: 'Traditional Clay Gamla', price_delta: 300 }
+      ]
+    },
+    featured: 0
+  },
+  {
+    id: 10,
+    name: 'ZZ Plant (Fortune Tree)',
+    botanical_name: 'Zamioculcas Zamiifolia',
+    urdu_name: 'زی زی پلانٹ',
+    category: 'indoor',
+    price: 2200,
+    stock: 22,
+    description: 'Shandar glossy dark green leaves. Kam roshni aur kam paani mein bhi hamesha taza rehta hai. Offices aur bedrooms ke corners ke liye perfect aesthetic plant.',
+    sunlight: 'low_light',
+    water: 'low',
+    difficulty: 'Easy',
+    pet_friendly: 0,
+    lahore_hardy: 1,
+    images: [
+      'https://images.unsplash.com/photo-1632207691143-643e2a9a9361?q=80&w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1598880940371-c756e015fea1?q=80&w=1000&auto=format&fit=crop'
+    ],
+    variants: {
+      sizes: [
+        { name: 'Bushy Tabletop (1.5 ft)', price_delta: 0 },
+        { name: 'Floor Accent Large (2.5 ft)', price_delta: 1200 }
+      ],
+      pots: [
+        { name: 'Nursery Pot', price_delta: 0 },
+        { name: 'Minimalist White Ceramic Planter', price_delta: 950 }
+      ]
+    },
+    featured: 0
+  }
+];
+
 let allPlants = [];
-let cart = JSON.parse(localStorage.getItem('lahore_botanica_cart') || '[]');
+let cart = [];
+try {
+  cart = JSON.parse(localStorage.getItem('lahore_botanica_cart') || '[]');
+} catch (e) {
+  cart = [];
+}
+
 let currentModalPlant = null;
 let selectedSizeIndex = 0;
 let selectedPotIndex = 0;
@@ -12,54 +326,90 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartBadge();
   initBeforeAfterSlider();
 
-  // Check URL hash for admin view
   if (window.location.hash === '#admin') {
     toggleAdminView();
   }
 });
 
-// Fetch Plants with active filters
+// Fetch Plants with fallback to embedded data
 async function fetchPlants() {
   const grid = document.getElementById('plants-grid');
-  grid.innerHTML = '<div class="col-span-full py-12 text-center text-charcoal-500 font-medium">Loading nursery catalog...</div>';
+  if (grid) grid.innerHTML = '<div class="col-span-full py-12 text-center text-charcoal-500 font-medium">Loading nursery catalog...</div>';
+
+  const search = document.getElementById('hero-search-input')?.value.trim().toLowerCase() || '';
+  const activeCatBtn = document.querySelector('.cat-pill.active');
+  const category = activeCatBtn ? activeCatBtn.getAttribute('data-cat') || 'all' : 'all';
+  const sunlight = document.querySelector('input[name="sunlight_filter"]:checked')?.value || '';
+  const water = document.querySelector('input[name="water_filter"]:checked')?.value || '';
+  const petCheck = document.getElementById('pet-friendly-check')?.checked;
+  const sort = document.getElementById('sort-select')?.value || 'featured';
 
   try {
     const params = new URLSearchParams();
-    const search = document.getElementById('hero-search-input')?.value.trim();
     if (search) params.append('search', search);
-
-    const activeCatBtn = document.querySelector('.cat-pill.active');
-    const category = activeCatBtn ? activeCatBtn.getAttribute('data-cat') || 'all' : 'all';
     if (category && category !== 'all') params.append('category', category);
-
-    const sunlight = document.querySelector('input[name="sunlight_filter"]:checked')?.value;
     if (sunlight) params.append('sunlight', sunlight);
-
-    const water = document.querySelector('input[name="water_filter"]:checked')?.value;
     if (water) params.append('water', water);
-
-    const petCheck = document.getElementById('pet-friendly-check')?.checked;
     if (petCheck) params.append('pet_friendly', '1');
-
-    const sort = document.getElementById('sort-select')?.value || 'featured';
     params.append('sort', sort);
 
     const res = await fetch(`/api/plants?${params.toString()}`);
-    const data = await res.json();
-
-    if (data.success) {
-      allPlants = data.plants;
-      renderPlantsGrid(allPlants);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.plants && data.plants.length > 0) {
+        allPlants = data.plants;
+        renderPlantsGrid(allPlants);
+        return;
+      }
     }
+    throw new Error('API unavailable, using fallback data');
   } catch (err) {
-    console.error('Error fetching plants:', err);
-    grid.innerHTML = '<div class="col-span-full py-12 text-center text-red-600">Failed to load plants. Please refresh the page.</div>';
+    // Client-side filtering on embedded catalog for Vercel static hosting
+    let filtered = [...FALLBACK_PLANTS];
+
+    if (search) {
+      filtered = filtered.filter(p => 
+        p.name.toLowerCase().includes(search) || 
+        (p.botanical_name && p.botanical_name.toLowerCase().includes(search)) ||
+        (p.urdu_name && p.urdu_name.includes(search)) ||
+        (p.description && p.description.toLowerCase().includes(search))
+      );
+    }
+
+    if (category && category !== 'all') {
+      filtered = filtered.filter(p => p.category === category);
+    }
+
+    if (sunlight) {
+      filtered = filtered.filter(p => p.sunlight === sunlight);
+    }
+
+    if (water) {
+      filtered = filtered.filter(p => p.water === water);
+    }
+
+    if (petCheck) {
+      filtered = filtered.filter(p => p.pet_friendly === 1);
+    }
+
+    if (sort === 'price_asc') {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (sort === 'price_desc') {
+      filtered.sort((a, b) => b.price - a.price);
+    } else {
+      filtered.sort((a, b) => b.featured - a.featured);
+    }
+
+    allPlants = filtered;
+    renderPlantsGrid(allPlants);
   }
 }
 
 // Render Plant Cards
 function renderPlantsGrid(plants) {
   const grid = document.getElementById('plants-grid');
+  if (!grid) return;
+
   if (!plants || plants.length === 0) {
     grid.innerHTML = `
       <div class="col-span-full py-16 text-center space-y-3">
@@ -74,7 +424,6 @@ function renderPlantsGrid(plants) {
 
   grid.innerHTML = plants.map(plant => {
     const mainImg = plant.images[0] || 'https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=800';
-    const hoverImg = plant.images[1] || mainImg;
     const anglesCount = plant.images.length || 1;
 
     let sunlightLabel = '☀️ Full Sun';
@@ -87,11 +436,9 @@ function renderPlantsGrid(plants) {
 
     return `
       <div class="card-elevation rounded-2xl overflow-hidden flex flex-col group bg-white">
-        <!-- Image & Angles Badge -->
         <div class="relative h-64 overflow-hidden bg-cream-100 cursor-pointer" onclick="openProductModal(${plant.id})">
           <img src="${mainImg}" alt="${plant.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
           
-          <!-- Angle count pill -->
           <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow">
             <svg class="w-3 h-3 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
             <span>${anglesCount} Angles</span>
@@ -103,7 +450,6 @@ function renderPlantsGrid(plants) {
             </div>
           ` : ''}
 
-          <!-- Quick View Hover Button -->
           <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4">
             <span class="bg-white/95 text-forest-900 text-xs font-bold px-4 py-2 rounded-xl shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">
               Inspect Angles & Pots
@@ -111,7 +457,6 @@ function renderPlantsGrid(plants) {
           </div>
         </div>
 
-        <!-- Content -->
         <div class="p-5 flex-grow flex flex-col justify-between space-y-3">
           <div>
             <div class="flex items-center justify-between text-[11px]">
@@ -123,14 +468,12 @@ function renderPlantsGrid(plants) {
               ${plant.name}
             </h3>
 
-            <!-- Care Badges -->
             <div class="flex flex-wrap items-center gap-1.5 mt-2">
               <span class="badge-care text-[10px]">${sunlightLabel}</span>
               <span class="badge-care text-[10px]">${waterLabel}</span>
             </div>
           </div>
 
-          <!-- Price & Action -->
           <div class="pt-3 border-t border-cream-100 flex items-center justify-between">
             <div>
               <div class="text-[10px] text-charcoal-500 uppercase font-semibold">Starting at</div>
@@ -170,7 +513,6 @@ function filterByCategory(cat) {
   fetchPlants();
 }
 
-// Filter triggers
 function applyFilters() {
   fetchPlants();
 }
@@ -216,7 +558,7 @@ function executeHeroSearch() {
 
 // ==================== SHOPIFY-STYLE PRODUCT DETAIL MODAL ====================
 function openProductModal(id) {
-  const plant = allPlants.find(p => p.id === id);
+  const plant = allPlants.find(p => p.id === id) || FALLBACK_PLANTS.find(p => p.id === id);
   if (!plant) return;
 
   currentModalPlant = plant;
@@ -227,7 +569,6 @@ function openProductModal(id) {
   const modal = document.getElementById('product-modal');
   modal.classList.remove('hidden');
 
-  // Populate basic text
   document.getElementById('modal-title').innerText = plant.name;
   document.getElementById('modal-botanical').innerText = plant.botanical_name || '';
   document.getElementById('modal-urdu').innerText = plant.urdu_name || '';
@@ -236,7 +577,6 @@ function openProductModal(id) {
   document.getElementById('modal-stock').innerText = `In Stock (${plant.stock} Available in Lahore)`;
   document.getElementById('modal-qty').innerText = modalQty;
 
-  // Care badges
   let sunText = '☀️ Full Sun';
   if (plant.sunlight === 'partial_shade') sunText = '⛅ Partial Shade (Balcony)';
   if (plant.sunlight === 'low_light') sunText = '🛋️ Indoor Light Safe';
@@ -250,7 +590,6 @@ function openProductModal(id) {
   document.getElementById('badge-pet').innerText = plant.pet_friendly ? '🐾 Safe for Cats & Dogs' : '⚠️ Keep away from pets';
   document.getElementById('badge-hardy').innerText = plant.lahore_hardy ? '🌡️ Lahore Summer Hardy' : '🌡️ Indoor AC recommended';
 
-  // Multi-Angle Interactive Gallery
   const images = plant.images && plant.images.length > 0 ? plant.images : [
     'https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=1000'
   ];
@@ -264,7 +603,6 @@ function openProductModal(id) {
     </button>
   `).join('');
 
-  // Sizing & Pots Options
   renderModalOptions(plant);
   calculateModalPrice();
 }
@@ -281,7 +619,6 @@ function setModalAngle(index) {
   const angleNames = ['Front Full View', 'Leaf Texture & Foliage Close-Up', 'Living Room / Interior Perspective', 'Pot & Root Angle'];
   label.innerText = `Angle ${index + 1} of ${images.length} (${angleNames[index] || 'Angle View'})`;
 
-  // Update active thumbnail border
   const thumbs = document.querySelectorAll('#modal-thumbnails button');
   thumbs.forEach((t, i) => {
     if (i === index) {
@@ -296,7 +633,6 @@ function renderModalOptions(plant) {
   const sizes = plant.variants?.sizes || [{ name: 'Standard Nursery Size', price_delta: 0 }];
   const pots = plant.variants?.pots || [{ name: 'Standard Grower Pot', price_delta: 0 }];
 
-  // Sizes Group
   const sizesContainer = document.getElementById('modal-sizes-group');
   sizesContainer.innerHTML = sizes.map((s, idx) => `
     <label class="p-2.5 rounded-xl border-2 ${idx === selectedSizeIndex ? 'border-forest-800 bg-forest-800/5 text-forest-900 font-bold' : 'border-cream-200 text-charcoal-700'} flex items-center justify-between cursor-pointer transition">
@@ -306,7 +642,6 @@ function renderModalOptions(plant) {
     </label>
   `).join('');
 
-  // Pots Group
   const potsContainer = document.getElementById('modal-pots-group');
   potsContainer.innerHTML = pots.map((p, idx) => `
     <label class="p-2.5 rounded-xl border-2 ${idx === selectedPotIndex ? 'border-terracotta bg-terracotta/5 text-charcoal-900 font-bold' : 'border-cream-200 text-charcoal-700'} flex items-center justify-between cursor-pointer transition">
@@ -373,7 +708,6 @@ function addModalItemToCart() {
     quantity: modalQty
   };
 
-  // Check if identical item already exists in cart
   const existingIdx = cart.findIndex(c => c.id === cartItem.id && c.size === cartItem.size && c.pot === cartItem.pot);
   if (existingIdx > -1) {
     cart[existingIdx].quantity += modalQty;
@@ -387,7 +721,7 @@ function addModalItemToCart() {
 }
 
 function quickAddToCart(id) {
-  const plant = allPlants.find(p => p.id === id);
+  const plant = allPlants.find(p => p.id === id) || FALLBACK_PLANTS.find(p => p.id === id);
   if (!plant) return;
 
   const cartItem = {
@@ -444,7 +778,9 @@ function toggleCartDrawer(open) {
 }
 
 function saveCart() {
-  localStorage.setItem('lahore_botanica_cart', JSON.stringify(cart));
+  try {
+    localStorage.setItem('lahore_botanica_cart', JSON.stringify(cart));
+  } catch (e) {}
   updateCartBadge();
 }
 
@@ -456,6 +792,8 @@ function updateCartBadge() {
 
 function renderCart() {
   const container = document.getElementById('cart-items-container');
+  if (!container) return;
+
   if (cart.length === 0) {
     container.innerHTML = `
       <div class="text-center py-12 space-y-3">
@@ -513,9 +851,13 @@ function updateCartTotals(subtotal) {
   const deliveryFee = subtotal === 0 ? 0 : (subtotal >= 3500 ? 0 : 250);
   const total = subtotal + deliveryFee;
 
-  document.getElementById('cart-subtotal').innerText = `Rs. ${subtotal.toLocaleString()}`;
-  document.getElementById('cart-delivery').innerText = deliveryFee === 0 ? 'FREE (Special Offer)' : `Rs. ${deliveryFee}`;
-  document.getElementById('cart-total').innerText = `Rs. ${total.toLocaleString()}`;
+  const subEl = document.getElementById('cart-subtotal');
+  const delEl = document.getElementById('cart-delivery');
+  const totEl = document.getElementById('cart-total');
+
+  if (subEl) subEl.innerText = `Rs. ${subtotal.toLocaleString()}`;
+  if (delEl) delEl.innerText = deliveryFee === 0 ? 'FREE (Special Offer)' : `Rs. ${deliveryFee}`;
+  if (totEl) totEl.innerText = `Rs. ${total.toLocaleString()}`;
 }
 
 async function placeOnlineOrder() {
@@ -555,20 +897,19 @@ async function placeOnlineOrder() {
       cart = [];
       saveCart();
       toggleCartDrawer(false);
-    } else {
-      alert(`Order error: ${data.error}`);
+      return;
     }
   } catch (err) {
-    console.error('Order error:', err);
-    alert('Could not place order. Please try via WhatsApp.');
+    // If backend API isn't present on static Vercel, forward to WhatsApp automatically!
+    checkoutViaWhatsApp();
   }
 }
 
 function checkoutViaWhatsApp() {
-  const name = document.getElementById('cust-name').value.trim() || 'Valued Customer';
-  const phone = document.getElementById('cust-phone').value.trim() || 'N/A';
-  const area = document.getElementById('cust-area').value;
-  const address = document.getElementById('cust-address').value.trim() || 'Lahore';
+  const name = document.getElementById('cust-name')?.value.trim() || 'Customer';
+  const phone = document.getElementById('cust-phone')?.value.trim() || 'N/A';
+  const area = document.getElementById('cust-area')?.value || 'Lahore';
+  const address = document.getElementById('cust-address')?.value.trim() || 'Lahore';
 
   if (cart.length === 0) {
     alert('Your cart is empty.');
@@ -635,7 +976,6 @@ function initBeforeAfterSlider() {
     moveSlider(e.clientX);
   });
 
-  // Touch Support for Mobile
   container.addEventListener('touchstart', (e) => {
     isDragging = true;
     moveSlider(e.touches[0].clientX);
@@ -679,9 +1019,21 @@ async function submitLandscapingLead(e) {
     if (data.success) {
       document.getElementById('lead-success-msg').classList.remove('hidden');
       document.getElementById('lead-form').reset();
+      return;
     }
   } catch (err) {
-    console.error('Lead error:', err);
-    alert('Request submitted. We will contact you shortly.');
+    // WhatsApp direct connection for static hosting
+    const text = `🌿 *New Landscaping Consultation Request*
+-------------------------
+*Client:* ${name}
+*Phone:* ${phone}
+*Project:* ${project} (${size})
+*Location:* ${location}
+*Details:* ${message || 'Standard inquiry'}
+-------------------------
+Please schedule a site inspection.`;
+    window.open(`https://wa.me/923008456789?text=${encodeURIComponent(text)}`, '_blank');
+    document.getElementById('lead-success-msg').classList.remove('hidden');
+    document.getElementById('lead-form').reset();
   }
 }
