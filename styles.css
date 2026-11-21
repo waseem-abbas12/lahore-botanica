@@ -1,0 +1,168 @@
+/* styles.css - Lahore Botanica & Landscaping Theme */
+:root {
+  --forest-900: #0C2419;
+  --forest-800: #133E2B;
+  --forest-700: #1B5239;
+  --forest-600: #267351;
+  --terracotta: #C86D51;
+  --terracotta-dark: #B0573C;
+  --terracotta-light: #F7EAE5;
+  --cream-50: #FCFAF6;
+  --cream-100: #F6F2EA;
+  --cream-200: #EAE3D5;
+  --charcoal-900: #191B18;
+  --charcoal-700: #3E433C;
+  --charcoal-500: #6B7267;
+  --sage-100: #EAF0EB;
+  --sage-200: #D2DFD4;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--cream-50);
+  color: var(--charcoal-900);
+  overflow-x: hidden;
+}
+
+.font-serif-luxury {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cream-100);
+}
+::-webkit-scrollbar-thumb {
+  background: #C2BBB0;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--forest-800);
+}
+
+/* Glassmorphism & Elevation */
+.glass-header {
+  background: rgba(251, 249, 245, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.card-elevation {
+  background: #FFFFFF;
+  border: 1px solid var(--cream-200);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-elevation:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -8px rgba(19, 62, 43, 0.08);
+  border-color: var(--forest-600);
+}
+
+/* Plant Multi-Angle Gallery Zoom */
+.gallery-main-img {
+  transition: transform 0.3s ease;
+}
+.gallery-container:hover .gallery-main-img {
+  transform: scale(1.04);
+}
+
+/* Before / After Landscaping Slider */
+.ba-container {
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  cursor: ew-resize;
+  border-radius: 1rem;
+}
+
+.ba-before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50%;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.ba-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  background: #FFFFFF;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  z-index: 20;
+  transform: translateX(-50%);
+}
+
+.ba-handle-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background: #FFFFFF;
+  color: var(--forest-800);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  font-weight: bold;
+}
+
+/* Badge Styles */
+.badge-care {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--sage-100);
+  color: var(--forest-800);
+  border: 1px solid var(--sage-200);
+}
+
+.badge-terracotta {
+  background: var(--terracotta-light);
+  color: var(--terracotta-dark);
+  border: 1px solid rgba(200, 109, 81, 0.2);
+}
+
+/* Modal Smooth Animations */
+.modal-enter {
+  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* WhatsApp Ripple Effect */
+.btn-whatsapp {
+  background-color: #25D366;
+  color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+.btn-whatsapp:hover {
+  background-color: #20BA59;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px -4px rgba(37, 211, 102, 0.35);
+}

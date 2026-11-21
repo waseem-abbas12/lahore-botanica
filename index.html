@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lahore Botanica | Premium Plants & Bespoke Landscaping Lahore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forest: {
+              900: '#0C2419',
+              800: '#133E2B',
+              700: '#1B5239',
+              600: '#267351',
+              500: '#348B64',
+            },
+            terracotta: {
+              DEFAULT: '#C86D51',
+              dark: '#B0573C',
+              light: '#F7EAE5',
+            },
+            cream: {
+              50: '#FCFAF6',
+              100: '#F6F2EA',
+              200: '#EAE3D5',
+            },
+            charcoal: {
+              900: '#191B18',
+              700: '#3E433C',
+              500: '#6B7267',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-forest-900 text-cream-50 text-xs py-2 px-4 text-center font-medium tracking-wide flex items-center justify-center gap-3">
+    <span>🌿 <strong>Lahore City Special:</strong> Free Delivery on plant orders above Rs. 3,500 (DHA, Gulberg, Bahria, Model Town & all sectors)</span>
+    <span class="hidden md:inline text-terracotta">•</span>
+    <span class="hidden md:inline">📞 Landscaping Site Visits: <strong>+92 300 8456789</strong></span>
+  </div>
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-40 glass-header border-b border-cream-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <a href="#" onclick="showStorefront()" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-full bg-forest-800 text-cream-50 flex items-center justify-center shadow-md group-hover:bg-forest-700 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+        </div>
+        <div>
+          <div class="font-serif-luxury text-xl sm:text-2xl font-bold tracking-tight text-forest-900 leading-none">LAHORE BOTANICA</div>
+          <div class="text-[10px] tracking-widest text-charcoal-500 uppercase font-semibold mt-1">Nursery & Landscape Architecture</div>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-charcoal-700">
+        <a href="#plants-section" class="hover:text-forest-800 transition">Plants Catalog</a>
+        <a href="#plants-section" onclick="filterByCategory('indoor')" class="hover:text-forest-800 transition">Indoor Plants</a>
+        <a href="#plants-section" onclick="filterByCategory('flowering')" class="hover:text-forest-800 transition">Flowering & Fragrant</a>
+        <a href="#landscaping-section" class="hover:text-forest-800 transition">Landscaping Services</a>
+        <a href="#lahore-care-section" class="hover:text-forest-800 transition">Lahore Plant Care</a>
+      </nav>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-3">
+        <!-- Switch to Admin CMS -->
+        <button id="admin-toggle-btn" onclick="toggleAdminView()" class="text-xs font-semibold px-3 py-1.5 rounded-full border border-forest-800 text-forest-800 hover:bg-forest-800 hover:text-white transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          <span id="admin-btn-label">Admin CMS</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button onclick="toggleCartDrawer(true)" class="relative p-2.5 rounded-full bg-cream-100 hover:bg-cream-200 text-forest-900 transition flex items-center justify-center">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+          <span id="cart-count-badge" class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-terracotta text-white text-[11px] font-bold flex items-center justify-center shadow">0</span>
+        </button>
+
+        <!-- WhatsApp Quick Connect -->
+        <a href="https://wa.me/923008456789?text=Hello%20Lahore%20Botanica,%20I%20am%20interested%20in%20your%20plants%20and%20landscaping%20services" target="_blank" class="hidden sm:inline-flex btn-whatsapp text-xs font-bold px-3.5 py-2 rounded-full items-center gap-1.5 shadow-sm">
+          <span>WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN STOREFRONT VIEW ==================== -->
+  <main id="storefront-view" class="flex-grow">
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-b from-cream-100 via-cream-50 to-cream-50 pt-12 pb-16 px-4 sm:px-6 lg:px-8 border-b border-cream-200">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sage-100 border border-sage-200 text-forest-800 text-xs font-semibold">
+            <span>🌿 Premium Plants Nursery & Landscaping Architecture</span>
+          </div>
+
+          <h1 class="font-serif-luxury text-4xl sm:text-5xl lg:text-6xl font-bold text-forest-900 leading-[1.12]">
+            Bring Nature Home. <br>
+            <span class="italic font-normal text-terracotta">Design Your Living Sanctuary.</span>
+          </h1>
+
+          <p class="text-charcoal-700 text-base sm:text-lg max-w-2xl leading-relaxed">
+            Lahore ke mosam ke mutabiq certified hardy plants, luxury indoor foliage, aur professional villa/farmhouse landscape architecture. Har plant ki complete care guide aur live multi-angle pictures ke sath.
+          </p>
+
+          <!-- Quick Search & Categories Bar -->
+          <div class="bg-white p-2.5 rounded-2xl shadow-lg border border-cream-200 max-w-xl">
+            <div class="flex items-center gap-2">
+              <div class="pl-2 text-charcoal-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              </div>
+              <input type="text" id="hero-search-input" onkeyup="handleHeroSearch(event)" placeholder="Search plants (e.g. Ficus, Motia, Monstera, Palm)..." class="w-full text-sm font-medium text-charcoal-900 focus:outline-none placeholder:text-charcoal-500 py-1.5">
+              <button onclick="executeHeroSearch()" class="bg-forest-800 hover:bg-forest-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold tracking-wide transition shadow-sm">
+                SEARCH
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Tags -->
+          <div class="flex flex-wrap items-center gap-2 pt-1 text-xs text-charcoal-500">
+            <span class="font-semibold text-charcoal-700">Popular:</span>
+            <button onclick="setFilterSearch('Monstera')" class="px-2.5 py-1 rounded-full bg-white border border-cream-200 hover:border-forest-600 transition">#Monstera</button>
+            <button onclick="setFilterSearch('Ficus')" class="px-2.5 py-1 rounded-full bg-white border border-cream-200 hover:border-forest-600 transition">#FiddleLeafFig</button>
+            <button onclick="setFilterSearch('Motia')" class="px-2.5 py-1 rounded-full bg-white border border-cream-200 hover:border-forest-600 transition">#DesiMotia</button>
+            <button onclick="setFilterSearch('Palm')" class="px-2.5 py-1 rounded-full bg-white border border-cream-200 hover:border-forest-600 transition">#DatePalm</button>
+            <button onclick="setFilterSearch('Bougainvillea')" class="px-2.5 py-1 rounded-full bg-white border border-cream-200 hover:border-forest-600 transition">#Bougainvillea</button>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="grid grid-cols-3 gap-3 pt-4 border-t border-cream-200 max-w-lg text-xs">
+            <div class="flex items-center gap-2 font-medium text-charcoal-700">
+              <span class="text-forest-700 text-lg">☀️</span>
+              <span>100% Lahore Climate Hardy</span>
+            </div>
+            <div class="flex items-center gap-2 font-medium text-charcoal-700">
+              <span class="text-forest-700 text-lg">🚚</span>
+              <span>Same-Day Local Delivery</span>
+            </div>
+            <div class="flex items-center gap-2 font-medium text-charcoal-700">
+              <span class="text-terracotta text-lg">🪴</span>
+              <span>Free Potting Advice</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual Showcase -->
+        <div class="lg:col-span-5 relative">
+          <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+            <img src="https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=1000&auto=format&fit=crop" alt="Luxury Plant Interior" class="w-full h-[450px] object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-forest-900/80 via-transparent to-transparent flex flex-col justify-end p-6 text-white">
+              <div class="inline-block px-3 py-1 bg-terracotta rounded-full text-[11px] font-bold uppercase tracking-wider mb-2 w-max">Featured Plant</div>
+              <h3 class="font-serif-luxury text-2xl font-bold">Fiddle Leaf Fig Specimen</h3>
+              <p class="text-cream-100 text-xs mt-1">Available in handcrafted terracotta & luxury white ceramic pots</p>
+              <div class="flex items-center justify-between mt-3">
+                <span class="text-lg font-bold">Rs. 3,200</span>
+                <button onclick="openProductModal(1)" class="bg-white text-forest-900 hover:bg-cream-100 px-4 py-1.5 rounded-full text-xs font-bold shadow transition">View Angles</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Categories Strip -->
+    <section class="py-6 bg-white border-b border-cream-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none text-xs font-semibold">
+          <button onclick="filterByCategory('all')" class="cat-pill active px-4 py-2 rounded-full bg-forest-800 text-white whitespace-nowrap transition">All Plants (10)</button>
+          <button onclick="filterByCategory('indoor')" class="cat-pill px-4 py-2 rounded-full bg-cream-100 hover:bg-cream-200 text-charcoal-700 whitespace-nowrap transition">🏡 Indoor Air Purifying</button>
+          <button onclick="filterByCategory('flowering')" class="cat-pill px-4 py-2 rounded-full bg-cream-100 hover:bg-cream-200 text-charcoal-700 whitespace-nowrap transition">🌸 Fragrant & Flowering</button>
+          <button onclick="filterByCategory('trees_palms')" class="cat-pill px-4 py-2 rounded-full bg-cream-100 hover:bg-cream-200 text-charcoal-700 whitespace-nowrap transition">🌴 Landscape Trees & Palms</button>
+          <button onclick="filterByCategory('fruit_herbs')" class="cat-pill px-4 py-2 rounded-full bg-cream-100 hover:bg-cream-200 text-charcoal-700 whitespace-nowrap transition">🍋 Fruit Plants & Herbs</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Plants Catalog & Filters Section -->
+    <section id="plants-section" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+          <span class="text-terracotta text-xs font-bold uppercase tracking-widest">Nursery Catalog</span>
+          <h2 class="font-serif-luxury text-3xl font-bold text-forest-900">Explore Our Healthy Plants</h2>
+          <p class="text-charcoal-500 text-sm mt-1">Multi-angle photographs, exact sizing, and customized potting options.</p>
+        </div>
+
+        <!-- Sort Control -->
+        <div class="flex items-center gap-3">
+          <label class="text-xs font-semibold text-charcoal-500 whitespace-nowrap">Sort By:</label>
+          <select id="sort-select" onchange="applyFilters()" class="text-xs font-semibold bg-white border border-cream-200 rounded-lg px-3 py-2 text-charcoal-700 focus:outline-none focus:border-forest-700">
+            <option value="featured">Featured & Best Sellers</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="newest">New Arrivals</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Left Filter Panel -->
+        <aside class="lg:col-span-1 space-y-6 bg-white p-5 rounded-2xl border border-cream-200 h-fit shadow-sm">
+          <div class="flex items-center justify-between pb-3 border-b border-cream-200">
+            <h3 class="font-bold text-sm text-forest-900 flex items-center gap-2">
+              <svg class="w-4 h-4 text-forest-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+              Filter Plants
+            </h3>
+            <button onclick="resetFilters()" class="text-[11px] text-terracotta hover:underline font-semibold">Reset All</button>
+          </div>
+
+          <!-- Sunlight Requirement -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-charcoal-700 mb-2">Sunlight (Dhoop)</h4>
+            <div class="space-y-1.5 text-xs text-charcoal-700">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="sunlight_filter" value="" checked onchange="applyFilters()" class="accent-forest-800">
+                <span>All Lighting Conditions</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="sunlight_filter" value="full_sun" onchange="applyFilters()" class="accent-forest-800">
+                <span>☀️ Full Sun (Bahar Ki Dhoop)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="sunlight_filter" value="partial_shade" onchange="applyFilters()" class="accent-forest-800">
+                <span>⛅ Partial Shade (Balcony / Terrace)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="sunlight_filter" value="low_light" onchange="applyFilters()" class="accent-forest-800">
+                <span>🛋️ Low Light (Indoor Rooms)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Water Requirement -->
+          <div class="pt-3 border-t border-cream-200">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-charcoal-700 mb-2">Water (Paani)</h4>
+            <div class="space-y-1.5 text-xs text-charcoal-700">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="water_filter" value="" checked onchange="applyFilters()" class="accent-forest-800">
+                <span>All Watering Needs</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="water_filter" value="low" onchange="applyFilters()" class="accent-forest-800">
+                <span>💧 Low Water (Drought Tolerant)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="water_filter" value="moderate" onchange="applyFilters()" class="accent-forest-800">
+                <span>💧💧 Moderate (Haftay me 1-2 dafa)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Special Tags -->
+          <div class="pt-3 border-t border-cream-200 space-y-2">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-charcoal-700 mb-2">Special Features</h4>
+            <label class="flex items-center gap-2 cursor-pointer text-xs text-charcoal-700">
+              <input type="checkbox" id="pet-friendly-check" onchange="applyFilters()" class="rounded accent-forest-800">
+              <span>🐾 Pet Friendly (Safe for Cats/Dogs)</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-xs text-charcoal-700">
+              <input type="checkbox" id="lahore-hardy-check" checked onchange="applyFilters()" class="rounded accent-forest-800">
+              <span>🌡️ Lahore Summer Tolerant (40°C+)</span>
+            </label>
+          </div>
+
+          <div class="p-3 bg-sage-100 rounded-xl text-[11px] text-forest-900 border border-sage-200">
+            <strong>Need Advice?</strong> Har plant ke sath soil mixing aur watering card shamil hota hai.
+          </div>
+        </aside>
+
+        <!-- Right Product Cards Grid -->
+        <div class="lg:col-span-3">
+          <div id="plants-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Plant Cards Loaded via JS -->
+            <div class="col-span-full py-12 text-center text-charcoal-500">Loading plants catalog...</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Landscaping Services & Before / After Slider Section -->
+    <section id="landscaping-section" class="py-16 bg-forest-900 text-cream-50 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="text-terracotta text-xs font-bold uppercase tracking-widest">Bespoke Architecture</span>
+          <h2 class="font-serif-luxury text-3xl sm:text-4xl font-bold mt-1 text-white">Landscaping & Garden Design in Lahore</h2>
+          <p class="text-cream-100/80 text-sm sm:text-base mt-2">
+            DHA Phases, Gulberg, Bahria Town aur Bedian Road Farmhouses ke liye complete master planning, artificial grass, fountains, date palm trees, aur lighting.
+          </p>
+        </div>
+
+        <!-- Interactive Before & After Slider Showcase -->
+        <div class="max-w-4xl mx-auto mb-16">
+          <div class="text-center text-xs font-semibold text-cream-200 mb-3 flex items-center justify-center gap-2">
+            <span>👈 Drag the line to see the transformation 👉</span>
+          </div>
+
+          <div id="ba-slider" class="ba-container h-[350px] sm:h-[450px] shadow-2xl border-4 border-white/20">
+            <!-- AFTER Image (Full background) -->
+            <img src="https://images.unsplash.com/photo-1558904541-efa8c4a08931?q=80&w=1200&auto=format&fit=crop" alt="After: Luxury Finished Landscaping" class="w-full h-full object-cover">
+            
+            <!-- BEFORE Image (Clipped) -->
+            <div id="ba-before-wrapper" class="ba-before">
+              <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop" alt="Before: Bare Ground" class="absolute top-0 left-0 max-w-none h-full object-cover" style="width: 1000px;">
+              <span class="absolute top-4 left-4 bg-black/70 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">Before (Khali Plot)</span>
+            </div>
+
+            <span class="absolute top-4 right-4 bg-terracotta text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow">After (Lahore Botanica Design)</span>
+
+            <!-- Splitter Handle -->
+            <div id="ba-handle" class="ba-handle">
+              <div class="ba-handle-circle">
+                <svg class="w-5 h-5 text-forest-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          
+          <div class="bg-forest-800/60 border border-forest-700 p-6 rounded-2xl hover:border-terracotta transition">
+            <div class="w-12 h-12 rounded-xl bg-terracotta/20 text-terracotta flex items-center justify-center font-bold text-xl mb-4">🌴</div>
+            <h3 class="font-serif-luxury text-xl font-bold text-white">Villa & Home Lawns</h3>
+            <p class="text-cream-100/70 text-xs mt-2 leading-relaxed">
+              10 Marla aur 1 Kanal villas ke front/back lawns ki softscaping, imported American turf, stepping stones, aur low-water flower borders.
+            </p>
+          </div>
+
+          <div class="bg-forest-800/60 border border-forest-700 p-6 rounded-2xl hover:border-terracotta transition">
+            <div class="w-12 h-12 rounded-xl bg-terracotta/20 text-terracotta flex items-center justify-center font-bold text-xl mb-4">🪴</div>
+            <h3 class="font-serif-luxury text-xl font-bold text-white">Rooftop & Terrace Gardens</h3>
+            <p class="text-cream-100/70 text-xs mt-2 leading-relaxed">
+              Modern concrete/clay planter setups, wooden pergolas, lightweight potting mediums, aur drip irrigation systems jo deewar ko seep na karein.
+            </p>
+          </div>
+
+          <div class="bg-forest-800/60 border border-forest-700 p-6 rounded-2xl hover:border-terracotta transition">
+            <div class="w-12 h-12 rounded-xl bg-terracotta/20 text-terracotta flex items-center justify-center font-bold text-xl mb-4">🏛️</div>
+            <h3 class="font-serif-luxury text-xl font-bold text-white">Farmhouses & Commercial</h3>
+            <p class="text-cream-100/70 text-xs mt-2 leading-relaxed">
+              Bedian Road, Barki Road farmhouses ke liye mature date palms, boundary ficus hedges, gazebos, swimming pool deck landscaping.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Consultation Booking Form -->
+        <div class="bg-white text-charcoal-900 rounded-3xl p-6 sm:p-10 shadow-2xl max-w-3xl mx-auto border border-cream-200">
+          <div class="text-center mb-6">
+            <span class="text-xs font-bold text-terracotta uppercase tracking-wider">Free Site Consultation</span>
+            <h3 class="font-serif-luxury text-2xl sm:text-3xl font-bold text-forest-900 mt-1">Book a Site Inspection in Lahore</h3>
+            <p class="text-charcoal-500 text-xs sm:text-sm mt-1">Hamari landscape architect team aapki location visit kar ke 3D design aur quotation tayyar karegi.</p>
+          </div>
+
+          <form id="lead-form" onsubmit="submitLandscapingLead(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">Your Full Name *</label>
+                <input type="text" id="lead-name" required placeholder="e.g. Usman Chaudhry" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">WhatsApp / Phone Number *</label>
+                <input type="tel" id="lead-phone" required placeholder="e.g. 0300-1234567" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">Project Type</label>
+                <select id="lead-project" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+                  <option value="Villa Lawn">Villa Front/Back Lawn</option>
+                  <option value="Rooftop Garden">Rooftop Garden Setup</option>
+                  <option value="Farmhouse Estate">Farmhouse Estate</option>
+                  <option value="Commercial Turf">Commercial / Office</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">Area Size</label>
+                <select id="lead-size" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+                  <option value="5 Marla">5 Marla</option>
+                  <option value="10 Marla">10 Marla</option>
+                  <option value="1 Kanal">1 Kanal</option>
+                  <option value="2+ Kanals / Farmhouse">2+ Kanals / Farmhouse</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">Lahore Area</label>
+                <input type="text" id="lead-location" required placeholder="e.g. DHA Phase 6, Gulberg..." class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-charcoal-700 mb-1">Requirements & Details (Optional)</label>
+              <textarea id="lead-message" rows="2" placeholder="Tell us about grass type, water fountain, date palms or budget..." class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700"></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-forest-800 hover:bg-forest-700 text-white font-bold py-3.5 rounded-xl text-xs tracking-wider uppercase transition shadow-md flex items-center justify-center gap-2">
+              <span>Schedule Free Site Consultation</span>
+            </button>
+            <div id="lead-success-msg" class="hidden text-xs text-center font-bold text-forest-700 bg-sage-100 p-3 rounded-xl border border-sage-200">
+              Shukriya! Aapki consultation request darj ho chuki hai. Hamari team jald WhatsApp/call karegi.
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Lahore Climate & Care Guides Section -->
+    <section id="lahore-care-section" class="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="text-terracotta text-xs font-bold uppercase tracking-widest">Horticulture Advice</span>
+        <h2 class="font-serif-luxury text-3xl font-bold text-forest-900 mt-1">Lahore Climate Plant Survival Guide</h2>
+        <p class="text-charcoal-500 text-xs sm:text-sm mt-1">Garmiyon ki 'Loo' aur sardiyon ki 'Smog' se paudon ko bachane ke aasan tareeqay.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card-elevation p-6 rounded-2xl">
+          <div class="text-2xl mb-2">🔥</div>
+          <h3 class="font-bold text-sm text-forest-900">Summer Heatwaves (May - July)</h3>
+          <p class="text-xs text-charcoal-500 mt-2 leading-relaxed">
+            Dopehar ki dhoop (12 PM se 4 PM) ke waqt indoor plants ko khirki se 3 feet door rakhein. Paani hamesha subah 7 AM se pehle ya maghrib ke baad dein.
+          </p>
+        </div>
+        <div class="card-elevation p-6 rounded-2xl">
+          <div class="text-2xl mb-2">🌫️</div>
+          <h3 class="font-bold text-sm text-forest-900">Smog & Dust Protection (Oct - Dec)</h3>
+          <p class="text-xs text-charcoal-500 mt-2 leading-relaxed">
+            Haftay mein ek martaba foliage (patton) ko fresh paani se spray karein taake dhoop absorb karne ke pores khulay rahein aur smog ka asar na ho.
+          </p>
+        </div>
+        <div class="card-elevation p-6 rounded-2xl">
+          <div class="text-2xl mb-2">🪱</div>
+          <h3 class="font-bold text-sm text-forest-900">Organic Lahore Soil Mix (Bhal Mitti)</h3>
+          <p class="text-xs text-charcoal-500 mt-2 leading-relaxed">
+            Hamare tmam pauday canal silt (Bhal mitti), cow-dung compost aur perlite ke balanced ratio me lagaye gaye hain jo jaron ko rot nahi hone dete.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== ADMIN CMS VIEW ==================== -->
+  <main id="admin-view" class="hidden flex-grow bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-6">
+      
+      <!-- Admin Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-forest-700">Internal Management Portal</span>
+          <h1 class="text-2xl sm:text-3xl font-serif-luxury font-bold text-slate-900">Lahore Botanica Dashboard</h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="openAddPlantModal()" class="bg-forest-800 hover:bg-forest-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <span>+ Add New Plant</span>
+          </button>
+          <button onclick="showStorefront()" class="bg-white border border-slate-300 text-slate-700 text-xs font-bold px-4 py-2 rounded-xl hover:bg-slate-100 transition shadow-sm">
+            View Storefront
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Counters -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Total Store Revenue</div>
+          <div id="stat-revenue" class="text-2xl font-bold text-forest-900 mt-1">Rs. 0</div>
+          <div class="text-[10px] text-emerald-600 font-semibold mt-1">Cash on Delivery & Bank</div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Active Plants Catalog</div>
+          <div id="stat-plants" class="text-2xl font-bold text-forest-900 mt-1">0</div>
+          <div class="text-[10px] text-slate-500 mt-1">Multi-angle variants listed</div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Orders Received</div>
+          <div id="stat-orders" class="text-2xl font-bold text-forest-900 mt-1">0</div>
+          <div class="text-[10px] text-slate-500 mt-1">Lahore delivery zone</div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">Landscaping Inquiries</div>
+          <div id="stat-leads" class="text-2xl font-bold text-terracotta mt-1">0</div>
+          <div id="stat-new-leads" class="text-[10px] text-terracotta font-semibold mt-1">0 Pending Visit</div>
+        </div>
+      </div>
+
+      <!-- Admin Tabs Navigation -->
+      <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+        <button onclick="switchAdminTab('plants')" id="tab-btn-plants" class="admin-tab-btn active px-4 py-2 rounded-xl text-xs font-bold bg-forest-800 text-white transition">Plants Inventory</button>
+        <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Customer Orders</button>
+        <button onclick="switchAdminTab('leads')" id="tab-btn-leads" class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Landscaping Leads</button>
+      </div>
+
+      <!-- Tab 1: Plants Management -->
+      <div id="admin-tab-plants" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 class="font-bold text-sm text-slate-900">All Plants in Database</h2>
+          <span class="text-xs text-slate-500">Edit prices, photos, and stock</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+              <tr>
+                <th class="p-3">Plant</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">Price (PKR)</th>
+                <th class="p-3">Stock</th>
+                <th class="p-3">Light / Water</th>
+                <th class="p-3">Lahore Hardy</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-plants-tbody" class="divide-y divide-slate-100">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Orders Management -->
+      <div id="admin-tab-orders" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 class="font-bold text-sm text-slate-900">Customer Orders</h2>
+          <span class="text-xs text-slate-500">Manage dispatch & COD deliveries</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+              <tr>
+                <th class="p-3">Order #</th>
+                <th class="p-3">Customer</th>
+                <th class="p-3">Lahore Area</th>
+                <th class="p-3">Items</th>
+                <th class="p-3">Total</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-tbody" class="divide-y divide-slate-100">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Landscaping Leads CRM -->
+      <div id="admin-tab-leads" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 class="font-bold text-sm text-slate-900">Landscaping Site Visit Inquiries</h2>
+          <span class="text-xs text-slate-500">Contact leads directly on WhatsApp</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+              <tr>
+                <th class="p-3">Client</th>
+                <th class="p-3">Phone</th>
+                <th class="p-3">Project / Size</th>
+                <th class="p-3">Location</th>
+                <th class="p-3">Notes</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">WhatsApp</th>
+              </tr>
+            </thead>
+            <tbody id="admin-leads-tbody" class="divide-y divide-slate-100">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== SHOPIFY-STYLE PRODUCT DETAIL MODAL ==================== -->
+  <div id="product-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto modal-enter shadow-2xl border border-cream-200 relative">
+      
+      <!-- Close Button -->
+      <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-cream-100 hover:bg-cream-200 text-charcoal-700 flex items-center justify-center transition">
+        ✕
+      </button>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 sm:p-8">
+        
+        <!-- Left: Multi-Angle Interactive Gallery -->
+        <div class="space-y-4">
+          <!-- Main Display Angle -->
+          <div class="gallery-container relative rounded-2xl overflow-hidden bg-cream-100 border border-cream-200 h-[360px] sm:h-[400px]">
+            <img id="modal-main-img" src="" alt="Plant Angle Preview" class="gallery-main-img w-full h-full object-cover">
+            <span id="modal-angle-label" class="absolute bottom-3 left-3 bg-black/60 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">Angle 1 of 3 (Main View)</span>
+          </div>
+
+          <!-- Thumbnails Selector -->
+          <div class="flex items-center gap-3" id="modal-thumbnails">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Care Badges Strip -->
+          <div class="flex flex-wrap items-center gap-2 pt-2">
+            <span id="badge-sun" class="badge-care">☀️ Light</span>
+            <span id="badge-water" class="badge-care">💧 Water</span>
+            <span id="badge-pet" class="badge-care">🐾 Pet Safe</span>
+            <span id="badge-hardy" class="badge-care badge-terracotta">🌡️ Lahore Hardy</span>
+          </div>
+        </div>
+
+        <!-- Right: Plant Details & Configuration -->
+        <div class="space-y-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <span id="modal-category" class="text-xs uppercase font-bold tracking-widest text-terracotta">Category</span>
+              <span id="modal-stock" class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">In Stock (20 Available)</span>
+            </div>
+
+            <h2 id="modal-title" class="font-serif-luxury text-2xl sm:text-3xl font-bold text-forest-900 mt-1">Plant Name</h2>
+            <div id="modal-botanical" class="text-xs italic text-charcoal-500">Botanical Name</div>
+            <div id="modal-urdu" class="text-sm font-semibold text-forest-800 mt-0.5" dir="rtl">اردو نام</div>
+
+            <!-- Dynamic Live Price -->
+            <div class="mt-4 flex items-baseline gap-3 pb-4 border-b border-cream-200">
+              <div id="modal-price" class="text-3xl font-bold text-forest-900">Rs. 0</div>
+              <span class="text-xs text-charcoal-500">(Includes packaging & Lahore planting guide)</span>
+            </div>
+
+            <!-- Size Selector -->
+            <div class="mt-4">
+              <label class="block text-xs font-bold text-charcoal-700 uppercase tracking-wider mb-2">Select Plant Size:</label>
+              <div id="modal-sizes-group" class="grid grid-cols-2 gap-2 text-xs">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Potting Option Selector -->
+            <div class="mt-4">
+              <label class="block text-xs font-bold text-charcoal-700 uppercase tracking-wider mb-2">Choose Planter / Pot:</label>
+              <div id="modal-pots-group" class="space-y-2 text-xs">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mt-4">
+              <p id="modal-description" class="text-xs text-charcoal-700 leading-relaxed bg-cream-50 p-3 rounded-xl border border-cream-200">
+                Description text...
+              </p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="space-y-3 pt-4 border-t border-cream-200">
+            <div class="flex items-center gap-3">
+              <!-- Quantity -->
+              <div class="flex items-center border border-cream-200 rounded-xl bg-cream-50 p-1">
+                <button onclick="adjustModalQty(-1)" class="w-8 h-8 rounded-lg hover:bg-white text-charcoal-700 font-bold flex items-center justify-center">-</button>
+                <span id="modal-qty" class="w-8 text-center text-xs font-bold text-charcoal-900">1</span>
+                <button onclick="adjustModalQty(1)" class="w-8 h-8 rounded-lg hover:bg-white text-charcoal-700 font-bold flex items-center justify-center">+</button>
+              </div>
+
+              <!-- Add to Cart -->
+              <button onclick="addModalItemToCart()" class="flex-grow bg-forest-800 hover:bg-forest-700 text-white py-3 rounded-xl text-xs font-bold tracking-wider uppercase transition shadow-md flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+
+            <!-- Direct WhatsApp Order -->
+            <button onclick="orderModalItemViaWhatsApp()" class="w-full btn-whatsapp py-3 rounded-xl text-xs font-bold tracking-wide transition shadow-sm flex items-center justify-center gap-2">
+              <span>Order Direct on WhatsApp (One-Click)</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== CART DRAWER ==================== -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer(false)"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        
+        <!-- Cart Header -->
+        <div class="p-5 border-b border-cream-200 flex items-center justify-between bg-cream-50">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-forest-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            <h2 class="font-serif-luxury text-lg font-bold text-forest-900">Your Plant Cart</h2>
+          </div>
+          <button onclick="toggleCartDrawer(false)" class="text-charcoal-500 hover:text-charcoal-900 text-lg">✕</button>
+        </div>
+
+        <!-- Cart Items List -->
+        <div id="cart-items-container" class="flex-grow overflow-y-auto p-5 space-y-4">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Cart Footer & Checkout Form -->
+        <div class="p-5 border-t border-cream-200 bg-cream-50 space-y-4">
+          <div class="space-y-1.5 text-xs text-charcoal-700">
+            <div class="flex justify-between">
+              <span>Subtotal:</span>
+              <span id="cart-subtotal" class="font-bold">Rs. 0</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Delivery Fee (Lahore):</span>
+              <span id="cart-delivery" class="font-semibold text-emerald-700">Rs. 250</span>
+            </div>
+            <div class="flex justify-between text-base font-bold text-forest-900 pt-2 border-t border-cream-200">
+              <span>Total Amount:</span>
+              <span id="cart-total" class="text-forest-800">Rs. 0</span>
+            </div>
+          </div>
+
+          <!-- Checkout Details -->
+          <div class="space-y-2 pt-2">
+            <input type="text" id="cust-name" placeholder="Full Name *" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-forest-700">
+            <input type="tel" id="cust-phone" placeholder="WhatsApp / Mobile Number *" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-forest-700">
+            <select id="cust-area" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-forest-700">
+              <option value="DHA Phase 1-9">DHA Phase 1 to 9, Lahore</option>
+              <option value="Gulberg & Canal Road">Gulberg (I-V) & Canal Road</option>
+              <option value="Bahria Town & Raiwind">Bahria Town / Raiwind Road</option>
+              <option value="Model Town & Garden Town">Model Town / Garden Town</option>
+              <option value="Cantt & Askari">Lahore Cantt / Askari</option>
+              <option value="Johar Town & Wapda Town">Johar Town / Wapda Town</option>
+              <option value="Bedian Road / Farmhouses">Bedian Road / Farmhouses</option>
+              <option value="Other Lahore Area">Other Lahore Sector</option>
+            </select>
+            <input type="text" id="cust-address" placeholder="Complete Street Address *" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-forest-700">
+            
+            <select id="cust-payment" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-forest-700 font-semibold text-forest-900">
+              <option value="cod">Cash on Delivery (COD) in Lahore</option>
+              <option value="bank_transfer">Direct Bank Transfer</option>
+              <option value="jazzcash">JazzCash / EasyPaisa</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button onclick="placeOnlineOrder()" class="bg-forest-800 hover:bg-forest-700 text-white py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow">
+              Place Order
+            </button>
+            <button onclick="checkoutViaWhatsApp()" class="btn-whatsapp py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+              <span>Checkout via WhatsApp</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ADMIN ADD/EDIT PLANT MODAL ==================== -->
+  <div id="admin-plant-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 modal-enter shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+        <h3 id="admin-modal-title" class="text-xl font-bold font-serif-luxury text-slate-900">Add New Plant</h3>
+        <button onclick="closeAddPlantModal()" class="text-slate-400 hover:text-slate-700 text-lg">✕</button>
+      </div>
+
+      <form id="admin-plant-form" onsubmit="savePlantForm(event)" class="space-y-4">
+        <input type="hidden" id="form-plant-id">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Common English Name *</label>
+            <input type="text" id="form-name" required placeholder="e.g. Monstera Deliciosa" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Urdu Name</label>
+            <input type="text" id="form-urdu" placeholder="e.g. مانسٹرا" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Botanical Name</label>
+            <input type="text" id="form-botanical" placeholder="e.g. Monstera deliciosa" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Category *</label>
+            <select id="form-category" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700">
+              <option value="indoor">Indoor Air Purifying</option>
+              <option value="flowering">Flowering & Fragrant</option>
+              <option value="trees_palms">Trees & Palms</option>
+              <option value="fruit_herbs">Fruit & Herbs</option>
+              <option value="succulents">Succulents</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Base Price (PKR) *</label>
+            <input type="number" id="form-price" required placeholder="2800" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Sunlight</label>
+            <select id="form-sunlight" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700">
+              <option value="partial_shade">Partial Shade</option>
+              <option value="full_sun">Full Sun (Bahar Dhoop)</option>
+              <option value="low_light">Low Light (Kamre me)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Water Need</label>
+            <select id="form-water" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700">
+              <option value="low">Low (Kam Paani)</option>
+              <option value="moderate">Moderate (Haftay me 1-2 bar)</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Stock Quantity</label>
+            <input type="number" id="form-stock" value="20" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Multi-Angle Image URLs (Comma-separated)</label>
+          <textarea id="form-images" rows="2" placeholder="https://image1.jpg, https://image2.jpg, https://image3.jpg" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Plant Description & Lahore Care Guide</label>
+          <textarea id="form-desc" rows="3" placeholder="Care details, benefits, seasonal care..." class="w-full text-xs p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-forest-700"></textarea>
+        </div>
+
+        <div class="flex items-center gap-4 text-xs font-medium text-slate-700">
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" id="form-pet" class="rounded accent-forest-800">
+            <span>Pet Friendly</span>
+          </label>
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" id="form-hardy" checked class="rounded accent-forest-800">
+            <span>Lahore Summer Hardy</span>
+          </label>
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" id="form-featured" class="rounded accent-forest-800">
+            <span>Featured Best Seller</span>
+          </label>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 flex justify-end gap-3">
+          <button type="button" onclick="closeAddPlantModal()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 text-xs font-bold hover:bg-slate-100">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-forest-800 text-white text-xs font-bold hover:bg-forest-700">Save Plant to Database</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-forest-900 text-cream-100 border-t border-forest-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      
+      <div class="space-y-3">
+        <div class="font-serif-luxury text-2xl font-bold text-white tracking-wide">LAHORE BOTANICA</div>
+        <p class="text-xs text-cream-200/70 leading-relaxed">
+          Premium online nursery & landscape contracting firm based in Lahore. Certified healthy plants, specimen trees, and turnkey outdoor architecture.
+        </p>
+        <div class="text-xs text-terracotta font-semibold">📍 Gulberg III & Bedian Road Nursery Farm, Lahore</div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-3">Popular Categories</h4>
+        <ul class="space-y-2 text-xs text-cream-200/70">
+          <li><a href="#plants-section" onclick="filterByCategory('indoor')" class="hover:text-white">Indoor Air Purifying Plants</a></li>
+          <li><a href="#plants-section" onclick="filterByCategory('flowering')" class="hover:text-white">Fragrant Motia & Desi Gulab</a></li>
+          <li><a href="#plants-section" onclick="filterByCategory('trees_palms')" class="hover:text-white">Date Palms & Ficus Hedges</a></li>
+          <li><a href="#plants-section" onclick="filterByCategory('fruit_herbs')" class="hover:text-white">Desi Lemon & Kitchen Herbs</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-3">Landscaping Areas</h4>
+        <ul class="space-y-2 text-xs text-cream-200/70">
+          <li>DHA Phase 1 to 9 & Raya Golf</li>
+          <li>Gulberg & Canal Road Villas</li>
+          <li>Bedian Road & Barki Farmhouses</li>
+          <li>Bahria Town & Lake City</li>
+          <li>Model Town & Cantt Estates</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-3">Direct Contact</h4>
+        <div class="space-y-2 text-xs text-cream-200/70">
+          <div>📞 Direct Call: <strong>+92 300 8456789</strong></div>
+          <div>💬 WhatsApp: <strong>0300 8456789</strong></div>
+          <div>🕒 Nursery Hours: 7 Days (8 AM - 9 PM)</div>
+          <div class="pt-2">
+            <button onclick="toggleCartDrawer(true)" class="bg-terracotta hover:bg-terracotta-dark text-white px-4 py-2 rounded-xl text-xs font-bold transition">View Open Cart</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-8 mt-8 border-t border-forest-800 text-center text-[11px] text-cream-200/50 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>© 2026 Lahore Botanica & Landscaping Architecture. All Rights Reserved.</div>
+      <div>Designed with Botanical Elegance & High-Speed Next Architecture</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
