@@ -316,15 +316,30 @@ try {
 }
 
 let currentModalPlant = null;
+let currentAngleIndex = 0;
 let selectedSizeIndex = 0;
 let selectedPotIndex = 0;
 let modalQty = 1;
+let searchDebounceTimer = null;
+let touchStartX = 0;
+let touchEndX = 0;
+
+function getCombinedPlants() {
+  let custom = [];
+  try {
+    custom = JSON.parse(localStorage.getItem('lahore_botanica_custom_plants') || '[]');
+  } catch (e) {
+    custom = [];
+  }
+  return [...custom, ...FALLBACK_PLANTS];
+}
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   fetchPlants();
   updateCartBadge();
   initBeforeAfterSlider();
+  setupGalleryTouchGestures();
 
   if (window.location.hash === '#admin') {
     toggleAdminView();
@@ -365,7 +380,7 @@ async function fetchPlants() {
     throw new Error('API unavailable, using fallback data');
   } catch (err) {
     // Client-side filtering on embedded catalog for Vercel static hosting
-    let filtered = [...FALLBACK_PLANTS];
+    let filtered = getCombinedPlants();
 
     if (search) {
       filtered = filtered.filter(p => 
@@ -437,7 +452,7 @@ function renderPlantsGrid(plants) {
     return `
       <div class="card-elevation rounded-2xl overflow-hidden flex flex-col group bg-white shadow-xs">
         <div class="relative h-40 sm:h-64 overflow-hidden bg-cream-100 cursor-pointer" onclick="openProductModal(${plant.id})">
-          <img src="${mainImg}" alt="${plant.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+          <img src="${mainImg}" alt="${plant.name}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=600';" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
           
           <div class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-black/60 backdrop-blur-sm text-white text-[9px] sm:text-[10px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow">
             <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
@@ -545,6 +560,27 @@ function setFilterSearch(keyword) {
   }
 }
 
+function handleLiveSearch(query) {
+  const clearBtn = document.getElementById('search-clear-btn');
+  if (clearBtn) {
+    clearBtn.classList.toggle('hidden', !query.trim());
+  }
+
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(() => {
+    fetchPlants();
+  }, 250);
+}
+
+function clearHeroSearch() {
+  const input = document.getElementById('hero-search-input');
+  if (input) {
+    input.value = '';
+    handleLiveSearch('');
+    input.focus();
+  }
+}
+
 function handleHeroSearch(e) {
   if (e.key === 'Enter') {
     executeHeroSearch();
@@ -565,6 +601,7 @@ function openProductModal(id) {
   selectedSizeIndex = 0;
   selectedPotIndex = 0;
   modalQty = 1;
+  currentAngleIndex = 0;
 
   const modal = document.getElementById('product-modal');
   modal.classList.remove('hidden');
@@ -597,12 +634,12 @@ function openProductModal(id) {
     'https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=1000'
   ];
 
-  setModalAngle(0, images);
+  setModalAngle(0);
 
   const thumbContainer = document.getElementById('modal-thumbnails');
   thumbContainer.innerHTML = images.map((img, idx) => `
-    <button onclick="setModalAngle(${idx})" class="w-16 h-16 rounded-xl overflow-hidden border-2 ${idx === 0 ? 'border-forest-800 ring-2 ring-forest-800/20' : 'border-cream-200'} transition hover:border-forest-700">
-      <img src="${img}" alt="Angle ${idx + 1}" class="w-full h-full object-cover">
+    <button onclick="setModalAngle(${idx})" class="w-16 h-16 rounded-xl overflow-hidden border-2 ${idx === 0 ? 'border-forest-800 ring-2 ring-forest-800/20' : 'border-cream-200'} transition hover:border-forest-700 flex-shrink-0">
+      <img src="${img}" alt="Angle ${idx + 1}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=200';" class="w-full h-full object-cover">
     </button>
   `).join('');
 
@@ -613,23 +650,63 @@ function openProductModal(id) {
 function setModalAngle(index) {
   if (!currentModalPlant) return;
   const images = currentModalPlant.images || [];
+  if (images.length === 0) return;
+  currentAngleIndex = index;
   const imgUrl = images[index] || images[0];
 
   const mainImg = document.getElementById('modal-main-img');
-  mainImg.src = imgUrl;
+  if (mainImg) {
+    mainImg.src = imgUrl;
+    mainImg.onerror = () => { mainImg.src = 'https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=800'; };
+  }
 
   const label = document.getElementById('modal-angle-label');
   const angleNames = ['Front Full View', 'Leaf Texture & Foliage Close-Up', 'Living Room / Interior Perspective', 'Pot & Root Angle'];
-  label.innerText = `Angle ${index + 1} of ${images.length} (${angleNames[index] || 'Angle View'})`;
+  if (label) {
+    label.innerText = `Angle ${index + 1} of ${images.length} (${angleNames[index] || 'Angle View'}) - Swipe ⇄ to Change`;
+  }
 
   const thumbs = document.querySelectorAll('#modal-thumbnails button');
   thumbs.forEach((t, i) => {
     if (i === index) {
-      t.className = 'w-16 h-16 rounded-xl overflow-hidden border-2 border-forest-800 ring-2 ring-forest-800/20 transition';
+      t.className = 'w-16 h-16 rounded-xl overflow-hidden border-2 border-forest-800 ring-2 ring-forest-800/20 transition flex-shrink-0';
     } else {
-      t.className = 'w-16 h-16 rounded-xl overflow-hidden border-2 border-cream-200 opacity-70 hover:opacity-100 transition';
+      t.className = 'w-16 h-16 rounded-xl overflow-hidden border-2 border-cream-200 opacity-70 hover:opacity-100 transition flex-shrink-0';
     }
   });
+}
+
+function setupGalleryTouchGestures() {
+  const container = document.querySelector('.gallery-container');
+  if (!container) return;
+
+  container.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  container.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleGallerySwipe();
+  }, { passive: true });
+}
+
+function handleGallerySwipe() {
+  if (!currentModalPlant) return;
+  const images = currentModalPlant.images || [];
+  if (images.length <= 1) return;
+
+  const diffX = touchEndX - touchStartX;
+  if (Math.abs(diffX) > 40) {
+    if (diffX < 0) {
+      // Swiped Left -> Next Angle
+      const nextIdx = (currentAngleIndex + 1) % images.length;
+      setModalAngle(nextIdx);
+    } else {
+      // Swiped Right -> Previous Angle
+      const prevIdx = (currentAngleIndex - 1 + images.length) % images.length;
+      setModalAngle(prevIdx);
+    }
+  }
 }
 
 function renderModalOptions(plant) {
@@ -931,6 +1008,10 @@ async function placeOnlineOrder() {
       })
     });
 
+    if (!res.ok) {
+      throw new Error(`Server status: ${res.status}`);
+    }
+
     const data = await res.json();
     if (data.success) {
       alert(`🎉 Order Confirmed!\nYour Order Number is: ${data.order_number}\nTotal Amount: Rs. ${data.total.toLocaleString()}\nOur nursery rider will deliver to your Lahore address.`);
@@ -938,9 +1019,11 @@ async function placeOnlineOrder() {
       saveCart();
       toggleCartDrawer(false);
       return;
+    } else {
+      throw new Error(data.error || 'Server rejected order');
     }
   } catch (err) {
-    // If backend API isn't present on static Vercel, forward to WhatsApp automatically!
+    // If backend API is offline or not present on static Vercel, forward to WhatsApp automatically!
     checkoutViaWhatsApp();
   }
 }
@@ -989,13 +1072,23 @@ function initBeforeAfterSlider() {
 
   if (!container || !beforeWrapper || !handle) return;
 
+  const syncBeforeImgWidth = () => {
+    const beforeImg = document.getElementById('ba-before-img');
+    if (beforeImg && container) {
+      beforeImg.style.width = `${container.offsetWidth}px`;
+    }
+  };
+
+  syncBeforeImgWidth();
+  window.addEventListener('resize', syncBeforeImgWidth);
+
   let isDragging = false;
 
   const moveSlider = (clientX) => {
     const rect = container.getBoundingClientRect();
     let x = clientX - rect.left;
-    if (x < 20) x = 20;
-    if (x > rect.width - 20) x = rect.width - 20;
+    if (x < 10) x = 10;
+    if (x > rect.width - 10) x = rect.width - 10;
 
     const percent = (x / rect.width) * 100;
     beforeWrapper.style.width = `${percent}%`;
@@ -1055,11 +1148,15 @@ async function submitLandscapingLead(e) {
       })
     });
 
+    if (!res.ok) throw new Error(`Status: ${res.status}`);
+
     const data = await res.json();
     if (data.success) {
       document.getElementById('lead-success-msg').classList.remove('hidden');
       document.getElementById('lead-form').reset();
       return;
+    } else {
+      throw new Error(data.error || 'Failed');
     }
   } catch (err) {
     // WhatsApp direct connection for static hosting

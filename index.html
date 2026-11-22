@@ -6,7 +6,7 @@
   <title>Lahore Botanica | Premium Plants & Bespoke Landscaping Lahore</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -125,7 +125,8 @@
               <div class="pl-2 text-charcoal-500">
                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
               </div>
-              <input type="text" id="hero-search-input" onkeyup="handleHeroSearch(event)" placeholder="Search plants (Ficus, Motia, Monstera, Palm)..." class="w-full text-xs sm:text-sm font-medium text-charcoal-900 focus:outline-none placeholder:text-charcoal-500 py-1.5">
+              <input type="text" id="hero-search-input" oninput="handleLiveSearch(this.value)" onkeyup="handleHeroSearch(event)" placeholder="Search plants (Ficus, Motia, Monstera, Palm)..." class="w-full text-xs sm:text-sm font-medium text-charcoal-900 focus:outline-none placeholder:text-charcoal-500 py-1.5">
+              <button id="search-clear-btn" onclick="clearHeroSearch()" class="hidden text-charcoal-400 hover:text-charcoal-700 px-1 text-sm font-bold" title="Clear">✕</button>
               <button onclick="executeHeroSearch()" class="bg-forest-800 hover:bg-forest-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-[11px] sm:text-xs font-bold tracking-wide transition shadow-sm flex-shrink-0">
                 SEARCH
               </button>
@@ -321,7 +322,7 @@
             
             <!-- BEFORE Image (Clipped) -->
             <div id="ba-before-wrapper" class="ba-before">
-              <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop" alt="Before: Bare Ground" class="absolute top-0 left-0 max-w-none h-full object-cover" style="width: 1000px;">
+              <img id="ba-before-img" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1200&auto=format&fit=crop" alt="Before: Bare Ground" class="absolute top-0 left-0 max-w-none h-full object-cover">
               <span class="absolute top-3 left-3 bg-black/70 text-white text-[9px] sm:text-[11px] font-bold px-2 sm:px-3 py-0.5 rounded-full uppercase tracking-wider backdrop-blur-sm">Before (Khali Plot)</span>
             </div>
 
@@ -526,6 +527,8 @@
                 <th class="p-2.5 sm:p-3">Category</th>
                 <th class="p-2.5 sm:p-3">Price</th>
                 <th class="p-2.5 sm:p-3">Stock</th>
+                <th class="p-2.5 sm:p-3">Climate / Water</th>
+                <th class="p-2.5 sm:p-3">Hardiness</th>
                 <th class="p-2.5 sm:p-3 text-right">Actions</th>
               </tr>
             </thead>
@@ -547,8 +550,10 @@
                 <th class="p-2.5 sm:p-3">Order #</th>
                 <th class="p-2.5 sm:p-3">Customer</th>
                 <th class="p-2.5 sm:p-3">Area</th>
+                <th class="p-2.5 sm:p-3">Items Summary</th>
                 <th class="p-2.5 sm:p-3">Total</th>
                 <th class="p-2.5 sm:p-3">Status</th>
+                <th class="p-2.5 sm:p-3">Action</th>
               </tr>
             </thead>
             <tbody id="admin-orders-tbody" class="divide-y divide-slate-100"></tbody>
@@ -570,12 +575,114 @@
                 <th class="p-2.5 sm:p-3">Phone</th>
                 <th class="p-2.5 sm:p-3">Project</th>
                 <th class="p-2.5 sm:p-3">Location</th>
+                <th class="p-2.5 sm:p-3">Details</th>
                 <th class="p-2.5 sm:p-3">Status</th>
                 <th class="p-2.5 sm:p-3">WhatsApp</th>
               </tr>
             </thead>
             <tbody id="admin-leads-tbody" class="divide-y divide-slate-100"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Add / Edit Plant Admin Modal -->
+      <div id="admin-plant-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-slate-200">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+            <h3 id="admin-modal-title" class="font-serif-luxury font-bold text-lg sm:text-xl text-slate-900">Add New Plant</h3>
+            <button onclick="closeAddPlantModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold">✕</button>
+          </div>
+
+          <form id="admin-plant-form" onsubmit="savePlantForm(event)" class="space-y-4 text-xs">
+            <input type="hidden" id="form-plant-id">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">English Name *</label>
+                <input type="text" id="form-name" required placeholder="e.g. Fiddle Leaf Fig" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Urdu Name</label>
+                <input type="text" id="form-urdu" placeholder="e.g. فڈل لیف فکس" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700" dir="rtl">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Botanical Name</label>
+                <input type="text" id="form-botanical" placeholder="e.g. Ficus Lyrata" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700 italic">
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Category *</label>
+                <select id="form-category" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
+                  <option value="indoor">Indoor Foliage</option>
+                  <option value="flowering">Fragrant & Flowering</option>
+                  <option value="trees_palms">Trees & Palms</option>
+                  <option value="fruit_herbs">Fruit & Herbs</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Base Price (PKR) *</label>
+                <input type="number" id="form-price" required min="100" placeholder="e.g. 3200" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Stock Quantity *</label>
+                <input type="number" id="form-stock" required min="0" placeholder="e.g. 25" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Sunlight Requirement</label>
+                <select id="form-sunlight" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
+                  <option value="partial_shade">Partial Shade (Balcony / Bright Window)</option>
+                  <option value="full_sun">Full Sun (Direct Outdoor Dhoop)</option>
+                  <option value="low_light">Low Light (Indoor Room / Office)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Water Need</label>
+                <select id="form-water" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
+                  <option value="moderate">Moderate (Haftay me 1-2 dafa)</option>
+                  <option value="low">Low (10-15 din me 1 dafa)</option>
+                  <option value="high">High (Daily paani)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Image URLs (Multi-Angle comma separated)</label>
+              <input type="text" id="form-images" placeholder="https://..., https://..." class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700 font-mono text-[11px]">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Plant Description & Care Details</label>
+              <textarea id="form-desc" rows="3" placeholder="Care details, benefits, fertilizer tips..." class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700"></textarea>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4 pt-2 border-t border-slate-200">
+              <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-700">
+                <input type="checkbox" id="form-hardy" checked class="rounded accent-forest-800">
+                <span>🌡️ Lahore Summer Hardy</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-700">
+                <input type="checkbox" id="form-pet" class="rounded accent-forest-800">
+                <span>🐾 Pet Friendly</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-700">
+                <input type="checkbox" id="form-featured" class="rounded accent-forest-800">
+                <span>⭐ Featured Hot Item</span>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+              <button type="button" onclick="closeAddPlantModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold hover:bg-slate-100 transition">Cancel</button>
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-forest-800 hover:bg-forest-700 text-white font-bold transition shadow-md">Save Plant</button>
+            </div>
+          </form>
         </div>
       </div>
 

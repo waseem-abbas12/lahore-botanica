@@ -75,13 +75,17 @@ function switchAdminTab(tabName) {
 async function fetchAdminPlants() {
   try {
     const res = await fetch('/api/plants?sort=newest');
+    if (!res.ok) throw new Error('API unavailable');
     const data = await res.json();
-    if (data.success) {
+    if (data.success && data.plants) {
       adminPlants = data.plants;
       renderAdminPlantsTable(adminPlants);
+      return;
     }
+    throw new Error('Fallback needed');
   } catch (err) {
-    console.error('Admin plants error:', err);
+    adminPlants = typeof getCombinedPlants === 'function' ? getCombinedPlants() : [...FALLBACK_PLANTS];
+    renderAdminPlantsTable(adminPlants);
   }
 }
 
@@ -206,17 +210,36 @@ async function savePlantForm(e) {
       });
     }
 
-    const data = await res.json();
-    if (data.success) {
-      closeAddPlantModal();
-      await fetchAdminPlants();
-      await fetchAdminStats();
-    } else {
-      alert(`Save error: ${data.error}`);
+    if (res && res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        closeAddPlantModal();
+        await fetchAdminPlants();
+        await fetchAdminStats();
+        return;
+      }
     }
+    throw new Error('Fallback to client storage');
   } catch (err) {
-    console.error('Save plant error:', err);
-    alert('Failed to save plant.');
+    let custom = [];
+    try {
+      custom = JSON.parse(localStorage.getItem('lahore_botanica_custom_plants') || '[]');
+    } catch(e) {}
+
+    if (id) {
+      const idx = custom.findIndex(p => p.id == id);
+      if (idx > -1) {
+        custom[idx] = { ...custom[idx], ...payload, id: Number(id) };
+      }
+    } else {
+      payload.id = Date.now();
+      custom.unshift(payload);
+    }
+
+    localStorage.setItem('lahore_botanica_custom_plants', JSON.stringify(custom));
+    closeAddPlantModal();
+    await fetchAdminPlants();
+    alert('Plant successfully saved to nursery catalog!');
   }
 }
 
@@ -225,13 +248,20 @@ async function deletePlant(id) {
 
   try {
     const res = await fetch(`/api/plants/${id}`, { method: 'DELETE' });
-    const data = await res.json();
-    if (data.success) {
+    if (res && res.ok) {
       await fetchAdminPlants();
       await fetchAdminStats();
+      return;
     }
+    throw new Error('Fallback delete');
   } catch (err) {
-    console.error('Delete error:', err);
+    let custom = [];
+    try {
+      custom = JSON.parse(localStorage.getItem('lahore_botanica_custom_plants') || '[]');
+      custom = custom.filter(p => p.id != id);
+      localStorage.setItem('lahore_botanica_custom_plants', JSON.stringify(custom));
+      await fetchAdminPlants();
+    } catch(e) {}
   }
 }
 

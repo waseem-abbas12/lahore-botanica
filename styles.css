@@ -33,6 +33,11 @@ body {
   font-family: 'Playfair Display', Georgia, serif;
 }
 
+[dir="rtl"], .urdu-font {
+  font-family: 'Noto Nastaliq Urdu', 'Plus Jakarta Sans', serif;
+  line-height: 1.6;
+}
+
 /* Hide scrollbar for clean touch carousels */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
