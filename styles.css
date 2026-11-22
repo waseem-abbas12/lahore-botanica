@@ -201,3 +201,24 @@ body {
   transform: translateY(-1px);
   box-shadow: 0 8px 16px -4px rgba(37, 211, 102, 0.35);
 }
+
+/* Page View Transitions */
+.page-view {
+  animation: pageFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Side Drawer */
+#mobile-side-menu {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}

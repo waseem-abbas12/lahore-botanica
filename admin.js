@@ -4,27 +4,22 @@ let adminOrders = [];
 let adminLeads = [];
 
 function toggleAdminView() {
-  const store = document.getElementById('storefront-view');
-  const admin = document.getElementById('admin-view');
+  const adminPage = document.getElementById('page-admin');
   const btnLabel = document.getElementById('admin-btn-label');
 
-  if (admin.classList.contains('hidden')) {
-    store.classList.add('hidden');
-    admin.classList.remove('hidden');
-    btnLabel.innerText = 'Exit CMS';
-    window.location.hash = 'admin';
-    loadAdminDashboard();
+  if (adminPage && adminPage.classList.contains('hidden')) {
+    navigateToPage('admin');
+    if (btnLabel) btnLabel.innerText = 'Exit CMS';
   } else {
     showStorefront();
   }
 }
 
 function showStorefront() {
-  document.getElementById('storefront-view').classList.remove('hidden');
-  document.getElementById('admin-view').classList.add('hidden');
-  document.getElementById('admin-btn-label').innerText = 'Admin CMS';
-  window.location.hash = '';
-  fetchPlants(); // refresh storefront
+  navigateToPage('shop');
+  const btnLabel = document.getElementById('admin-btn-label');
+  if (btnLabel) btnLabel.innerText = 'CMS';
+  if (typeof fetchPlants === 'function') fetchPlants();
 }
 
 async function loadAdminDashboard() {

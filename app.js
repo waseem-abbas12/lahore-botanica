@@ -334,17 +334,171 @@ function getCombinedPlants() {
   return [...custom, ...FALLBACK_PLANTS];
 }
 
-// Initialize on page load
+// Initialize on page load & URL Routing
 document.addEventListener('DOMContentLoaded', () => {
   fetchPlants();
   updateCartBadge();
   initBeforeAfterSlider();
   setupGalleryTouchGestures();
-
-  if (window.location.hash === '#admin') {
-    toggleAdminView();
-  }
+  handleRoute();
 });
+
+window.addEventListener('hashchange', handleRoute);
+window.addEventListener('popstate', handleRoute);
+
+function handleRoute() {
+  const hash = window.location.hash.replace('#', '') || 'shop';
+  navigateToPage(hash, false);
+}
+
+function navigateToPage(pageId, updateHash = true) {
+  const validPages = ['shop', 'landscaping', 'care-guide', 'track-order', 'about', 'admin'];
+  if (!validPages.includes(pageId)) pageId = 'shop';
+
+  // Toggle page visibility
+  validPages.forEach(p => {
+    const el = document.getElementById(`page-${p}`);
+    if (el) el.classList.toggle('hidden', p !== pageId);
+  });
+
+  // Update hash
+  if (updateHash && window.location.hash !== `#${pageId}`) {
+    history.pushState(null, '', `#${pageId}`);
+  }
+
+  // Desktop Nav Highlight
+  document.querySelectorAll('.nav-page-link').forEach(link => {
+    const isCurrent = link.getAttribute('data-page') === pageId;
+    link.classList.toggle('text-forest-800', isCurrent);
+    link.classList.toggle('font-bold', isCurrent);
+    link.classList.toggle('text-charcoal-700', !isCurrent);
+  });
+
+  // Mobile Bottom Nav Highlight
+  document.querySelectorAll('.bnav-btn').forEach(btn => {
+    btn.classList.remove('text-forest-800', 'font-bold');
+    btn.classList.add('text-charcoal-700');
+  });
+  const activeBnav = document.getElementById(`bnav-${pageId}`);
+  if (activeBnav) {
+    activeBnav.classList.add('text-forest-800', 'font-bold');
+    activeBnav.classList.remove('text-charcoal-700');
+  }
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Re-sync slider if entering landscaping page
+  if (pageId === 'landscaping') {
+    setTimeout(() => {
+      const container = document.getElementById('ba-slider');
+      const beforeImg = document.getElementById('ba-before-img');
+      if (container && beforeImg) {
+        beforeImg.style.width = `${container.offsetWidth}px`;
+      }
+    }, 120);
+  }
+
+  // If opening admin, load admin dashboard
+  if (pageId === 'admin') {
+    if (typeof loadAdminDashboard === 'function') loadAdminDashboard();
+  }
+}
+
+function toggleMobileSideMenu(open) {
+  const menu = document.getElementById('mobile-side-menu');
+  const backdrop = document.getElementById('mobile-menu-backdrop');
+  if (!menu || !backdrop) return;
+
+  if (open) {
+    backdrop.classList.remove('hidden');
+    menu.classList.remove('-translate-x-full');
+    menu.classList.add('translate-x-0');
+    document.body.style.overflow = 'hidden';
+  } else {
+    backdrop.classList.add('hidden');
+    menu.classList.remove('translate-x-0');
+    menu.classList.add('-translate-x-full');
+    document.body.style.overflow = '';
+  }
+}
+
+function handleMenuSearch(e) {
+  if (e.key === 'Enter') {
+    const query = e.target.value.trim();
+    if (!query) return;
+    toggleMobileSideMenu(false);
+    navigateToPage('shop');
+    const heroInput = document.getElementById('hero-search-input');
+    if (heroInput) {
+      heroInput.value = query;
+      executeHeroSearch();
+    }
+  }
+}
+
+function calculatePlantCare() {
+  const plant = document.getElementById('calc-plant')?.value || 'ficus';
+  const env = document.getElementById('calc-env')?.value || 'ac_room';
+  const resultBox = document.getElementById('calc-result');
+  const resultText = document.getElementById('calc-result-text');
+
+  if (!resultBox || !resultText) return;
+
+  let watering = '💧 Paani: Haftay mein 1 dafa (Halka paani).';
+  let light = '☀️ Dhoop: Bright indirect roshni.';
+  let fertilizer = '🌱 Khaad: Har 4 haftay baad organic cow compost.';
+  let extraTip = '🌿 Smog Tip: Haftay me 1 dafa patton ko spray se dho lein taake pores khulay rahein.';
+
+  if (plant === 'ficus') {
+    if (env === 'hot_lawn') {
+      watering = '💧 Paani: Rozana subah 7 AM se pehle achi tarha paani dein (Direct afternoon dhoop se bachayein warna leaves burn honge).';
+      light = '☀️ Dhoop: 40% Green shade net ke neeche rakhein.';
+    } else if (env === 'ac_room') {
+      watering = '💧 Paani: 7 se 9 din baad (Pehla inch mitti dry hone par). AC vent ke direct agay na rakhein.';
+      light = '☀️ Dhoop: Khirki ke paas jahan roshni aati ho.';
+    }
+  } else if (plant === 'motia') {
+    watering = '💧 Paani: Garmiyon me rozana shaam ko paani dein taake phoolon ki khushbu taza rahe.';
+    light = '☀️ Dhoop: Full 5-6 ghante direct dhoop (Phool aane ke liye zaroori hai).';
+    fertilizer = '🌱 Khaad: Mustard oil cake (Sarson khali) liquid khad 15 din baad dein.';
+  } else if (plant === 'snake') {
+    watering = '💧 Paani: 15 se 20 din baad paani dein. Overwatering se root rot hoti hai.';
+    light = '🛋️ Dhoop: Kam roshni ya AC office me bhi shandaar rehta hai.';
+  } else if (plant === 'palm') {
+    watering = '💧 Paani: Haftay mein 2 dafa deep watering.';
+    light = '☀️ Dhoop: Balcony ya lawn me 4-5 ghante dhoop.';
+  }
+
+  resultText.innerHTML = `
+    <div class="font-bold text-white text-sm mb-1">🌿 Lahore Horticulture Care Advice:</div>
+    <div class="space-y-1">
+      <div>${watering}</div>
+      <div>${light}</div>
+      <div>${fertilizer}</div>
+      <div class="text-emerald-300 font-semibold">${extraTip}</div>
+    </div>
+  `;
+  resultBox.classList.remove('hidden');
+}
+
+function checkOrderStatus() {
+  const input = document.getElementById('track-order-input')?.value.trim();
+  const box = document.getElementById('track-result-box');
+  const numEl = document.getElementById('track-order-num');
+  const statusEl = document.getElementById('track-order-status');
+
+  if (!input) {
+    alert('Please enter your Order # or Phone Number.');
+    return;
+  }
+
+  if (box && numEl && statusEl) {
+    numEl.innerText = `Order: ${input.toUpperCase()}`;
+    statusEl.innerText = 'Out for Delivery with Lahore Rider';
+    box.classList.remove('hidden');
+  }
+}
 
 // Fetch Plants with fallback to embedded data
 async function fetchPlants() {
