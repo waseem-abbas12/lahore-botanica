@@ -222,3 +222,56 @@ body {
 #mobile-side-menu {
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Wishlist Heart Button & Animation */
+.btn-wishlist {
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.btn-wishlist:active {
+  transform: scale(0.85);
+}
+.btn-wishlist.active svg {
+  fill: #E11D48;
+  color: #E11D48;
+  stroke: #E11D48;
+  animation: heartPop 0.35s ease-out;
+}
+
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+/* Plant Doctor Diagnostic Cards */
+.doctor-symptom-card {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.doctor-symptom-card:hover {
+  transform: translateY(-2px);
+  border-color: #C86D51;
+}
+.doctor-symptom-card.active {
+  border-color: #133E2B;
+  background-color: #F6F2EA;
+  box-shadow: 0 4px 14px rgba(19, 62, 43, 0.12);
+}
+
+/* Landscaping Calculator Inputs */
+.calc-option-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.calc-option-card input:checked + div {
+  border-color: #133E2B;
+  background-color: #F6F2EA;
+  box-shadow: 0 0 0 2px #133E2B;
+}
+
+/* Star Ratings */
+.star-rating {
+  color: #F59E0B;
+}
+

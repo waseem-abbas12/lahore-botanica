@@ -603,6 +603,8 @@ function renderPlantsGrid(plants) {
     if (plant.water === 'moderate') waterLabel = '💧 Moderate';
     if (plant.water === 'high') waterLabel = '💧 High';
 
+    const wishlisted = isWishlisted(plant.id);
+
     return `
       <div class="card-elevation rounded-2xl overflow-hidden flex flex-col group bg-white shadow-xs">
         <div class="relative h-40 sm:h-64 overflow-hidden bg-cream-100 cursor-pointer" onclick="openProductModal(${plant.id})">
@@ -613,8 +615,13 @@ function renderPlantsGrid(plants) {
             <span>${anglesCount} Angles</span>
           </div>
 
+          <!-- Wishlist Heart Toggle Button -->
+          <button onclick="toggleWishlist(${plant.id}, event)" class="btn-wishlist ${wishlisted ? 'active' : ''} absolute top-2 right-2 sm:top-3 sm:right-3 z-10 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-charcoal-700 hover:text-rose-600 flex items-center justify-center shadow transition" title="Add to Wishlist">
+            <svg class="w-4 h-4 ${wishlisted ? 'text-rose-600 fill-rose-600' : 'text-charcoal-700'}" fill="${wishlisted ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+          </button>
+
           ${plant.featured ? `
-            <div class="absolute top-2 right-2 sm:top-3 sm:right-3 bg-terracotta text-white text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full uppercase tracking-wider shadow">
+            <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 bg-terracotta text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow">
               Hot
             </div>
           ` : ''}
@@ -1328,3 +1335,382 @@ Please schedule a site inspection.`;
     document.getElementById('lead-form').reset();
   }
 }
+
+// ==================== 1. WISHLIST SYSTEM ====================
+let wishlist = JSON.parse(localStorage.getItem('lb_wishlist') || '[]');
+
+function isWishlisted(id) {
+  return wishlist.includes(Number(id));
+}
+
+function toggleWishlist(id, event) {
+  if (event) event.stopPropagation();
+  const numId = Number(id);
+  const index = wishlist.indexOf(numId);
+  if (index > -1) {
+    wishlist.splice(index, 1);
+    showWishlistToast('Removed from Wishlist');
+  } else {
+    wishlist.push(numId);
+    showWishlistToast('Added to Wishlist ❤️');
+  }
+  localStorage.setItem('lb_wishlist', JSON.stringify(wishlist));
+  updateWishlistBadges();
+
+  // If plants are rendered, refresh grid to reflect heart states
+  if (allPlants && allPlants.length > 0) {
+    renderPlantsGrid(filteredPlants.length > 0 ? filteredPlants : allPlants);
+  }
+  // If wishlist drawer is open, re-render its list
+  renderWishlistItems();
+}
+
+function updateWishlistBadges() {
+  const count = wishlist.length;
+  const badgeH = document.getElementById('wishlist-count-badge');
+  const badgeM = document.getElementById('menu-wishlist-badge');
+  const badgeD = document.getElementById('wishlist-drawer-badge');
+
+  if (badgeH) badgeH.textContent = count;
+  if (badgeM) badgeM.textContent = count;
+  if (badgeD) badgeD.textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
+}
+
+function toggleWishlistDrawer(show) {
+  const drawer = document.getElementById('wishlist-drawer');
+  if (!drawer) return;
+  if (show) {
+    renderWishlistItems();
+    drawer.classList.remove('hidden');
+  } else {
+    drawer.classList.add('hidden');
+  }
+}
+
+function renderWishlistItems() {
+  const container = document.getElementById('wishlist-items-container');
+  if (!container) return;
+
+  if (wishlist.length === 0) {
+    container.innerHTML = `
+      <div class="py-16 text-center text-charcoal-500 text-xs space-y-2">
+        <div class="text-4xl">❤️</div>
+        <div class="font-serif-luxury font-bold text-forest-900 text-sm">Aapki Wishlist Khali Hai</div>
+        <p class="text-[11px] text-charcoal-400">Apne pasandeeda paudon ko dil (❤️) par click kar ke save karein.</p>
+        <button onclick="toggleWishlistDrawer(false); navigateToPage('shop')" class="text-xs text-forest-800 font-bold underline mt-2">Explore Plants</button>
+      </div>
+    `;
+    return;
+  }
+
+  const items = allPlants.filter(p => wishlist.includes(Number(p.id)));
+
+  container.innerHTML = items.map(plant => `
+    <div class="flex items-center gap-3 p-3 rounded-2xl bg-cream-50 border border-cream-200">
+      <img src="${plant.images[0] || 'https://images.unsplash.com/photo-1545241047-6083a3684587?q=80&w=200'}" alt="${plant.name}" class="w-14 h-14 object-cover rounded-xl shadow-xs">
+      <div class="flex-grow">
+        <div class="text-[10px] text-charcoal-400 italic">${plant.botanical_name || ''}</div>
+        <div class="font-bold text-xs text-forest-900 line-clamp-1">${plant.name}</div>
+        <div class="text-xs font-bold text-forest-800 mt-0.5">Rs. ${plant.price.toLocaleString()}</div>
+      </div>
+      <div class="flex flex-col gap-1.5 items-end">
+        <button onclick="quickAddToCart(${plant.id}); toggleWishlist(${plant.id});" class="bg-forest-800 hover:bg-forest-700 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition" title="Move to Cart">
+          + Cart
+        </button>
+        <button onclick="toggleWishlist(${plant.id})" class="text-[10px] text-charcoal-400 hover:text-rose-600 transition" title="Remove">
+          ✕ Remove
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function moveAllWishlistToCart() {
+  if (wishlist.length === 0) return;
+  wishlist.forEach(id => {
+    quickAddToCart(id);
+  });
+  wishlist = [];
+  localStorage.setItem('lb_wishlist', JSON.stringify(wishlist));
+  updateWishlistBadges();
+  renderWishlistItems();
+  toggleWishlistDrawer(false);
+  toggleCartDrawer(true);
+}
+
+function showWishlistToast(msg) {
+  let toast = document.getElementById('wishlist-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'wishlist-toast';
+    toast.className = 'fixed top-20 right-4 z-50 bg-forest-900 text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-xl border border-forest-700 transition-all duration-300 opacity-0 transform translate-y-2 pointer-events-none flex items-center gap-2';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = msg;
+  toast.classList.remove('opacity-0', 'translate-y-2');
+  setTimeout(() => {
+    toast.classList.add('opacity-0', 'translate-y-2');
+  }, 2200);
+}
+
+// ==================== 2. LANDSCAPING COST CALCULATOR ====================
+function updateLandscapeCalc() {
+  const plotRadio = document.querySelector('input[name="calc_plot"]:checked');
+  const plotType = plotRadio ? plotRadio.value : '5marla';
+  const turfSelect = document.getElementById('calc-turf-type');
+  const turfType = turfSelect ? turfSelect.value : 'bermuda';
+  const palmsSlider = document.getElementById('calc-palms-slider');
+  const palmsCount = palmsSlider ? parseInt(palmsSlider.value, 10) : 2;
+
+  const rockeryCheck = document.getElementById('calc-add-rockery');
+  const lightsCheck = document.getElementById('calc-add-lights');
+  const sprinklersCheck = document.getElementById('calc-add-sprinklers');
+
+  // Lawn Area in Sq Ft
+  let areaSqFt = 500;
+  if (plotType === '10marla') areaSqFt = 1200;
+  if (plotType === '1kanal') areaSqFt = 2500;
+  if (plotType === 'farmhouse') areaSqFt = 5000;
+
+  // Turf rate per sq ft
+  let turfRate = 45; // American Bermuda
+  if (turfType === 'dhaka') turfRate = 55;
+  if (turfType === 'zoysia') turfRate = 75;
+
+  const turfCost = areaSqFt * turfRate;
+  const palmsCost = palmsCount * 18000;
+
+  let addonsCost = 0;
+  if (rockeryCheck && rockeryCheck.checked) addonsCost += 45000;
+  if (lightsCheck && lightsCheck.checked) addonsCost += 25000;
+  if (sprinklersCheck && sprinklersCheck.checked) addonsCost += 35000;
+
+  const totalCost = turfCost + palmsCost + addonsCost;
+
+  // Update UI Labels
+  const palmsLabel = document.getElementById('calc-palms-count');
+  if (palmsLabel) palmsLabel.textContent = `${palmsCount} ${palmsCount === 1 ? 'Tree' : 'Trees'} (Rs. ${palmsCost.toLocaleString()})`;
+
+  const sumTurf = document.getElementById('calc-summary-turf');
+  if (sumTurf) sumTurf.textContent = `Rs. ${turfCost.toLocaleString()} (${areaSqFt} sq ft)`;
+
+  const sumPalms = document.getElementById('calc-summary-palms');
+  if (sumPalms) sumPalms.textContent = `Rs. ${palmsCost.toLocaleString()}`;
+
+  const sumAddons = document.getElementById('calc-summary-addons');
+  if (sumAddons) sumAddons.textContent = `Rs. ${addonsCost.toLocaleString()}`;
+
+  const totalLabel = document.getElementById('calc-total-price');
+  if (totalLabel) totalLabel.textContent = `Rs. ${totalCost.toLocaleString()}`;
+}
+
+function sendLandscapeQuoteWhatsApp() {
+  const plotRadio = document.querySelector('input[name="calc_plot"]:checked');
+  const plotType = plotRadio ? plotRadio.value.toUpperCase() : '5 MARLA';
+  const turfSelect = document.getElementById('calc-turf-type');
+  const turfText = turfSelect ? turfSelect.options[turfSelect.selectedIndex].text : 'American Bermuda';
+  const palmsSlider = document.getElementById('calc-palms-slider');
+  const palmsCount = palmsSlider ? palmsSlider.value : '2';
+
+  const rockery = document.getElementById('calc-add-rockery')?.checked ? 'Yes (+Rockery & Fountain)' : 'No';
+  const lights = document.getElementById('calc-add-lights')?.checked ? 'Yes (+Night Spotlights)' : 'No';
+  const sprinklers = document.getElementById('calc-add-sprinklers')?.checked ? 'Yes (+Automated Sprinklers)' : 'No';
+
+  const total = document.getElementById('calc-total-price')?.textContent || 'Rs. 128,500';
+
+  const text = `🏛️ *Lahore Botanica - Landscaping 3D Design Request*
+----------------------------------------
+*Plot / Lawn Size:* ${plotType}
+*Turf Selection:* ${turfText}
+*Date Palms:* ${palmsCount} Mature Trees
+*Rockery & Fountain:* ${rockery}
+*Night Lighting:* ${lights}
+*Sprinkler System:* ${sprinklers}
+----------------------------------------
+*Estimated Total:* ${total}
+----------------------------------------
+Please schedule a site inspection and provide 3D CAD proposal.`;
+
+  window.open(`https://wa.me/923008456789?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+// ==================== 3. DR. BOTANICA - LAHORE PLANT DOCTOR ====================
+const plantDoctorIssues = {
+  yellow_leaves: {
+    title: '🍂 Peele Pattay (Yellowing Foliage / Chlorosis)',
+    cause: 'Lahore ke underground hard tap water me salts zyada hona aur drainage hole block hone se root suffocation.',
+    first24: '⚡ Agle 4 din tak paani foran band karein. Mitti ki upper satah ko lakri ki stick se halka sa khurad (aerate) dein taake hawa jarhon tak pohnchay.',
+    organicRemedy: '🍃 Har 15 din baad 1 chamach Epsom Salt (Magnesium Sulfate) 1 liter paani me ghol kar patton par spray karein.',
+    whatsappMsg: 'Doctor Botanica, mere pauday ke patte peele ho rahe hain. Please check advise dein.'
+  },
+  drooping: {
+    title: '🥀 Murjhaye Pattay (Heat Stress & Transpiration Shock)',
+    cause: 'May-July me Lahore ka 44°C taapmaan patton ki nami ko jazb kar leta hai ya pauda direct dopehar ki dhoop me rakha hai.',
+    first24: '⚡ Pauday ko dopehar ki direct dhoop se foran hata kar shaded porch ya indoor bright spot par shift karein aur patton par thanda paani spray karein.',
+    organicRemedy: '🍃 Mitti ke upar 1 inch dry tree leaves ya coconut husk ki mulch bicha dein taake mitti ka paani bhap na bane.',
+    whatsappMsg: 'Doctor Botanica, mera pauda garmi se murjha gaya hai. Emergency revival method bata dein.'
+  },
+  mealybugs: {
+    title: '⚪ Safed Kapas Ke Keeray (Mealybugs & Scale Attack)',
+    cause: 'Lahore ke monsoon aur October ke mahine me nami ke bais safed keeray tano aur patton ke joron me anday dete hain.',
+    first24: '⚡ Ear-bud ko 70% surgical spirit ya dettol mixed water me dabo kar safed keeron ko manually ragar kar saaf karein.',
+    organicRemedy: '🍃 1 liter paani me 5ml pure Neem Oil aur 2 drop dishwashing liquid mila kar har 5 din baad shaam ke waqt spray karein.',
+    whatsappMsg: 'Doctor Botanica, paudon par safed mealybugs ka hamla hai. Certified organic pesticide guide karein.'
+  },
+  brown_tips: {
+    title: '🟫 Jali Hui Nokain (Brown Crispy Tips & Leaf Burn)',
+    cause: 'Lahore November Smog ka zahreela PM2.5 aur AC rooms ki shadeed dry air patton ke edges ko jala deti hai.',
+    first24: '⚡ Jali hui nokon ko saaf qainchi se trim karein. Room me paani ka bowl rakhein taake natural humidity barh sakay.',
+    organicRemedy: '🍃 Haftay me ek martaba subah 8 baje fresh filtered paani se foliage spray karein taake smog ki layer dhul jaye.',
+    whatsappMsg: 'Doctor Botanica, patton ke kinaray jal rahe hain smog ki waja se. Kese bachayein?'
+  },
+  bud_drop: {
+    title: '🌺 Kaliyon Ka Girna (Premature Bud & Flower Drop)',
+    cause: 'Desi Motia aur Jasmine ki location ko baar baar tabdeel karna ya potassium aur phosphorus ki shadeed kami.',
+    first24: '⚡ Pauday ki jagah mutasir na karein. Full 6 ghante subah se dopehar ki roshni me fix rakh dein.',
+    organicRemedy: '🍃 2 kele ke chilkon ko 3 din paani me bhigo kar rakhein (banana peel tea). Yeh potassium-rich liquid mitti me dalein.',
+    whatsappMsg: 'Doctor Botanica, phoolon ki kaliyan khilne se pehle gir rahi hain. Khaad ka formula bata dein.'
+  }
+};
+
+function diagnosePlantIssue(key) {
+  document.querySelectorAll('.doctor-symptom-card').forEach(btn => {
+    btn.classList.remove('active', 'border-forest-800', 'bg-cream-100');
+    if (btn.getAttribute('data-symptom') === key) {
+      btn.classList.add('active', 'border-forest-800', 'bg-cream-100');
+    }
+  });
+
+  const issue = plantDoctorIssues[key] || plantDoctorIssues.yellow_leaves;
+  const box = document.getElementById('doctor-diagnosis-box');
+  if (!box) return;
+
+  box.innerHTML = `
+    <div class="space-y-3">
+      <div class="flex items-center justify-between border-b border-cream-200 pb-2">
+        <h4 class="font-bold text-sm sm:text-base text-forest-900">${issue.title}</h4>
+        <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Lahore Climate Verified</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <div class="p-3 rounded-xl bg-white border border-cream-200">
+          <div class="font-bold text-amber-800 mb-1">🔍 Lahore Root Cause:</div>
+          <p class="text-charcoal-700 leading-relaxed">${issue.cause}</p>
+        </div>
+        <div class="p-3 rounded-xl bg-white border border-cream-200">
+          <div class="font-bold text-rose-700 mb-1">⚡ First 24-Hours Action:</div>
+          <p class="text-charcoal-700 leading-relaxed">${issue.first24}</p>
+        </div>
+        <div class="p-3 rounded-xl bg-white border border-cream-200">
+          <div class="font-bold text-emerald-800 mb-1">🍃 Organic Lahore Remedy:</div>
+          <p class="text-charcoal-700 leading-relaxed">${issue.organicRemedy}</p>
+        </div>
+      </div>
+
+      <div class="pt-2 flex flex-wrap items-center justify-between gap-2">
+        <span class="text-[11px] text-charcoal-500 italic">Kya pauday ki halat mazeed kharab ho rahi hai?</span>
+        <a href="https://wa.me/923008456789?text=${encodeURIComponent(issue.whatsappMsg)}" target="_blank" class="btn-whatsapp px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+          <span>Consult Dr. Botanica on WhatsApp (Free)</span>
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+// ==================== 4. CUSTOMER REVIEWS SYSTEM ====================
+let userReviews = JSON.parse(localStorage.getItem('lb_user_reviews') || '[]');
+
+function openReviewModal() {
+  const modal = document.getElementById('review-modal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeReviewModal() {
+  const modal = document.getElementById('review-modal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function submitCustomerReview(e) {
+  e.preventDefault();
+  const name = document.getElementById('rev-name').value.trim();
+  const area = document.getElementById('rev-area').value;
+  const rating = parseInt(document.getElementById('rev-rating').value, 10);
+  const comment = document.getElementById('rev-comment').value.trim();
+
+  const newReview = {
+    id: Date.now(),
+    name,
+    area,
+    rating,
+    comment,
+    date: 'Just now'
+  };
+
+  userReviews.unshift(newReview);
+  localStorage.setItem('lb_user_reviews', JSON.stringify(userReviews));
+  closeReviewModal();
+  document.getElementById('customer-review-form').reset();
+  renderUserReviews();
+  showWishlistToast('Shukriya! Aapka review publish ho gaya ⭐');
+}
+
+function renderUserReviews() {
+  const container = document.getElementById('user-submitted-reviews');
+  if (!container) return;
+
+  if (userReviews.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = userReviews.map(r => {
+    const initials = r.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'LB';
+    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+
+    return `
+      <div class="card-elevation p-4 sm:p-5 rounded-2xl flex flex-col justify-between border-2 border-forest-600/30 bg-emerald-50/20">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-amber-500 text-xs">${stars}</span>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Recent Review</span>
+          </div>
+          <p class="text-xs text-charcoal-700 leading-relaxed italic">
+            "${r.comment}"
+          </p>
+        </div>
+        <div class="pt-3 border-t border-cream-200 mt-3 flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-forest-800 text-white text-xs font-bold flex items-center justify-center">${initials}</div>
+          <div>
+            <div class="text-xs font-bold text-forest-900 leading-none">${r.name}</div>
+            <div class="text-[10px] text-charcoal-500 mt-0.5">${r.area}, Lahore</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ==================== 5. LAHORE AQI SMOG FILTER ====================
+function filterByAQI() {
+  navigateToPage('shop');
+  // Auto search air purifying plants
+  const searchInput = document.getElementById('hero-search-input');
+  if (searchInput) {
+    searchInput.value = 'Air Purifier';
+  }
+  // Filter category indoor or air purifier
+  filterByCategory('indoor');
+  const target = document.getElementById('plants-section');
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// Initializations on load
+document.addEventListener('DOMContentLoaded', () => {
+  updateWishlistBadges();
+  updateLandscapeCalc();
+  diagnosePlantIssue('yellow_leaves');
+  renderUserReviews();
+});
+
