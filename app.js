@@ -1706,6 +1706,70 @@ function filterByAQI() {
   }
 }
 
+// ==================== 6. INSTITUTIONAL FREE PLANT REQUEST & MEMBERSHIP ====================
+function submitInstitutionalRequest(e) {
+  e.preventDefault();
+  const name = document.getElementById('inst-name')?.value.trim();
+  const type = document.getElementById('inst-type')?.value;
+  const contact = document.getElementById('inst-contact')?.value.trim();
+  const phone = document.getElementById('inst-phone')?.value.trim();
+  const city = document.getElementById('inst-city')?.value.trim();
+  const qty = document.getElementById('inst-qty')?.value;
+
+  const req = {
+    id: Date.now(),
+    name,
+    type,
+    contact,
+    phone,
+    city,
+    qty,
+    date: new Date().toISOString()
+  };
+
+  const existing = JSON.parse(localStorage.getItem('lb_institutional_requests') || '[]');
+  existing.unshift(req);
+  localStorage.setItem('lb_institutional_requests', JSON.stringify(existing));
+
+  const successMsg = document.getElementById('inst-success-msg');
+  if (successMsg) successMsg.classList.remove('hidden');
+
+  const text = `🌿 *Free Plant Distribution Application - Green Pakistan*
+----------------------------------------
+*Institution:* ${name}
+*Category:* ${type}
+*Contact Officer:* ${contact}
+*WhatsApp/Phone:* ${phone}
+*City/Region:* ${city}
+*Allocation Needed:* ${qty} Plants
+----------------------------------------
+Attn: Directorate of Operations (Jahangir Alam & Balaj Ahmad)
+Grow Green Heaven & Lahore Botanica Initiative`;
+
+  setTimeout(() => {
+    window.open(`https://wa.me/923008456789?text=${encodeURIComponent(text)}`, '_blank');
+  }, 600);
+}
+
+function pledgeMembership(tier) {
+  const amounts = {
+    Bronze: 'Rs. 5,000 - 15,000',
+    Silver: 'Rs. 15,000 - 30,000',
+    Gold: 'Rs. 30,000 - 45,000',
+    Diamond: 'Rs. 50,000+'
+  };
+
+  const amount = amounts[tier] || 'Custom Donation';
+  const text = `🌿 *Green Patron Membership Pledge - Grow Green Pakistan*
+----------------------------------------
+*Selected Tier:* ${tier} Patron
+*Contribution Level:* ${amount}
+----------------------------------------
+I would like to join the Green Pakistan initiative to support free plant distribution across educational and public institutions. Please provide details for membership enrollment.`;
+
+  window.open(`https://wa.me/923008456789?text=${encodeURIComponent(text)}`, '_blank');
+}
+
 // Initializations on load
 document.addEventListener('DOMContentLoaded', () => {
   updateWishlistBadges();
