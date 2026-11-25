@@ -1778,3 +1778,62 @@ document.addEventListener('DOMContentLoaded', () => {
   renderUserReviews();
 });
 
+
+
+// ==================== 7. REAL PROJECT GALLERY & LIGHTBOX ====================
+function filterProjectGallery(category, btnElement) {
+  const cards = document.querySelectorAll('.project-card');
+  cards.forEach(card => {
+    if (category === 'all' || card.dataset.category === category) {
+      card.style.display = 'block';
+      card.style.opacity = '1';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  const pills = document.querySelectorAll('.portfolio-filter-pill');
+  pills.forEach(p => p.classList.remove('active-pill'));
+  if (btnElement) {
+    btnElement.classList.add('active-pill');
+  }
+}
+
+function openProjectLightbox(imageSrc, title, tag, desc) {
+  const modal = document.getElementById('project-lightbox');
+  const img = document.getElementById('lightbox-img');
+  const titleEl = document.getElementById('lightbox-title');
+  const tagEl = document.getElementById('lightbox-tag');
+  const descEl = document.getElementById('lightbox-desc');
+  const waBtn = document.getElementById('lightbox-whatsapp-btn');
+
+  if (img) img.src = imageSrc;
+  if (titleEl) titleEl.textContent = title;
+  if (tagEl) tagEl.textContent = tag;
+  if (descEl) descEl.textContent = desc;
+
+  if (waBtn) {
+    const waText = `Hello Lahore Botanica! I saw your project "${title}" in ${tag}. I would like to inquire about similar landscaping for my property.`;
+    waBtn.href = `https://wa.me/923008456789?text=${encodeURIComponent(waText)}`;
+  }
+
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeProjectLightbox() {
+  const modal = document.getElementById('project-lightbox');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+// Close lightbox on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeProjectLightbox();
+  }
+});

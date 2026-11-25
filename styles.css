@@ -275,3 +275,30 @@ body {
   color: #F59E0B;
 }
 
+
+
+/* Portfolio Filter Pills & Project Lightbox */
+.portfolio-filter-pill {
+  background-color: rgba(19, 62, 43, 0.08);
+  color: #133E2B;
+  border: 1px solid rgba(19, 62, 43, 0.18);
+  cursor: pointer;
+  user-select: none;
+}
+.portfolio-filter-pill:hover {
+  background-color: rgba(19, 62, 43, 0.15);
+}
+.portfolio-filter-pill.active-pill {
+  background-color: #133E2B !important;
+  color: #FFFFFF !important;
+  border-color: #133E2B !important;
+  box-shadow: 0 4px 12px rgba(19, 62, 43, 0.28);
+}
+
+.project-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -6px rgba(19, 62, 43, 0.15), 0 8px 12px -6px rgba(0, 0, 0, 0.06);
+}
