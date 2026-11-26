@@ -1,3 +1,64 @@
+// ==================== SITE SETTINGS (from admin panel) ====================
+window.SITE_SETTINGS = {
+  store_name: 'Lahore Botanica & Landscaping', whatsapp: '923008456789',
+  phone: '+92 300 8456789', delivery_fee: '250', free_delivery_min: '3500'
+};
+const DEFAULT_WHATSAPP = '923008456789';
+const DEFAULT_PHONE_DISPLAY = '+92 300 8456789';
+
+function waNumber() {
+  return String(window.SITE_SETTINGS.whatsapp || DEFAULT_WHATSAPP).replace(/\D/g, '');
+}
+function deliveryFeeFor(subtotal) {
+  if (!subtotal) return 0;
+  const min = parseInt(window.SITE_SETTINGS.free_delivery_min, 10) || 3500;
+  const fee = parseInt(window.SITE_SETTINGS.delivery_fee, 10);
+  return subtotal >= min ? 0 : (Number.isNaN(fee) ? 250 : fee);
+}
+function escapeHtml(v) {
+  return String(v === null || v === undefined ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// Rewrites hardcoded WhatsApp / phone links in static HTML to the numbers saved in admin settings
+function applySiteSettingsToDom() {
+  const wa = waNumber();
+  const phoneDigits = String(window.SITE_SETTINGS.phone || '').replace(/\D/g, '');
+  document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
+    a.href = a.href.replace(/wa\.me\/\d+/, `wa.me/${wa}`);
+  });
+  if (phoneDigits) {
+    document.querySelectorAll('a[href^="tel:"]').forEach(a => { a.href = `tel:+${phoneDigits}`; });
+  }
+  document.querySelectorAll('[data-setting]').forEach(el => {
+    const v = window.SITE_SETTINGS[el.dataset.setting];
+    if (v) el.textContent = v;
+  });
+  if (window.SITE_SETTINGS.phone && window.SITE_SETTINGS.phone !== DEFAULT_PHONE_DISPLAY) {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node.nodeValue.includes(DEFAULT_PHONE_DISPLAY)) {
+        node.nodeValue = node.nodeValue.split(DEFAULT_PHONE_DISPLAY).join(window.SITE_SETTINGS.phone);
+      }
+    }
+  }
+}
+
+async function loadSiteSettings() {
+  try {
+    const res = await fetch('/api/settings');
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) Object.assign(window.SITE_SETTINGS, data.settings);
+    }
+  } catch (e) { /* offline / static preview: keep defaults */ }
+  applySiteSettingsToDom();
+  if (typeof cart !== 'undefined' && typeof updateCartBadge === 'function') updateCartBadge();
+}
+document.addEventListener('DOMContentLoaded', loadSiteSettings);
+
 // app.js - Fast Storefront, Multi-Angle Shopify-Style Modal, Cart & Landscaping Slider
 const FALLBACK_PLANTS = [
   {
@@ -325,13 +386,7 @@ let touchStartX = 0;
 let touchEndX = 0;
 
 function getCombinedPlants() {
-  let custom = [];
-  try {
-    custom = JSON.parse(localStorage.getItem('lahore_botanica_custom_plants') || '[]');
-  } catch (e) {
-    custom = [];
-  }
-  return [...custom, ...FALLBACK_PLANTS];
+  return [...FALLBACK_PLANTS];
 }
 
 // Initialize on page load & URL Routing
@@ -496,21 +551,61 @@ function calculatePlantCare() {
   resultBox.classList.remove('hidden');
 }
 
-function checkOrderStatus() {
-  const input = document.getElementById('track-order-input')?.value.trim();
+async function checkOrderStatus() {
+  const input = document.getElementById('track-order-input')?.value.trim() || '';
+  const phoneInput = document.getElementById('track-phone-input')?.value.trim() || '';
   const box = document.getElementById('track-result-box');
-  const numEl = document.getElementById('track-order-num');
-  const statusEl = document.getElementById('track-order-status');
-
-  if (!input) {
-    alert('Please enter your Order # or Phone Number.');
+  if (!box) return;
+  if (!input && !phoneInput) {
+    alert('Order number ya phone number likhein.');
     return;
   }
+  const looksLikeOrder = /^LB-/i.test(input);
+  const params = new URLSearchParams();
+  if (looksLikeOrder) params.set('q', input);
+  const phone = looksLikeOrder ? phoneInput : (input || phoneInput);
+  if (phone) params.set('phone', phone);
 
-  if (box && numEl && statusEl) {
-    numEl.innerText = `Order: ${input.toUpperCase()}`;
-    statusEl.innerText = 'Out for Delivery with Lahore Rider';
-    box.classList.remove('hidden');
+  box.classList.remove('hidden');
+  box.innerHTML = '<div class="p-4 text-center text-charcoal-500">Searching...</div>';
+
+  const STEPS = ['Pending', 'Confirmed', 'Dispatched', 'Delivered'];
+  const STEP_LABELS = {
+    Pending: 'Order received', Confirmed: 'Confirmed & plants being prepared',
+    Dispatched: 'Out for delivery', Delivered: 'Delivered'
+  };
+  try {
+    const res = await fetch(`/api/orders/track?${params}`);
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Tracking unavailable');
+    if (!data.orders.length) {
+      box.innerHTML = `<div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800">Is number se koi order nahi mila. Order # check karein ya <a class="underline font-bold" target="_blank" href="https://wa.me/${waNumber()}?text=${encodeURIComponent('Mera order track karna hai: ' + (input || phoneInput))}">WhatsApp par poochein</a>.</div>`;
+      return;
+    }
+    box.innerHTML = data.orders.map(o => {
+      const cancelled = o.status === 'Cancelled';
+      const reached = STEPS.indexOf(o.status);
+      const timeline = cancelled
+        ? '<div class="text-red-700 font-bold">✕ Order cancel ho gaya</div>'
+        : STEPS.map((st, i) => {
+            const h = (o.history || []).filter(x => x.status === st).pop();
+            const done = i <= reached;
+            return `<div class="flex items-start gap-2 ${done ? 'text-emerald-700 font-bold' : 'text-charcoal-400'}">
+              <span>${done ? '✓' : '○'}</span>
+              <span>${STEP_LABELS[st]}${h ? `<span class="block text-[10px] font-normal text-charcoal-500">${new Date(h.at).toLocaleString('en-PK')}${h.note ? ' • ' + escapeHtml(h.note) : ''}</span>` : ''}</span>
+            </div>`;
+          }).join('');
+      return `<div class="p-4 rounded-2xl bg-cream-50 border border-cream-200 space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-cream-200">
+          <span class="font-bold text-forest-900">${escapeHtml(o.order_number)}</span>
+          <span class="font-bold px-2.5 py-0.5 rounded-full ${cancelled ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}">${escapeHtml(o.status)}</span>
+        </div>
+        <div class="text-charcoal-600">${o.items.map(i => `${i.quantity}x ${escapeHtml(i.name)}`).join(', ')} • <b>Rs. ${Number(o.total).toLocaleString()}</b></div>
+        <div class="space-y-2">${timeline}</div>
+      </div>`;
+    }).join('');
+  } catch (err) {
+    box.innerHTML = `<div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800">Tracking abhi available nahi. <a class="underline font-bold" target="_blank" href="https://wa.me/${waNumber()}?text=${encodeURIComponent('Mera order track karna hai: ' + (input || phoneInput))}">WhatsApp par status poochein</a>.</div>`;
   }
 }
 
@@ -1017,7 +1112,7 @@ function orderModalItemViaWhatsApp() {
 -------------------------
 Please confirm stock availability and delivery schedule in Lahore.`;
 
-  const url = `https://wa.me/923008456789?text=${encodeURIComponent(text)}`;
+  const url = `https://wa.me/${waNumber()}?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
 }
 
@@ -1140,7 +1235,7 @@ function removeCartItem(index) {
 }
 
 function updateCartTotals(subtotal) {
-  const deliveryFee = subtotal === 0 ? 0 : (subtotal >= 3500 ? 0 : 250);
+  const deliveryFee = deliveryFeeFor(subtotal);
   const total = subtotal + deliveryFee;
 
   const subEl = document.getElementById('cart-subtotal');
@@ -1169,8 +1264,11 @@ async function placeOnlineOrder() {
     return;
   }
 
+  const btn = document.getElementById('place-order-btn');
+  if (btn) { btn.disabled = true; btn.dataset.label = btn.innerHTML; btn.innerHTML = 'Placing order...'; }
+  let res;
   try {
-    const res = await fetch('/api/orders', {
+    res = await fetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1179,28 +1277,57 @@ async function placeOnlineOrder() {
         customer_address: address,
         lahore_area: area,
         payment_method: payment,
-        items: cart
+        notes: document.getElementById('cust-notes')?.value.trim() || '',
+        items: cart.map(i => ({ id: i.id, size: i.size, pot: i.pot, quantity: i.quantity }))
       })
     });
-
-    if (!res.ok) {
-      throw new Error(`Server status: ${res.status}`);
-    }
-
-    const data = await res.json();
-    if (data.success) {
-      alert(`🎉 Order Confirmed!\nYour Order Number is: ${data.order_number}\nTotal Amount: Rs. ${data.total.toLocaleString()}\nOur nursery rider will deliver to your Lahore address.`);
-      cart = [];
-      saveCart();
-      toggleCartDrawer(false);
-      return;
-    } else {
-      throw new Error(data.error || 'Server rejected order');
-    }
   } catch (err) {
-    // If backend API is offline or not present on static Vercel, forward to WhatsApp automatically!
-    checkoutViaWhatsApp();
+    res = null;
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = btn.dataset.label || btn.innerHTML; }
   }
+
+  // Server unreachable (static preview / offline): fall back to WhatsApp ordering
+  if (!res || res.status === 404 || res.status >= 500) {
+    checkoutViaWhatsApp();
+    return;
+  }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.success) {
+    alert(data.error || 'Order place nahi ho saka. Dobara try karein.');
+    if (res.status === 400 || res.status === 409) fetchPlants();
+    return;
+  }
+  cart = [];
+  saveCart();
+  toggleCartDrawer(false);
+  showOrderConfirmation(data, { name, phone, address, area, payment });
+}
+
+function showOrderConfirmation(order, customer) {
+  const itemsText = order.items.map(i => `• ${i.quantity}x ${i.name} (${i.size}) - Rs. ${i.line_total.toLocaleString()}`).join('\n');
+  const waText = `🌿 *Order Confirmation - ${window.SITE_SETTINGS.store_name}*\n*Order #:* ${order.order_number}\n*Name:* ${customer.name}\n*Phone:* ${customer.phone}\n*Address:* ${customer.address}, ${customer.area}\n${itemsText}\n*Total:* Rs. ${order.total.toLocaleString()} (${customer.payment.toUpperCase()})`;
+  let modal = document.getElementById('order-confirm-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'order-confirm-modal';
+    modal.className = 'fixed inset-0 z-[60] bg-black/60 flex items-center justify-center p-4';
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = `
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl space-y-3">
+      <div class="text-4xl">🎉</div>
+      <h3 class="font-serif-luxury text-xl font-bold text-forest-900">Order Confirmed!</h3>
+      <p class="text-xs text-charcoal-600">Aapka order number:</p>
+      <div class="font-mono text-lg font-bold text-forest-900 bg-cream-100 rounded-xl py-2 select-all">${escapeHtml(order.order_number)}</div>
+      <p class="text-xs text-charcoal-600">Total: <b>Rs. ${order.total.toLocaleString()}</b>${order.delivery_fee ? ` (delivery Rs. ${order.delivery_fee} shamil)` : ' • Free delivery'}</p>
+      <p class="text-[11px] text-charcoal-500">Hamari team jald call karke confirm karegi. Is number se aap "Track Order" page par status dekh sakte hain.</p>
+      <div class="flex flex-col gap-2 pt-2">
+        <a target="_blank" rel="noopener" href="https://wa.me/${waNumber()}?text=${encodeURIComponent(waText)}" class="btn-whatsapp px-4 py-3 rounded-xl text-xs font-bold">WhatsApp par confirm karein</a>
+        <button onclick="document.getElementById('order-confirm-modal').remove(); navigateToPage('track-order'); document.getElementById('track-order-input').value='${escapeHtml(order.order_number)}'; checkOrderStatus();" class="px-4 py-2.5 rounded-xl border border-cream-200 text-xs font-bold text-forest-900">Order track karein</button>
+        <button onclick="document.getElementById('order-confirm-modal').remove()" class="text-xs text-charcoal-500 py-1">Close</button>
+      </div>
+    </div>`;
 }
 
 function checkoutViaWhatsApp() {
@@ -1215,7 +1342,7 @@ function checkoutViaWhatsApp() {
   }
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const delivery = subtotal >= 3500 ? 0 : 250;
+  const delivery = deliveryFeeFor(subtotal);
   const total = subtotal + delivery;
 
   let itemsText = cart.map(item => `• ${item.quantity}x ${item.name} (${item.size}, ${item.pot}) - Rs. ${(item.price * item.quantity).toLocaleString()}`).join('\n');
@@ -1236,7 +1363,7 @@ ${itemsText}
 -------------------------
 Please confirm order dispatch.`;
 
-  window.open(`https://wa.me/923008456789?text=${encodeURIComponent(text)}`, '_blank');
+  window.open(`https://wa.me/${waNumber()}?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 // ==================== INTERACTIVE BEFORE / AFTER SLIDER ====================
@@ -1309,33 +1436,37 @@ async function submitLandscapingLead(e) {
   const location = document.getElementById('lead-location').value.trim();
   const message = document.getElementById('lead-message').value.trim();
 
+  let res = null;
   try {
-    const res = await fetch('/api/leads', {
+    res = await fetch('/api/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        source: 'consultation',
         client_name: name,
         client_phone: phone,
         project_type: project,
         area_size: size,
         location: location,
-        message: message
+        message: message,
+        preferred_date: document.getElementById('lead-date')?.value || '',
+        website: document.getElementById('lead-website')?.value || ''
       })
     });
+  } catch (err) { res = null; }
 
-    if (!res.ok) throw new Error(`Status: ${res.status}`);
-
-    const data = await res.json();
-    if (data.success) {
-      document.getElementById('lead-success-msg').classList.remove('hidden');
-      document.getElementById('lead-form').reset();
-      return;
-    } else {
-      throw new Error(data.error || 'Failed');
-    }
-  } catch (err) {
-    // WhatsApp direct connection for static hosting
-    const text = `🌿 *New Landscaping Consultation Request*
+  if (res && res.ok) {
+    document.getElementById('lead-success-msg').classList.remove('hidden');
+    e.target.reset();
+    return;
+  }
+  if (res && res.status >= 400 && res.status < 500 && res.status !== 404) {
+    const data = await res.json().catch(() => ({}));
+    alert(data.error || 'Form submit nahi ho saka.');
+    return;
+  }
+  // Server unreachable: send the request on WhatsApp instead
+  const text = `🌿 *New Landscaping Consultation Request*
 -------------------------
 *Client:* ${name}
 *Phone:* ${phone}
@@ -1344,10 +1475,9 @@ async function submitLandscapingLead(e) {
 *Details:* ${message || 'Standard inquiry'}
 -------------------------
 Please schedule a site inspection.`;
-    window.open(`https://wa.me/923008456789?text=${encodeURIComponent(text)}`, '_blank');
-    document.getElementById('lead-success-msg').classList.remove('hidden');
-    document.getElementById('lead-form').reset();
-  }
+  window.open(`https://wa.me/${waNumber()}?text=${encodeURIComponent(text)}`, '_blank');
+  document.getElementById('lead-success-msg').classList.remove('hidden');
+  e.target.reset();
 }
 
 // ==================== 1. WISHLIST SYSTEM ====================
@@ -1545,7 +1675,7 @@ function sendLandscapeQuoteWhatsApp() {
 ----------------------------------------
 Please schedule a site inspection and provide 3D CAD proposal.`;
 
-  window.open(`https://wa.me/923008456789?text=${encodeURIComponent(text)}`, '_blank');
+  window.open(`https://wa.me/${waNumber()}?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 // ==================== 3. DR. BOTANICA - LAHORE PLANT DOCTOR ====================
@@ -1623,7 +1753,7 @@ function diagnosePlantIssue(key) {
 
       <div class="pt-2 flex flex-wrap items-center justify-between gap-2">
         <span class="text-[11px] text-charcoal-500 italic">Kya pauday ki halat mazeed kharab ho rahi hai?</span>
-        <a href="https://wa.me/923008456789?text=${encodeURIComponent(issue.whatsappMsg)}" target="_blank" class="btn-whatsapp px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+        <a href="https://wa.me/${waNumber()}?text=${encodeURIComponent(issue.whatsappMsg)}" target="_blank" class="btn-whatsapp px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
           <span>Consult Dr. Botanica on WhatsApp (Free)</span>
         </a>
       </div>
@@ -1632,7 +1762,19 @@ function diagnosePlantIssue(key) {
 }
 
 // ==================== 4. CUSTOMER REVIEWS SYSTEM ====================
-let userReviews = JSON.parse(localStorage.getItem('lb_user_reviews') || '[]');
+let userReviews = [];
+
+async function loadApprovedReviews() {
+  try {
+    const res = await fetch('/api/reviews');
+    const data = await res.json();
+    if (data.success) {
+      userReviews = data.reviews;
+      renderUserReviews();
+    }
+  } catch (e) { /* keep static testimonials only */ }
+}
+document.addEventListener('DOMContentLoaded', loadApprovedReviews);
 
 function openReviewModal() {
   const modal = document.getElementById('review-modal');
@@ -1644,28 +1786,26 @@ function closeReviewModal() {
   if (modal) modal.classList.add('hidden');
 }
 
-function submitCustomerReview(e) {
+async function submitCustomerReview(e) {
   e.preventDefault();
-  const name = document.getElementById('rev-name').value.trim();
-  const area = document.getElementById('rev-area').value;
-  const rating = parseInt(document.getElementById('rev-rating').value, 10);
-  const comment = document.getElementById('rev-comment').value.trim();
-
-  const newReview = {
-    id: Date.now(),
-    name,
-    area,
-    rating,
-    comment,
-    date: 'Just now'
+  const payload = {
+    name: document.getElementById('rev-name').value.trim(),
+    area: document.getElementById('rev-area').value,
+    rating: parseInt(document.getElementById('rev-rating').value, 10),
+    comment: document.getElementById('rev-comment').value.trim()
   };
-
-  userReviews.unshift(newReview);
-  localStorage.setItem('lb_user_reviews', JSON.stringify(userReviews));
-  closeReviewModal();
-  document.getElementById('customer-review-form').reset();
-  renderUserReviews();
-  showWishlistToast('Shukriya! Aapka review publish ho gaya ⭐');
+  try {
+    const res = await fetch('/api/reviews', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success) throw new Error(data.error || 'Review submit nahi ho saka');
+    closeReviewModal();
+    document.getElementById('customer-review-form').reset();
+    showWishlistToast('Shukriya! Approval ke baad aapka review show hoga ⭐');
+  } catch (err) {
+    alert(err.message === 'Failed to fetch' ? 'Server se rabta nahi ho saka. Baad mein try karein.' : err.message);
+  }
 }
 
 function renderUserReviews() {
@@ -1678,8 +1818,9 @@ function renderUserReviews() {
   }
 
   container.innerHTML = userReviews.map(r => {
-    const initials = r.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'LB';
-    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+    const initials = escapeHtml(String(r.name).split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'LB');
+    const rating = Math.min(5, Math.max(1, parseInt(r.rating, 10) || 5));
+    const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
 
     return `
       <div class="card-elevation p-4 sm:p-5 rounded-2xl flex flex-col justify-between border-2 border-forest-600/30 bg-emerald-50/20">
@@ -1689,14 +1830,14 @@ function renderUserReviews() {
             <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Recent Review</span>
           </div>
           <p class="text-xs text-charcoal-700 leading-relaxed italic">
-            "${r.comment}"
+            "${escapeHtml(r.comment)}"
           </p>
         </div>
         <div class="pt-3 border-t border-cream-200 mt-3 flex items-center gap-2.5">
           <div class="w-7 h-7 rounded-full bg-forest-800 text-white text-xs font-bold flex items-center justify-center">${initials}</div>
           <div>
-            <div class="text-xs font-bold text-forest-900 leading-none">${r.name}</div>
-            <div class="text-[10px] text-charcoal-500 mt-0.5">${r.area}, Lahore</div>
+            <div class="text-xs font-bold text-forest-900 leading-none">${escapeHtml(r.name)}</div>
+            <div class="text-[10px] text-charcoal-500 mt-0.5">${escapeHtml(r.area)}</div>
           </div>
         </div>
       </div>
@@ -1741,9 +1882,19 @@ function submitInstitutionalRequest(e) {
     date: new Date().toISOString()
   };
 
-  const existing = JSON.parse(localStorage.getItem('lb_institutional_requests') || '[]');
-  existing.unshift(req);
-  localStorage.setItem('lb_institutional_requests', JSON.stringify(existing));
+  fetch('/api/leads', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      source: 'institutional',
+      client_name: `${contact || name} (${name})`,
+      client_phone: phone,
+      project_type: `Free plants: ${type || 'Institution'}`,
+      area_size: `${qty || ''} plants`,
+      location: city,
+      message: `Institution: ${name}\nContact person: ${contact}`
+    })
+  }).catch(() => {});
 
   const successMsg = document.getElementById('inst-success-msg');
   if (successMsg) successMsg.classList.remove('hidden');
@@ -1761,7 +1912,7 @@ Attn: Directorate of Operations (Jahangir Alam & Balaj Ahmad)
 Grow Green Heaven & Lahore Botanica Initiative`;
 
   setTimeout(() => {
-    window.open(`https://wa.me/923008456789?text=${encodeURIComponent(text)}`, '_blank');
+    window.open(`https://wa.me/${waNumber()}?text=${encodeURIComponent(text)}`, '_blank');
   }, 600);
 }
 
@@ -1781,7 +1932,7 @@ function pledgeMembership(tier) {
 ----------------------------------------
 I would like to join the Green Pakistan initiative to support free plant distribution across educational and public institutions. Please provide details for membership enrollment.`;
 
-  window.open(`https://wa.me/923008456789?text=${encodeURIComponent(text)}`, '_blank');
+  window.open(`https://wa.me/${waNumber()}?text=${encodeURIComponent(text)}`, '_blank');
 }
 
 // Initializations on load
@@ -1828,7 +1979,7 @@ function openProjectLightbox(imageSrc, title, tag, desc) {
 
   if (waBtn) {
     const waText = `Hello Lahore Botanica! I saw your project "${title}" in ${tag}. I would like to inquire about similar landscaping for my property.`;
-    waBtn.href = `https://wa.me/923008456789?text=${encodeURIComponent(waText)}`;
+    waBtn.href = `https://wa.me/${waNumber()}?text=${encodeURIComponent(waText)}`;
   }
 
   if (modal) {
@@ -1908,7 +2059,7 @@ function renderCitiesDirectory(filtered) {
         <div class="text-4xl mb-3">📍</div>
         <h3 class="font-serif-luxury text-xl font-bold text-forest-900">Shehr Ya Society Nahi Mili</h3>
         <p class="text-xs text-charcoal-500 mt-1">Lekin hum pure Pakistan me serve karte hain! WhatsApp par direct rabta karein.</p>
-        <a href="https://wa.me/923008456789?text=Hello%20Lahore%20Botanica,%20I%20want%20landscaping%20in%20my%20city" target="_blank" class="mt-4 inline-flex btn-whatsapp px-5 py-2.5 rounded-xl text-xs font-bold">Inquire on WhatsApp</a>
+        <a href="https://wa.me/${waNumber()}?text=Hello%20Lahore%20Botanica,%20I%20want%20landscaping%20in%20my%20city" target="_blank" class="mt-4 inline-flex btn-whatsapp px-5 py-2.5 rounded-xl text-xs font-bold">Inquire on WhatsApp</a>
       </div>
     `;
     return;
@@ -2015,7 +2166,7 @@ function renderCityDetailPage(slug) {
             ${city.metaDesc}
           </p>
           <div class="flex flex-wrap items-center gap-3 pt-2">
-            <a href="https://wa.me/923008456789?text=${encodeURIComponent('Hello Lahore Botanica! I am interested in landscaping and plant delivery services in ' + city.name + '. Please share packages and site visit schedule.')}" target="_blank" class="btn-whatsapp px-5 py-3 rounded-xl text-xs font-bold flex items-center gap-2 shadow-md">
+            <a href="https://wa.me/${waNumber()}?text=${encodeURIComponent('Hello Lahore Botanica! I am interested in landscaping and plant delivery services in ' + city.name + '. Please share packages and site visit schedule.')}" target="_blank" class="btn-whatsapp px-5 py-3 rounded-xl text-xs font-bold flex items-center gap-2 shadow-md">
               <span>Book ${city.name} Consultation on WhatsApp</span>
             </a>
             <a href="#landscape-packages" onclick="navigateToPage('landscaping'); return false;" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-3 rounded-xl text-xs transition border border-white/20">
@@ -2161,7 +2312,7 @@ function renderCityDetailPage(slug) {
           Apne plot ka size aur requirements WhatsApp par share karein. Hamare landscape architects aapko 3D layout aur exact turnkey estimate faraham karengay.
         </p>
         <div class="flex items-center justify-center gap-3 pt-2">
-          <a href="https://wa.me/923008456789?text=${encodeURIComponent('Hello Lahore Botanica! I want to consult for a landscape project in ' + city.name + '. Please contact me.')}" target="_blank" class="btn-whatsapp px-6 py-3 rounded-xl text-xs font-bold shadow-lg">
+          <a href="https://wa.me/${waNumber()}?text=${encodeURIComponent('Hello Lahore Botanica! I want to consult for a landscape project in ' + city.name + '. Please contact me.')}" target="_blank" class="btn-whatsapp px-6 py-3 rounded-xl text-xs font-bold shadow-lg">
             Chat with ${city.name} Landscape Architect
           </a>
           <button onclick="navigateToPage('cities')" class="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition border border-white/20">

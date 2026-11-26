@@ -1,10 +1,12 @@
 {
   "name": "lahore-botanica",
   "version": "1.0.0",
-  "description": "High-speed custom plant e-commerce and landscaping architecture platform for Lahore, Pakistan.",
+  "description": "Plant e-commerce + landscaping CRM platform (Lahore Botanica).",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build:css": "tailwindcss -c tailwind/main.config.js -i tailwind/input.css -o public/tailwind.css --minify && tailwindcss -c tailwind/city.config.js -i tailwind/input.css -o public/city.css --minify"
   },
   "keywords": [
     "plants",
@@ -14,5 +16,15 @@
     "ecommerce"
   ],
   "author": "Lahore Botanica",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@electric-sql/pglite": "^0.6.0",
+    "pg": "^8.23.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
 }

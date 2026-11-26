@@ -4,48 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Lahore Botanica | Premium Plants & Bespoke Landscaping Lahore</title>
+  <meta name="description" content="Lahore Botanica: plant nursery with home delivery and turnkey landscaping for villas, farmhouses, rooftops and commercial sites in Lahore and across Pakistan. Free site consultation.">
+  <link rel="canonical" href="https://lahore-botanica.vercel.app/">
+  <meta name="theme-color" content="#133E2B">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lahore-botanica.vercel.app/">
+  <meta property="og:title" content="Lahore Botanica | Premium Plants & Bespoke Landscaping">
+  <meta property="og:description" content="Plant nursery with home delivery and turnkey landscaping for villas, farmhouses and rooftops. Free site consultation.">
+  <meta property="og:image" content="https://lahore-botanica.vercel.app/images/projects/villa-landscaping.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["HomeAndConstructionBusiness", "Store"],
+    "name": "Lahore Botanica & Landscaping",
+    "url": "https://lahore-botanica.vercel.app/",
+    "image": "https://lahore-botanica.vercel.app/images/projects/villa-landscaping.jpg",
+    "telephone": "+923008456789",
+    "priceRange": "PKR",
+    "address": { "@type": "PostalAddress", "addressLocality": "Lahore", "addressRegion": "Punjab", "addressCountry": "PK" },
+    "areaServed": ["Lahore", "Karachi", "Islamabad", "Rawalpindi", "Faisalabad", "Multan", "Peshawar", "Sialkot", "Gujranwala"]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            forest: {
-              900: '#0C2419',
-              800: '#133E2B',
-              700: '#1B5239',
-              600: '#267351',
-              500: '#348B64',
-            },
-            terracotta: {
-              DEFAULT: '#C86D51',
-              dark: '#B0573C',
-              light: '#F7EAE5',
-            },
-            cream: {
-              50: '#FCFAF6',
-              100: '#F6F2EA',
-              200: '#EAE3D5',
-            },
-            charcoal: {
-              900: '#191B18',
-              700: '#3E433C',
-              500: '#6B7267',
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="/tailwind.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#133E2B">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
+  <link rel="apple-touch-icon" href="/icons/icon-180.png">
 </head>
 <body class="min-h-screen flex flex-col pb-20 md:pb-0">
 
@@ -1580,6 +1572,12 @@
               <textarea id="lead-message" rows="2" placeholder="Details about grass type, palms, water fountain..." class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700"></textarea>
             </div>
 
+            <div>
+              <label class="block text-xs font-bold text-charcoal-700 mb-1">Preferred Site Visit Date (Optional)</label>
+              <input type="date" id="lead-date" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+            </div>
+            <input type="text" id="lead-website" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+
             <button type="submit" class="w-full bg-forest-800 hover:bg-forest-700 text-white font-bold py-3.5 rounded-xl text-xs tracking-wider uppercase transition shadow-md flex items-center justify-center gap-2">
               <span>Schedule Free Site Consultation</span>
             </button>
@@ -1735,33 +1733,15 @@
         <div class="bg-white p-5 sm:p-8 rounded-3xl border border-cream-200 shadow-md space-y-4">
           <h3 class="font-serif-luxury text-lg font-bold text-forest-900">Enter Order Reference</h3>
           <div class="flex flex-col sm:flex-row gap-2">
-            <input type="text" id="track-order-input" placeholder="e.g. LB-1001 or 0300-1234567" class="flex-grow text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+            <input type="text" id="track-order-input" placeholder="Order # (e.g. LB-261126-AB12C) ya phone number" onkeydown="if(event.key==='Enter')checkOrderStatus()" class="flex-grow text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
             <button onclick="checkOrderStatus()" class="bg-forest-800 hover:bg-forest-700 text-white px-6 py-3 rounded-xl text-xs font-bold tracking-wider uppercase transition shadow flex-shrink-0">
               Track Order
             </button>
           </div>
 
+          <input type="tel" id="track-phone-input" placeholder="Order ke waqt diya gaya phone number (optional)" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
           <!-- Dynamic Result Box -->
-          <div id="track-result-box" class="hidden p-4 rounded-2xl bg-cream-50 border border-cream-200 space-y-3 text-xs">
-            <div class="flex items-center justify-between pb-2 border-b border-cream-200">
-              <span class="font-bold text-forest-900" id="track-order-num">Order #LB-1001</span>
-              <span class="font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full" id="track-order-status">Confirmed</span>
-            </div>
-            <div class="space-y-2 text-charcoal-700">
-              <div class="flex items-center gap-2 text-emerald-700 font-bold">
-                <span>✓</span> <span>1. Order Received in System</span>
-              </div>
-              <div class="flex items-center gap-2 text-emerald-700 font-bold">
-                <span>✓</span> <span>2. Healthy Plants Selected & Potted</span>
-              </div>
-              <div class="flex items-center gap-2 text-emerald-700 font-bold">
-                <span>✓</span> <span>3. Packed in Shock-Proof Nursery Crates</span>
-              </div>
-              <div class="flex items-center gap-2 text-charcoal-500 font-medium">
-                <span>⏳</span> <span>4. Handed over to Lahore Delivery Rider</span>
-              </div>
-            </div>
-          </div>
+          <div id="track-result-box" class="hidden space-y-3 text-xs"></div>
         </div>
 
         <!-- Lahore Delivery Zones & Timeline -->
@@ -2216,122 +2196,89 @@
       </div>
     </div> <!-- END PAGE 7: page-city-detail -->
 
-    <div id="page-admin" class="page-view hidden bg-slate-50 py-6 sm:py-8 px-3 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-5 sm:space-y-6">
-      
+    <div id="page-admin" class="page-view hidden bg-slate-50 py-6 sm:py-8 px-3 sm:px-6 lg:px-8 min-h-[70vh]">
+
+    <!-- Admin Login Gate -->
+    <div id="admin-login-gate" class="max-w-sm mx-auto mt-10 bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-8">
+      <div class="text-center mb-5">
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-forest-800 text-white flex items-center justify-center text-xl">🔒</div>
+        <h1 class="mt-3 text-xl font-serif-luxury font-bold text-slate-900">Admin Login</h1>
+        <p class="text-xs text-slate-500 mt-1">Sirf authorized staff ke liye</p>
+      </div>
+      <form onsubmit="adminLogin(event)" class="space-y-3 text-xs">
+        <input type="password" id="admin-password" required autocomplete="current-password" placeholder="Password" class="w-full p-3 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
+        <p id="admin-login-error" class="hidden text-red-600 font-semibold"></p>
+        <button type="submit" class="w-full py-3 rounded-xl bg-forest-800 hover:bg-forest-700 text-white font-bold transition">Login</button>
+        <button type="button" onclick="showStorefront()" class="w-full py-2 text-slate-500 font-semibold">← Store par wapas</button>
+      </form>
+    </div>
+
+    <div id="admin-content" class="hidden max-w-7xl mx-auto space-y-5 sm:space-y-6">
+
       <!-- Admin Header -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
           <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-forest-700">Internal Management Portal</span>
-          <h1 class="text-xl sm:text-3xl font-serif-luxury font-bold text-slate-900">Lahore Botanica Dashboard</h1>
+          <h1 class="text-xl sm:text-3xl font-serif-luxury font-bold text-slate-900"><span data-setting="store_name">Lahore Botanica</span> Dashboard</h1>
+          <p id="admin-db-warning" class="hidden mt-1 text-[11px] font-bold text-red-600">⚠️ Database temporary hai (DATABASE_URL set nahi). Orders aur leads save nahi rahenge.</p>
         </div>
-        <div class="flex items-center gap-2 sm:gap-3">
-          <button onclick="openAddPlantModal()" class="bg-forest-800 hover:bg-forest-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span>+ Add Plant</span>
-          </button>
-          <button onclick="showStorefront()" class="bg-white border border-slate-300 text-slate-700 text-xs font-bold px-3.5 py-2 rounded-xl hover:bg-slate-100 transition shadow-sm">
-            View Store
-          </button>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="openAddPlantModal()" class="bg-forest-800 hover:bg-forest-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition">+ Add Plant</button>
+          <button onclick="loadAdminDashboard()" class="bg-white border border-slate-300 text-slate-700 text-xs font-bold px-3.5 py-2 rounded-xl hover:bg-slate-100 transition">↻ Refresh</button>
+          <button onclick="showStorefront()" class="bg-white border border-slate-300 text-slate-700 text-xs font-bold px-3.5 py-2 rounded-xl hover:bg-slate-100 transition">View Store</button>
+          <button onclick="adminLogout()" class="bg-white border border-red-200 text-red-600 text-xs font-bold px-3.5 py-2 rounded-xl hover:bg-red-50 transition">Logout</button>
         </div>
       </div>
 
-      <!-- Stats Counters -->
+      <!-- Stats -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <div class="text-[11px] sm:text-xs font-semibold text-slate-500">Total Store Revenue</div>
+          <div class="text-[11px] sm:text-xs font-semibold text-slate-500">Delivered Revenue</div>
           <div id="stat-revenue" class="text-xl sm:text-2xl font-bold text-forest-900 mt-1">Rs. 0</div>
-          <div class="text-[10px] text-emerald-600 font-semibold mt-0.5">Cash on Delivery & Bank</div>
+          <div id="stat-pipeline" class="text-[10px] text-emerald-600 font-semibold mt-0.5">Rs. 0 in pipeline</div>
         </div>
         <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <div class="text-[11px] sm:text-xs font-semibold text-slate-500">Active Catalog</div>
-          <div id="stat-plants" class="text-xl sm:text-2xl font-bold text-forest-900 mt-1">10</div>
-          <div class="text-[10px] text-slate-500 mt-0.5">Multi-angle variants</div>
-        </div>
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <div class="text-[11px] sm:text-xs font-semibold text-slate-500">Orders Received</div>
+          <div class="text-[11px] sm:text-xs font-semibold text-slate-500">Orders</div>
           <div id="stat-orders" class="text-xl sm:text-2xl font-bold text-forest-900 mt-1">0</div>
-          <div class="text-[10px] text-slate-500 mt-0.5">Lahore delivery zone</div>
+          <div id="stat-pending-orders" class="text-[10px] text-amber-600 font-semibold mt-0.5">0 need action</div>
         </div>
         <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div class="text-[11px] sm:text-xs font-semibold text-slate-500">Landscaping Leads</div>
-          <div id="stat-leads" class="text-xl sm:text-2xl font-bold text-terracotta mt-1">3</div>
-          <div id="stat-new-leads" class="text-[10px] text-terracotta font-semibold mt-0.5">Pending Visits</div>
+          <div id="stat-leads" class="text-xl sm:text-2xl font-bold text-terracotta mt-1">0</div>
+          <div id="stat-new-leads" class="text-[10px] text-terracotta font-semibold mt-0.5">0 new</div>
+        </div>
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-[11px] sm:text-xs font-semibold text-slate-500">Catalog</div>
+          <div id="stat-plants" class="text-xl sm:text-2xl font-bold text-forest-900 mt-1">0</div>
+          <div id="stat-low-stock" class="text-[10px] text-slate-500 font-semibold mt-0.5">0 low stock</div>
         </div>
       </div>
 
-      <!-- Admin Tabs Navigation -->
+      <!-- Tabs -->
       <div class="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto scrollbar-none">
-        <button onclick="switchAdminTab('plants')" id="tab-btn-plants" class="admin-tab-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold bg-forest-800 text-white whitespace-nowrap transition">Plants</button>
-        <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="admin-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-200 text-slate-700 whitespace-nowrap transition">Orders</button>
-        <button onclick="switchAdminTab('leads')" id="tab-btn-leads" class="admin-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-200 text-slate-700 whitespace-nowrap transition">Leads CRM</button>
+        <button onclick="switchAdminTab('leads')" id="tab-btn-leads" class="admin-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition">Leads CRM</button>
+        <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="admin-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition">Orders</button>
+        <button onclick="switchAdminTab('plants')" id="tab-btn-plants" class="admin-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition">Plants</button>
+        <button onclick="switchAdminTab('reviews')" id="tab-btn-reviews" class="admin-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition">Reviews <span id="badge-reviews" class="hidden ml-1 px-1.5 rounded-full bg-terracotta text-white text-[10px]"></span></button>
+        <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="admin-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition">Settings</button>
       </div>
 
-      <!-- Tab 1: Plants Management -->
-      <div id="admin-tab-plants" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-3 sm:p-4 border-b border-slate-200 flex items-center justify-between">
-          <h2 class="font-bold text-xs sm:text-sm text-slate-900">All Plants in Database</h2>
-          <span class="text-[10px] sm:text-xs text-slate-500">Edit prices, photos & stock</span>
+      <!-- Leads CRM -->
+      <div id="admin-tab-leads" class="admin-tab bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-3 sm:p-4 border-b border-slate-200 flex flex-wrap gap-2 items-center justify-between">
+          <h2 class="font-bold text-xs sm:text-sm text-slate-900">Landscaping & Institutional Leads</h2>
+          <div class="flex items-center gap-2">
+            <input id="leads-search" oninput="renderAdminLeadsTable()" placeholder="Search naam / phone / area" class="text-xs p-2 rounded-lg border border-slate-300 w-44">
+            <select id="leads-filter" onchange="renderAdminLeadsTable()" class="text-xs p-2 rounded-lg border border-slate-300 bg-white"></select>
+            <a href="/api/export/leads.csv" class="text-xs font-bold px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">⬇ CSV</a>
+          </div>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">
             <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
               <tr>
-                <th class="p-2.5 sm:p-3">Plant</th>
-                <th class="p-2.5 sm:p-3">Category</th>
-                <th class="p-2.5 sm:p-3">Price</th>
-                <th class="p-2.5 sm:p-3">Stock</th>
-                <th class="p-2.5 sm:p-3">Climate / Water</th>
-                <th class="p-2.5 sm:p-3">Hardiness</th>
-                <th class="p-2.5 sm:p-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="admin-plants-tbody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Tab 2: Orders Management -->
-      <div id="admin-tab-orders" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-3 sm:p-4 border-b border-slate-200 flex items-center justify-between">
-          <h2 class="font-bold text-xs sm:text-sm text-slate-900">Customer Orders</h2>
-          <span class="text-[10px] sm:text-xs text-slate-500">Manage dispatch & COD deliveries</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
-              <tr>
-                <th class="p-2.5 sm:p-3">Order #</th>
-                <th class="p-2.5 sm:p-3">Customer</th>
-                <th class="p-2.5 sm:p-3">Area</th>
-                <th class="p-2.5 sm:p-3">Items Summary</th>
-                <th class="p-2.5 sm:p-3">Total</th>
-                <th class="p-2.5 sm:p-3">Status</th>
-                <th class="p-2.5 sm:p-3">Action</th>
-              </tr>
-            </thead>
-            <tbody id="admin-orders-tbody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Tab 3: Landscaping Leads CRM -->
-      <div id="admin-tab-leads" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-3 sm:p-4 border-b border-slate-200 flex items-center justify-between">
-          <h2 class="font-bold text-xs sm:text-sm text-slate-900">Landscaping Inquiries</h2>
-          <span class="text-[10px] sm:text-xs text-slate-500">Contact leads directly on WhatsApp</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
-              <tr>
-                <th class="p-2.5 sm:p-3">Client</th>
-                <th class="p-2.5 sm:p-3">Phone</th>
-                <th class="p-2.5 sm:p-3">Project</th>
-                <th class="p-2.5 sm:p-3">Location</th>
-                <th class="p-2.5 sm:p-3">Details</th>
-                <th class="p-2.5 sm:p-3">Status</th>
-                <th class="p-2.5 sm:p-3">WhatsApp</th>
+                <th class="p-3">Date</th><th class="p-3">Client</th><th class="p-3">Project</th><th class="p-3">Details</th>
+                <th class="p-3">Estimate (Rs)</th><th class="p-3">Status</th><th class="p-3">Notes</th><th class="p-3">Action</th>
               </tr>
             </thead>
             <tbody id="admin-leads-tbody" class="divide-y divide-slate-100"></tbody>
@@ -2339,108 +2286,145 @@
         </div>
       </div>
 
-      <!-- Add / Edit Plant Admin Modal -->
+      <!-- Orders -->
+      <div id="admin-tab-orders" class="admin-tab hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-3 sm:p-4 border-b border-slate-200 flex flex-wrap gap-2 items-center justify-between">
+          <h2 class="font-bold text-xs sm:text-sm text-slate-900">Customer Orders</h2>
+          <div class="flex items-center gap-2">
+            <input id="orders-search" oninput="renderAdminOrdersTable()" placeholder="Order # / naam / phone" class="text-xs p-2 rounded-lg border border-slate-300 w-44">
+            <select id="orders-filter" onchange="renderAdminOrdersTable()" class="text-xs p-2 rounded-lg border border-slate-300 bg-white"></select>
+            <a href="/api/export/orders.csv" class="text-xs font-bold px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">⬇ CSV</a>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+              <tr>
+                <th class="p-3">Order #</th><th class="p-3">Customer</th><th class="p-3">Address</th><th class="p-3">Items</th>
+                <th class="p-3">Total</th><th class="p-3">Payment</th><th class="p-3">Status</th><th class="p-3">Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-tbody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Plants -->
+      <div id="admin-tab-plants" class="admin-tab hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-3 sm:p-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 class="font-bold text-xs sm:text-sm text-slate-900">Nursery Catalog</h2>
+          <span class="text-[10px] sm:text-xs text-slate-500">Prices, stock, photos aur variants</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+              <tr>
+                <th class="p-3">Plant</th><th class="p-3">Category</th><th class="p-3">Price</th><th class="p-3">Stock</th>
+                <th class="p-3">Visibility</th><th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-plants-tbody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Reviews -->
+      <div id="admin-tab-reviews" class="admin-tab hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-3 sm:p-4 border-b border-slate-200">
+          <h2 class="font-bold text-xs sm:text-sm text-slate-900">Customer Reviews</h2>
+          <p class="text-[11px] text-slate-500">Approve karne ke baad hi review website par show hota hai</p>
+        </div>
+        <div id="admin-reviews-list" class="divide-y divide-slate-100"></div>
+      </div>
+
+      <!-- Settings -->
+      <div id="admin-tab-settings" class="admin-tab hidden bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+        <h2 class="font-bold text-sm text-slate-900 mb-1">Business Settings</h2>
+        <p class="text-[11px] text-slate-500 mb-4">Yahan badla hua WhatsApp number aur naam poori website par apply hota hai.</p>
+        <form id="admin-settings-form" onsubmit="saveSettings(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs max-w-3xl">
+          <label class="block"><span class="font-bold text-slate-700">Business Name</span><input name="store_name" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+          <label class="block"><span class="font-bold text-slate-700">WhatsApp Number (923XXXXXXXXX)</span><input name="whatsapp" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+          <label class="block"><span class="font-bold text-slate-700">Display Phone</span><input name="phone" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+          <label class="block"><span class="font-bold text-slate-700">Email</span><input name="email" type="email" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+          <label class="block sm:col-span-2"><span class="font-bold text-slate-700">Address</span><input name="address" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+          <label class="block"><span class="font-bold text-slate-700">Delivery Fee (Rs)</span><input name="delivery_fee" type="number" min="0" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+          <label class="block"><span class="font-bold text-slate-700">Free Delivery Above (Rs)</span><input name="free_delivery_min" type="number" min="0" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+          <div class="sm:col-span-2 flex items-center gap-3 pt-2">
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-forest-800 hover:bg-forest-700 text-white font-bold">Save Settings</button>
+            <span id="settings-saved-msg" class="hidden text-emerald-700 font-bold">✓ Saved</span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+      <!-- Add / Edit Plant Modal -->
       <div id="admin-plant-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-8 shadow-2xl border border-slate-200">
           <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
             <h3 id="admin-modal-title" class="font-serif-luxury font-bold text-lg sm:text-xl text-slate-900">Add New Plant</h3>
             <button onclick="closeAddPlantModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center font-bold">✕</button>
           </div>
-
           <form id="admin-plant-form" onsubmit="savePlantForm(event)" class="space-y-4 text-xs">
             <input type="hidden" id="form-plant-id">
-
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">English Name *</label>
-                <input type="text" id="form-name" required placeholder="e.g. Fiddle Leaf Fig" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Urdu Name</label>
-                <input type="text" id="form-urdu" placeholder="e.g. فڈل لیف فکس" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700" dir="rtl">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Botanical Name</label>
-                <input type="text" id="form-botanical" placeholder="e.g. Ficus Lyrata" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700 italic">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Category *</label>
-                <select id="form-category" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
+              <label class="block"><span class="font-bold text-slate-700">English Name *</span><input type="text" id="form-name" required class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+              <label class="block"><span class="font-bold text-slate-700">Urdu Name</span><input type="text" id="form-urdu" dir="rtl" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+              <label class="block"><span class="font-bold text-slate-700">Botanical Name</span><input type="text" id="form-botanical" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300 italic"></label>
+              <label class="block"><span class="font-bold text-slate-700">Category *</span>
+                <select id="form-category" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300">
                   <option value="indoor">Indoor Foliage</option>
                   <option value="flowering">Fragrant & Flowering</option>
                   <option value="trees_palms">Trees & Palms</option>
                   <option value="fruit_herbs">Fruit & Herbs</option>
                 </select>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Base Price (PKR) *</label>
-                <input type="number" id="form-price" required min="100" placeholder="e.g. 3200" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Stock Quantity *</label>
-                <input type="number" id="form-stock" required min="0" placeholder="e.g. 25" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Sunlight Requirement</label>
-                <select id="form-sunlight" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
-                  <option value="partial_shade">Partial Shade (Balcony / Bright Window)</option>
-                  <option value="full_sun">Full Sun (Direct Outdoor Dhoop)</option>
-                  <option value="low_light">Low Light (Indoor Room / Office)</option>
+              </label>
+              <label class="block"><span class="font-bold text-slate-700">Base Price (PKR) *</span><input type="number" id="form-price" required min="0" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+              <label class="block"><span class="font-bold text-slate-700">Stock *</span><input type="number" id="form-stock" required min="0" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></label>
+              <label class="block"><span class="font-bold text-slate-700">Sunlight</span>
+                <select id="form-sunlight" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300">
+                  <option value="partial_shade">Partial Shade</option>
+                  <option value="full_sun">Full Sun</option>
+                  <option value="low_light">Low Light</option>
                 </select>
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">Water Need</label>
-                <select id="form-water" class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
-                  <option value="moderate">Moderate (Haftay me 1-2 dafa)</option>
-                  <option value="low">Low (10-15 din me 1 dafa)</option>
-                  <option value="high">High (Daily paani)</option>
+              </label>
+              <label class="block"><span class="font-bold text-slate-700">Water Need</span>
+                <select id="form-water" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300">
+                  <option value="moderate">Moderate</option>
+                  <option value="low">Low</option>
+                  <option value="high">High</option>
                 </select>
-              </div>
-            </div>
-
-            <div>
-              <label class="block font-bold text-slate-700 mb-1">Image URLs (Multi-Angle comma separated)</label>
-              <input type="text" id="form-images" placeholder="https://..., https://..." class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700 font-mono text-[11px]">
-            </div>
-
-            <div>
-              <label class="block font-bold text-slate-700 mb-1">Plant Description & Care Details</label>
-              <textarea id="form-desc" rows="3" placeholder="Care details, benefits, fertilizer tips..." class="w-full p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700"></textarea>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-4 pt-2 border-t border-slate-200">
-              <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-700">
-                <input type="checkbox" id="form-hardy" checked class="rounded accent-forest-800">
-                <span>🌡️ Lahore Summer Hardy</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-700">
-                <input type="checkbox" id="form-pet" class="rounded accent-forest-800">
-                <span>🐾 Pet Friendly</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer font-semibold text-slate-700">
-                <input type="checkbox" id="form-featured" class="rounded accent-forest-800">
-                <span>⭐ Featured Hot Item</span>
               </label>
             </div>
-
+            <label class="block"><span class="font-bold text-slate-700">Image URLs (har line par aik)</span>
+              <textarea id="form-images" rows="3" placeholder="https://..." class="mt-1 w-full p-2.5 rounded-xl border border-slate-300 font-mono text-[11px]"></textarea>
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label class="block"><span class="font-bold text-slate-700">Sizes (Naam | extra price)</span>
+                <textarea id="form-sizes" rows="3" placeholder="Medium (2-3 ft) | 0&#10;Large (4-5 ft) | 2400" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300 font-mono text-[11px]"></textarea>
+              </label>
+              <label class="block"><span class="font-bold text-slate-700">Pots (Naam | extra price)</span>
+                <textarea id="form-pots" rows="3" placeholder="Nursery Pot | 0&#10;Terracotta | 750" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300 font-mono text-[11px]"></textarea>
+              </label>
+            </div>
+            <label class="block"><span class="font-bold text-slate-700">Description & Care</span>
+              <textarea id="form-desc" rows="3" class="mt-1 w-full p-2.5 rounded-xl border border-slate-300"></textarea>
+            </label>
+            <div class="flex flex-wrap items-center gap-4 pt-2 border-t border-slate-200 font-semibold text-slate-700">
+              <label class="flex items-center gap-2"><input type="checkbox" id="form-active" checked class="accent-forest-800"> Website par show</label>
+              <label class="flex items-center gap-2"><input type="checkbox" id="form-hardy" checked class="accent-forest-800"> 🌡️ Summer Hardy</label>
+              <label class="flex items-center gap-2"><input type="checkbox" id="form-pet" class="accent-forest-800"> 🐾 Pet Friendly</label>
+              <label class="flex items-center gap-2"><input type="checkbox" id="form-featured" class="accent-forest-800"> ⭐ Featured</label>
+            </div>
+            <p id="plant-form-error" class="hidden text-red-600 font-semibold"></p>
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
-              <button type="button" onclick="closeAddPlantModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold hover:bg-slate-100 transition">Cancel</button>
-              <button type="submit" class="px-5 py-2.5 rounded-xl bg-forest-800 hover:bg-forest-700 text-white font-bold transition shadow-md">Save Plant</button>
+              <button type="button" onclick="closeAddPlantModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold hover:bg-slate-100">Cancel</button>
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-forest-800 hover:bg-forest-700 text-white font-bold shadow-md">Save Plant</button>
             </div>
           </form>
         </div>
       </div>
 
-    </div> <!-- END PAGE 6: page-admin -->
+    </div> <!-- END page-admin -->
   </main> <!-- END MAIN APPLICATION CONTENT -->
 
   <!-- ==================== SHOPIFY-STYLE PRODUCT DETAIL MODAL (STRONGLY MOBILE OPTIMIZED) ==================== -->
@@ -2665,16 +2649,18 @@
               <option value="Other Lahore Area">Other Lahore Sector</option>
             </select>
             <input type="text" id="cust-address" placeholder="Complete Street Address *" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-forest-700">
+            <input type="text" id="cust-notes" placeholder="Delivery notes (optional) — e.g. gate number, time" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-forest-700">
             
             <select id="cust-payment" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-forest-700 font-semibold text-forest-900">
-              <option value="cod">Cash on Delivery (COD) in Lahore</option>
+              <option value="cod">Cash on Delivery (COD)</option>
               <option value="bank_transfer">Direct Bank Transfer</option>
-              <option value="jazzcash">JazzCash / EasyPaisa</option>
+              <option value="jazzcash">JazzCash</option>
+              <option value="easypaisa">EasyPaisa</option>
             </select>
           </div>
 
           <div class="grid grid-cols-2 gap-2 pt-1">
-            <button onclick="placeOnlineOrder()" class="bg-forest-800 hover:bg-forest-700 text-white py-2.5 sm:py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow">
+            <button id="place-order-btn" onclick="placeOnlineOrder()" class="bg-forest-800 hover:bg-forest-700 text-white py-2.5 sm:py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow">
               Place Order
             </button>
             <button onclick="checkoutViaWhatsApp()" class="btn-whatsapp py-2.5 sm:py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shadow">
