@@ -347,12 +347,26 @@ window.addEventListener('hashchange', handleRoute);
 window.addEventListener('popstate', handleRoute);
 
 function handleRoute() {
-  const hash = window.location.hash.replace('#', '') || 'shop';
-  navigateToPage(hash, false);
+  const rawHash = window.location.hash.replace('#', '') || 'shop';
+  
+  if (rawHash.startsWith('city-')) {
+    const slug = rawHash.replace('city-', '').toLowerCase();
+    renderCityDetailPage(slug);
+    navigateToPage('city-detail', false);
+    return;
+  }
+  
+  if (rawHash === 'cities') {
+    renderCitiesDirectory();
+    navigateToPage('cities', false);
+    return;
+  }
+  
+  navigateToPage(rawHash, false);
 }
 
 function navigateToPage(pageId, updateHash = true) {
-  const validPages = ['shop', 'landscaping', 'care-guide', 'track-order', 'about', 'admin'];
+  const validPages = ['shop', 'landscaping', 'care-guide', 'track-order', 'about', 'admin', 'cities', 'city-detail'];
   if (!validPages.includes(pageId)) pageId = 'shop';
 
   // Toggle page visibility
@@ -1835,5 +1849,337 @@ function closeProjectLightbox() {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeProjectLightbox();
+  }
+});
+
+
+// ==================== 8. PAKISTAN CITIES DIRECTORY & SEO ROUTING ====================
+
+function initCityDropdown() {
+  const list = document.getElementById('city-dropdown-list');
+  if (!list || typeof PAKISTAN_CITIES === 'undefined') return;
+
+  list.innerHTML = PAKISTAN_CITIES.map(c => `
+    <button onclick="navigateToCity('${c.slug}'); toggleCityDropdown(false);" class="w-full text-left px-3 py-2 rounded-xl hover:bg-cream-100 flex items-center justify-between transition group">
+      <div>
+        <div class="font-bold text-forest-900 text-xs group-hover:text-emerald-700">${c.name}</div>
+        <div class="text-[10px] text-charcoal-400">${c.province}</div>
+      </div>
+      <span class="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">${c.badge}</span>
+    </button>
+  `).join('');
+}
+
+function toggleCityDropdown(forceState) {
+  const menu = document.getElementById('city-dropdown-menu');
+  if (!menu) return;
+  if (typeof forceState === 'boolean') {
+    menu.classList.toggle('hidden', !forceState);
+  } else {
+    menu.classList.toggle('hidden');
+  }
+}
+
+// Close city dropdown on outside click
+document.addEventListener('click', (e) => {
+  const wrapper = document.getElementById('city-selector-wrapper');
+  if (wrapper && !wrapper.contains(e.target)) {
+    toggleCityDropdown(false);
+  }
+});
+
+function navigateToCity(slug) {
+  window.location.hash = `#city-${slug}`;
+}
+
+function selectCityFilter(slug) {
+  navigateToCity(slug);
+}
+
+function renderCitiesDirectory(filtered) {
+  const container = document.getElementById('cities-cards-container');
+  if (!container || typeof PAKISTAN_CITIES === 'undefined') return;
+
+  const list = filtered || PAKISTAN_CITIES;
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="col-span-full text-center py-12 bg-white rounded-3xl border border-cream-200 p-8">
+        <div class="text-4xl mb-3">📍</div>
+        <h3 class="font-serif-luxury text-xl font-bold text-forest-900">Shehr Ya Society Nahi Mili</h3>
+        <p class="text-xs text-charcoal-500 mt-1">Lekin hum pure Pakistan me serve karte hain! WhatsApp par direct rabta karein.</p>
+        <a href="https://wa.me/923008456789?text=Hello%20Lahore%20Botanica,%20I%20want%20landscaping%20in%20my%20city" target="_blank" class="mt-4 inline-flex btn-whatsapp px-5 py-2.5 rounded-xl text-xs font-bold">Inquire on WhatsApp</a>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = list.map(c => `
+    <div class="card-elevation bg-white rounded-3xl overflow-hidden border border-cream-200 flex flex-col justify-between group hover:shadow-2xl transition-all duration-300">
+      <div>
+        <div class="h-48 overflow-hidden relative cursor-pointer" onclick="navigateToCity('${c.slug}')">
+          <img src="${c.heroImage}" alt="${c.name} Landscaping" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='images/projects/villa-landscaping.jpg'">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4">
+            <div>
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/90 text-white text-[10px] font-bold backdrop-blur-sm shadow-xs">${c.badge}</span>
+              <h3 class="font-serif-luxury text-xl font-bold text-white mt-1">${c.name}</h3>
+              <p class="text-[11px] text-cream-100/90 leading-tight line-clamp-1">${c.tagline}</p>
+            </div>
+          </div>
+          <span class="absolute top-3 right-3 bg-forest-900/90 text-cream-50 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-forest-600">${c.estatesCount}</span>
+        </div>
+
+        <div class="p-5 space-y-3">
+          <!-- Top Societies Badges -->
+          <div>
+            <div class="text-[10px] uppercase font-bold tracking-wider text-charcoal-400 mb-1.5">Top Societies Covered:</div>
+            <div class="flex flex-wrap gap-1.5">
+              ${c.topSectors.slice(0, 4).map(s => `<span class="px-2 py-0.5 rounded-lg bg-cream-100 text-charcoal-700 text-[10px] font-medium">${s}</span>`).join('')}
+              ${c.topSectors.length > 4 ? `<span class="px-2 py-0.5 rounded-lg bg-forest-50 text-forest-800 text-[10px] font-bold">+${c.topSectors.length - 4} more</span>` : ''}
+            </div>
+          </div>
+
+          <!-- Climate & Turf Brief -->
+          <div class="p-3 rounded-2xl bg-cream-50 border border-cream-200/70 text-[11px] space-y-1">
+            <div class="text-charcoal-700"><strong class="text-forest-900">Recommended Turf:</strong> ${c.recommendedTurf}</div>
+            <div class="text-charcoal-700"><strong class="text-forest-900">Plant Delivery:</strong> ${c.deliveryTime}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-5 pt-0">
+        <button onclick="navigateToCity('${c.slug}')" class="w-full bg-forest-800 hover:bg-forest-700 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-sm flex items-center justify-center gap-1.5">
+          <span>Explore ${c.name} Hub & SEO Profile</span>
+          <span>&rarr;</span>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterCitiesDirectory(term) {
+  if (typeof PAKISTAN_CITIES === 'undefined') return;
+  const q = (term || '').trim().toLowerCase();
+  if (!q) {
+    renderCitiesDirectory();
+    return;
+  }
+
+  const filtered = PAKISTAN_CITIES.filter(c => {
+    return c.name.toLowerCase().includes(q) ||
+           c.province.toLowerCase().includes(q) ||
+           c.tagline.toLowerCase().includes(q) ||
+           c.keywords.toLowerCase().includes(q) ||
+           c.topSectors.some(s => s.toLowerCase().includes(q));
+  });
+
+  renderCitiesDirectory(filtered);
+}
+
+function renderCityDetailPage(slug) {
+  if (typeof PAKISTAN_CITIES === 'undefined') return;
+  const city = PAKISTAN_CITIES.find(c => c.slug === slug) || PAKISTAN_CITIES[0];
+  const container = document.getElementById('city-detail-content');
+  if (!container) return;
+
+  // Update document title for SEO
+  document.title = city.metaTitle;
+  
+  // Update header active label
+  const headerCityLabel = document.getElementById('header-city-name');
+  if (headerCityLabel) headerCityLabel.textContent = city.name;
+
+  container.innerHTML = `
+    <!-- Breadcrumb -->
+    <div class="bg-cream-100 border-b border-cream-200 py-2.5 px-4 sm:px-8">
+      <div class="max-w-7xl mx-auto flex items-center gap-2 text-xs text-charcoal-500 font-medium flex-wrap">
+        <a href="#shop" onclick="navigateToPage('shop'); return false;" class="hover:text-forest-800">Home</a>
+        <span>/</span>
+        <a href="#cities" onclick="navigateToPage('cities'); return false;" class="hover:text-forest-800">Pakistan Cities Hub</a>
+        <span>/</span>
+        <span class="text-forest-900 font-bold">${city.name} Landscaping Architecture</span>
+      </div>
+    </div>
+
+    <!-- City Hero -->
+    <section class="relative bg-gradient-to-b from-forest-900 via-forest-800 to-forest-900 text-cream-50 pt-10 sm:pt-16 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8 border-b border-forest-700">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] sm:text-xs font-bold border border-emerald-400/30">
+            <span>📍 ${city.name} Regional Division • ${city.province}</span>
+          </div>
+          <h1 class="font-serif-luxury text-3xl sm:text-5xl lg:text-5xl font-bold text-white leading-tight">
+            Turnkey Landscaping Architecture in <span class="italic font-normal text-terracotta">${city.name}</span>
+          </h1>
+          <p class="text-cream-100/90 text-xs sm:text-base leading-relaxed">
+            ${city.metaDesc}
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <a href="https://wa.me/923008456789?text=${encodeURIComponent('Hello Lahore Botanica! I am interested in landscaping and plant delivery services in ' + city.name + '. Please share packages and site visit schedule.')}" target="_blank" class="btn-whatsapp px-5 py-3 rounded-xl text-xs font-bold flex items-center gap-2 shadow-md">
+              <span>Book ${city.name} Consultation on WhatsApp</span>
+            </a>
+            <a href="#landscape-packages" onclick="navigateToPage('landscaping'); return false;" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-3 rounded-xl text-xs transition border border-white/20">
+              View National Packages
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20 relative group">
+            <img src="${city.heroImage}" alt="${city.name} Landscaping Projects" class="w-full h-72 sm:h-84 object-cover" onerror="this.src='images/projects/villa-landscaping.jpg'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-5">
+              <span class="text-xs text-emerald-300 font-bold">${city.estatesCount}</span>
+              <span class="text-white font-serif-luxury text-lg font-bold">${city.tagline}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Metrics Ribbon -->
+    <section class="py-5 bg-cream-100 border-b border-cream-200 px-3 sm:px-6">
+      <div class="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
+        <div class="p-3 bg-white rounded-2xl border border-cream-200">
+          <div class="text-[10px] text-charcoal-400 font-bold uppercase">Delivery Window</div>
+          <div class="font-bold text-forest-900 text-sm mt-0.5">${city.deliveryTime}</div>
+        </div>
+        <div class="p-3 bg-white rounded-2xl border border-cream-200">
+          <div class="text-[10px] text-charcoal-400 font-bold uppercase">Site Inspection</div>
+          <div class="font-bold text-forest-900 text-sm mt-0.5">${city.siteVisit}</div>
+        </div>
+        <div class="p-3 bg-white rounded-2xl border border-cream-200">
+          <div class="text-[10px] text-charcoal-400 font-bold uppercase">Proven Track Record</div>
+          <div class="font-bold text-forest-900 text-sm mt-0.5">${city.estatesCount}</div>
+        </div>
+        <div class="p-3 bg-white rounded-2xl border border-cream-200">
+          <div class="text-[10px] text-charcoal-400 font-bold uppercase">Certified Warranty</div>
+          <div class="font-bold text-forest-900 text-sm mt-0.5">100% Replacement</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detailed City Breakdown Grid -->
+    <section class="py-12 sm:py-16 px-3 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-12">
+
+      <!-- Climate & Soil Science -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+        <div class="card-elevation p-6 sm:p-8 rounded-3xl bg-white border border-cream-200 flex flex-col justify-between">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-terracotta bg-terracotta/10 px-2.5 py-0.5 rounded-full">Climate Science</span>
+            <h3 class="font-serif-luxury text-xl font-bold text-forest-900 mt-2">${city.name} Climate & Seasonal Challenges</h3>
+            <p class="text-xs text-charcoal-600 mt-2 leading-relaxed">
+              ${city.climateSummary} Aam roadside plants bina root-hardening ke yahan survive nahi karte. Hamare paude ${city.name} ke seasonal extremes ke liye pre-conditioned hotay hain.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-cream-100 text-xs">
+            <strong class="text-forest-900">Recommended Turf Grass:</strong>
+            <p class="text-charcoal-600 text-[11px] mt-0.5">${city.recommendedTurf}</p>
+          </div>
+        </div>
+
+        <div class="card-elevation p-6 sm:p-8 rounded-3xl bg-white border border-cream-200 flex flex-col justify-between">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full">Soil Bio-Chemistry</span>
+            <h3 class="font-serif-luxury text-xl font-bold text-forest-900 mt-2">${city.name} Soil Conditioning Formula</h3>
+            <p class="text-xs text-charcoal-600 mt-2 leading-relaxed">
+              ${city.soilSolution} Har plot ki mitti ko pehle test kiya jata hai aur drainage layers create ki jati hain ta k roots me fungal rot na banay.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-cream-100 text-xs">
+            <strong class="text-forest-900">Key Acclimatized Flora:</strong>
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              ${city.popularFlora.map(f => `<span class="px-2 py-0.5 bg-cream-100 text-charcoal-700 rounded-md text-[10px] font-semibold">${f}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Societies Covered in this City -->
+      <div class="bg-forest-900 text-cream-50 p-6 sm:p-10 rounded-3xl shadow-xl">
+        <div class="text-center max-w-2xl mx-auto mb-6">
+          <span class="text-xs font-bold text-terracotta uppercase tracking-widest">Active Coverage Zones</span>
+          <h3 class="font-serif-luxury text-2xl font-bold text-white mt-1">Housing Societies & Sectors in ${city.name}</h3>
+          <p class="text-xs text-cream-100/70 mt-1">Hamari site inspection teams aur installation trucks in tamam ilaqon me regular active hain:</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          ${city.topSectors.map(s => `
+            <div class="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-2">
+              <span class="text-emerald-400">✓</span>
+              <span class="font-medium text-cream-100 text-[11px]">${s}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Turnkey Specialties in this City -->
+      <div>
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <span class="text-terracotta text-[10px] sm:text-xs font-bold uppercase tracking-widest">Tailored Architecture</span>
+          <h3 class="font-serif-luxury text-2xl sm:text-3xl font-bold text-forest-900 mt-1">Specialized Landscape Services for ${city.name}</h3>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          ${city.specialties.map(spec => `
+            <div class="p-4 rounded-2xl bg-white border border-cream-200 shadow-xs flex items-start gap-3">
+              <span class="text-xl">🌿</span>
+              <div>
+                <h4 class="font-bold text-xs sm:text-sm text-forest-900">${spec}</h4>
+                <p class="text-[10px] text-charcoal-500 mt-0.5">Custom architectural layout, material sourcing & complete execution.</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- City Specific SEO FAQs -->
+      <div class="bg-cream-100/70 p-6 sm:p-10 rounded-3xl border border-cream-200">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <span class="text-terracotta text-[10px] sm:text-xs font-bold uppercase tracking-widest">Frequently Asked Questions</span>
+          <h3 class="font-serif-luxury text-2xl font-bold text-forest-900 mt-1">${city.name} Landscaping FAQs</h3>
+        </div>
+
+        <div class="space-y-4 max-w-3xl mx-auto text-xs">
+          ${city.faqs.map(faq => `
+            <div class="p-4 rounded-2xl bg-white border border-cream-200 shadow-xs space-y-1.5">
+              <div class="font-bold text-forest-900 flex items-center gap-2">
+                <span class="text-terracotta font-serif-luxury font-bold text-sm">Q.</span>
+                <span>${faq.q}</span>
+              </div>
+              <div class="text-charcoal-600 pl-4 text-[11px] leading-relaxed">
+                ${faq.a}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Localized WhatsApp CTA Banner -->
+      <div class="bg-gradient-to-r from-forest-900 via-forest-800 to-forest-900 text-cream-50 p-6 sm:p-10 rounded-3xl text-center space-y-4 shadow-xl">
+        <h3 class="font-serif-luxury text-xl sm:text-3xl font-bold text-white">Start Your Landscaping Transformation in ${city.name}</h3>
+        <p class="text-xs sm:text-sm text-cream-100/80 max-w-xl mx-auto">
+          Apne plot ka size aur requirements WhatsApp par share karein. Hamare landscape architects aapko 3D layout aur exact turnkey estimate faraham karengay.
+        </p>
+        <div class="flex items-center justify-center gap-3 pt-2">
+          <a href="https://wa.me/923008456789?text=${encodeURIComponent('Hello Lahore Botanica! I want to consult for a landscape project in ' + city.name + '. Please contact me.')}" target="_blank" class="btn-whatsapp px-6 py-3 rounded-xl text-xs font-bold shadow-lg">
+            Chat with ${city.name} Landscape Architect
+          </a>
+          <button onclick="navigateToPage('cities')" class="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition border border-white/20">
+            View Other Cities
+          </button>
+        </div>
+      </div>
+
+    </section>
+  `;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  initCityDropdown();
+  if (window.location.hash === '#cities') {
+    renderCitiesDirectory();
   }
 });
