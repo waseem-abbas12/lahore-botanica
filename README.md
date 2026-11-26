@@ -30,7 +30,7 @@ public/            Frontend (served as static files)
   tailwind.css     Pre-built Tailwind (main page)   ← npm run build:css
   city.css         Pre-built Tailwind (city pages)
   images/projects  Portfolio photos
-api/[...path].js   Vercel serverless entry → lib/api.js
+api/handler.js     Vercel serverless entry → lib/api.js
 lib/api.js         REST API (all routes)
 lib/db.js          Postgres (DATABASE_URL) or embedded PGlite for local dev
 lib/auth.js        Admin session

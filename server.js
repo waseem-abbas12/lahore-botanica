@@ -1,5 +1,5 @@
 // server.js - Local / VPS server: static files from ./public + REST API from ./lib/api.js
-// On Vercel, the API runs from api/[...path].js and ./public is served as static files.
+// On Vercel, the API runs from api/handler.js and ./public is served as static files.
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
