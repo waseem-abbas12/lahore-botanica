@@ -1,12 +1,11 @@
 {
-  "name": "Lahore Botanica & Landscaping",
-  "short_name": "Lahore Botanica",
-  "description": "Premium plants nursery, bespoke villa landscaping, and plant care for Lahore, Pakistan.",
+  "name": "The Living Garden",
+  "short_name": "Living Garden",
+  "description": "Landscape design, construction and maintenance across Pakistan.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FCFAF6",
   "theme_color": "#133E2B",
-  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/icons/icon-192.png",

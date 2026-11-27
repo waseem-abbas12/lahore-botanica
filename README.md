@@ -1,32 +1,30 @@
-# 🌿 Lahore Botanica — Plants Store + Landscaping CRM
+# 🌿 The Living Garden — Landscaping Company Website + CRM
 
 Plant nursery e-commerce aur landscaping business ka web app: customer storefront, landscaping lead capture, real order tracking, aur password-protected admin panel.
 
 ## Features
 
-**Customer side**
-- Plant catalog: search, filters, multi-angle photos, size/pot variants
-- Cart & checkout (COD, bank transfer, JazzCash, EasyPaisa). **Prices are recalculated on the server.** Stock decreases automatically.
-- Order confirmation with an order number, plus a WhatsApp confirmation button
-- **Real order tracking** by order number and/or phone, with a status timeline
-- Landscaping consultation form, cost calculator, institutional free-plant requests: everything is saved in the database
-- Customer reviews (show only after admin approval)
-- 9 city SEO landing pages, sitemap, schema.org markup, PWA manifest + icons
+**Website (`/`)**
+- Landscaping company site: services, sectors, projects portfolio, 5-step process, lawn cost estimator, maintenance plans, cities served, FAQ, reviews
+- "Book a free site visit" form (project type, location, size, budget, timeline, visit date) saved as a lead
+- Portfolio comes from the admin **Projects** section; until projects are added, generic service examples are shown
+- Company name, phone, WhatsApp, address, hours, stats and social links come from admin **Settings**
+- 9 city SEO landing pages, sitemap, schema.org (business + FAQ), PWA manifest
 
-**Admin panel (`/#admin`)**
+**Admin (`/admin`)**
 - Password login (HttpOnly signed cookie, 12h session, brute-force throttling)
-- **Leads CRM:** status pipeline (New → Contacted → Site Visit → Proposal → Won → In Progress → Completed / Lost), estimate, follow-up notes, WhatsApp/Call buttons, search, filter, CSV export
-- **Orders:** status updates with history (shown to the customer on the tracking page), rider note, auto stock-return on cancel, CSV export
-- **Plants:** add/edit/hide/delete, price, stock, images, size & pot variants
+- **Leads CRM:** New → Contacted → Site Visit → Proposal → Won → In Progress → Completed / Lost, quote value, notes, WhatsApp/Call, search, CSV export
+- **Projects:** add/edit/hide portfolio projects with photos, location, year, area and scope
 - **Reviews:** approve / hide / delete
-- **Settings:** business name, WhatsApp number, phone, address, delivery fee, free-delivery limit (applied site-wide)
+- **Settings:** business details and homepage stats
 
 ## Project structure
 
 ```
 public/            Frontend (served as static files)
-  index.html       Store + landscaping + admin (single page)
-  app.js admin.js  Frontend logic
+  index.html       Company website        app.js   website logic
+  admin.html       Staff portal           admin.js portal logic
+  site.css         Custom components
   tailwind.css     Pre-built Tailwind (main page)   ← npm run build:css
   city.css         Pre-built Tailwind (city pages)
   images/projects  Portfolio photos

@@ -1,492 +1,317 @@
-// admin.js - Admin CMS: login, leads CRM, orders, catalog, reviews, settings
-let adminPlants = [];
-let adminOrders = [];
-let adminLeads = [];
-let adminReviews = [];
+// admin.js - The Living Garden staff portal: leads CRM, projects, reviews, settings
+(function () {
+  'use strict';
 
-const ORDER_STATUSES = ['Pending', 'Confirmed', 'Dispatched', 'Delivered', 'Cancelled'];
-const LEAD_STATUSES = ['New Lead', 'Contacted', 'Site Visit Scheduled', 'Proposal Sent', 'Won', 'In Progress', 'Completed', 'Lost'];
-const LEAD_SOURCE_LABELS = {
-  consultation: 'Consultation form', calculator: 'Cost calculator', institutional: 'Free plants (institution)',
-  membership: 'Green patron', city_page: 'City page', other: 'Other'
-};
-const STATUS_COLORS = {
-  'Pending': 'bg-amber-100 text-amber-800', 'Confirmed': 'bg-blue-100 text-blue-800', 'Dispatched': 'bg-indigo-100 text-indigo-800',
-  'Delivered': 'bg-emerald-100 text-emerald-800', 'Cancelled': 'bg-slate-200 text-slate-600',
-  'New Lead': 'bg-red-100 text-red-700', 'Contacted': 'bg-amber-100 text-amber-800', 'Site Visit Scheduled': 'bg-blue-100 text-blue-800',
-  'Proposal Sent': 'bg-indigo-100 text-indigo-800', 'Won': 'bg-emerald-100 text-emerald-800', 'In Progress': 'bg-teal-100 text-teal-800',
-  'Completed': 'bg-emerald-200 text-emerald-900', 'Lost': 'bg-slate-200 text-slate-600'
-};
-
-// ---------- utils ----------
-function esc(v) {
-  return String(v === null || v === undefined ? '' : v)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-function rs(n) { return `Rs. ${Number(n || 0).toLocaleString()}`; }
-function fmtDate(d) {
-  if (!d) return '';
-  const dt = new Date(d);
-  return dt.toLocaleDateString('en-PK', { day: 'numeric', month: 'short' }) + ', ' +
-    dt.toLocaleTimeString('en-PK', { hour: 'numeric', minute: '2-digit' });
-}
-function waLink(phone, text) {
-  return `https://wa.me/${String(phone || '').replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
-}
-function storeName() {
-  return (window.SITE_SETTINGS && window.SITE_SETTINGS.store_name) || 'Lahore Botanica';
-}
-
-async function adminApi(url, options = {}) {
-  const res = await fetch(url, {
-    credentials: 'same-origin',
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
-  });
-  let data = {};
-  try { data = await res.json(); } catch {}
-  if (res.status === 401) {
-    showAdminLogin();
-    throw new Error(data.error || 'Login required');
-  }
-  if (!res.ok || data.success === false) throw new Error(data.error || `Error ${res.status}`);
-  return data;
-}
-
-// ---------- navigation ----------
-function toggleAdminView() {
-  const adminPage = document.getElementById('page-admin');
-  if (adminPage && adminPage.classList.contains('hidden')) navigateToPage('admin');
-  else showStorefront();
-}
-
-function showStorefront() {
-  navigateToPage('shop');
-  if (typeof fetchPlants === 'function') fetchPlants();
-}
-
-// ---------- auth ----------
-function showAdminLogin() {
-  document.getElementById('admin-login-gate')?.classList.remove('hidden');
-  document.getElementById('admin-content')?.classList.add('hidden');
-  setTimeout(() => document.getElementById('admin-password')?.focus(), 50);
-}
-
-function showAdminContent() {
-  document.getElementById('admin-login-gate')?.classList.add('hidden');
-  document.getElementById('admin-content')?.classList.remove('hidden');
-}
-
-async function adminLogin(e) {
-  e.preventDefault();
-  const errEl = document.getElementById('admin-login-error');
-  errEl.classList.add('hidden');
-  try {
-    const res = await fetch('/api/admin/login', {
-      method: 'POST', credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: document.getElementById('admin-password').value })
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.success) throw new Error(data.error || 'Login failed');
-    document.getElementById('admin-password').value = '';
-    showAdminContent();
-    loadAdminDashboard();
-  } catch (err) {
-    errEl.textContent = err.message === 'Failed to fetch' ? 'Server se rabta nahi ho saka' : err.message;
-    errEl.classList.remove('hidden');
-  }
-}
-
-async function adminLogout() {
-  await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
-  showAdminLogin();
-}
-
-// Called by navigateToPage('admin') in app.js
-async function loadAdminDashboard() {
-  let me = { admin: false };
-  try {
-    me = await (await fetch('/api/admin/me', { credentials: 'same-origin' })).json();
-  } catch {}
-  if (!me.admin) return showAdminLogin();
-  showAdminContent();
-  initAdminFilters();
-  if (!document.querySelector('.admin-tab-btn.active')) switchAdminTab('leads');
-  fetch('/api/health').then(r => r.json()).then(h => {
-    document.getElementById('admin-db-warning')?.classList.toggle('hidden', !!h.durable);
-  }).catch(() => {});
-  await Promise.allSettled([fetchAdminStats(), fetchAdminPlants(), fetchAdminOrders(), fetchAdminLeads(), fetchAdminReviews(), fillSettingsForm()]);
-}
-
-function initAdminFilters() {
-  const lf = document.getElementById('leads-filter');
-  if (lf && !lf.options.length) {
-    lf.innerHTML = '<option value="">All statuses</option><option value="open">Open (active)</option>' +
-      LEAD_STATUSES.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
-    lf.value = 'open';
-  }
-  const of = document.getElementById('orders-filter');
-  if (of && !of.options.length) {
-    of.innerHTML = '<option value="">All statuses</option>' + ORDER_STATUSES.map(s => `<option value="${s}">${s}</option>`).join('');
-  }
-}
-
-function switchAdminTab(tabName) {
-  document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-    const on = btn.id === `tab-btn-${tabName}`;
-    btn.classList.toggle('active', on);
-    btn.classList.toggle('bg-forest-800', on);
-    btn.classList.toggle('text-white', on);
-    btn.classList.toggle('bg-slate-200', !on);
-    btn.classList.toggle('text-slate-700', !on);
-  });
-  document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('hidden', t.id !== `admin-tab-${tabName}`));
-}
-
-// ---------- stats ----------
-async function fetchAdminStats() {
-  try {
-    const { stats } = await adminApi('/api/stats');
-    document.getElementById('stat-revenue').textContent = rs(stats.total_revenue);
-    document.getElementById('stat-pipeline').textContent = `${rs(stats.pipeline_revenue)} in pipeline`;
-    document.getElementById('stat-orders').textContent = stats.total_orders;
-    document.getElementById('stat-pending-orders').textContent = `${stats.pending_orders} need action`;
-    document.getElementById('stat-leads').textContent = stats.total_leads;
-    document.getElementById('stat-new-leads').textContent = `${stats.new_leads} new • ${stats.won_leads} won`;
-    document.getElementById('stat-plants').textContent = stats.total_plants;
-    document.getElementById('stat-low-stock').textContent = `${stats.low_stock} low stock (≤5)`;
-    const badge = document.getElementById('badge-reviews');
-    badge.textContent = stats.pending_reviews;
-    badge.classList.toggle('hidden', !stats.pending_reviews);
-  } catch (err) {
-    console.error('Stats error:', err);
-  }
-}
-
-// ---------- plants ----------
-async function fetchAdminPlants() {
-  try {
-    const data = await adminApi('/api/plants?all=1&sort=newest');
-    adminPlants = data.plants;
-    renderAdminPlantsTable();
-  } catch (err) {
-    document.getElementById('admin-plants-tbody').innerHTML = `<tr><td colspan="6" class="p-6 text-center text-red-600">${esc(err.message)}</td></tr>`;
-  }
-}
-
-function renderAdminPlantsTable() {
-  const tbody = document.getElementById('admin-plants-tbody');
-  if (!adminPlants.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-slate-400">Koi plant nahi. "+ Add Plant" se shuru karein.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = adminPlants.map(p => `
-    <tr class="hover:bg-slate-50 ${p.active ? '' : 'opacity-50'}">
-      <td class="p-3"><div class="flex items-center gap-3">
-        <img src="${esc(p.images[0] || '')}" alt="" class="w-12 h-12 rounded-xl object-cover bg-slate-100">
-        <div>
-          <div class="font-bold text-slate-900">${esc(p.name)} ${p.featured ? '⭐' : ''}</div>
-          <div class="text-[10px] text-slate-500 italic">${esc(p.botanical_name)} • <span class="text-emerald-700">${esc(p.urdu_name)}</span></div>
-        </div></div></td>
-      <td class="p-3 capitalize text-slate-700">${esc(String(p.category).replace('_', ' '))}</td>
-      <td class="p-3 font-bold text-forest-900">${rs(p.price)}</td>
-      <td class="p-3 font-semibold ${p.stock <= 5 ? 'text-red-600' : p.stock < 10 ? 'text-amber-600' : 'text-slate-700'}">${p.stock}</td>
-      <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${p.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}">${p.active ? 'Live' : 'Hidden'}</span></td>
-      <td class="p-3 text-right space-x-2 whitespace-nowrap">
-        <button onclick="editPlant(${p.id})" class="text-xs font-bold text-blue-600 hover:text-blue-800">Edit</button>
-        <button onclick="deletePlant(${p.id})" class="text-xs font-bold text-red-600 hover:text-red-800">Delete</button>
-      </td>
-    </tr>`).join('');
-}
-
-function variantsToText(list) {
-  return (list || []).map(v => `${v.name} | ${v.price_delta || 0}`).join('\n');
-}
-function textToVariants(text) {
-  return String(text || '').split('\n').map(line => {
-    const [name, delta] = line.split('|');
-    return { name: (name || '').trim(), price_delta: parseInt((delta || '0').replace(/\D/g, ''), 10) || 0 };
-  }).filter(v => v.name);
-}
-
-function openAddPlantModal() {
-  document.getElementById('admin-modal-title').textContent = 'Add New Plant';
-  document.getElementById('admin-plant-form').reset();
-  document.getElementById('form-plant-id').value = '';
-  document.getElementById('form-active').checked = true;
-  document.getElementById('form-hardy').checked = true;
-  document.getElementById('form-sizes').value = 'Standard | 0';
-  document.getElementById('form-pots').value = 'Nursery Pot | 0';
-  document.getElementById('plant-form-error').classList.add('hidden');
-  document.getElementById('admin-plant-modal').classList.remove('hidden');
-}
-
-function closeAddPlantModal() {
-  document.getElementById('admin-plant-modal').classList.add('hidden');
-}
-
-function editPlant(id) {
-  const p = adminPlants.find(item => item.id === id);
-  if (!p) return;
-  openAddPlantModal();
-  document.getElementById('admin-modal-title').textContent = `Edit: ${p.name}`;
-  document.getElementById('form-plant-id').value = p.id;
-  document.getElementById('form-name').value = p.name;
-  document.getElementById('form-urdu').value = p.urdu_name || '';
-  document.getElementById('form-botanical').value = p.botanical_name || '';
-  document.getElementById('form-category').value = p.category;
-  document.getElementById('form-price').value = p.price;
-  document.getElementById('form-stock').value = p.stock;
-  document.getElementById('form-sunlight').value = p.sunlight;
-  document.getElementById('form-water').value = p.water;
-  document.getElementById('form-images').value = (p.images || []).join('\n');
-  document.getElementById('form-sizes').value = variantsToText(p.variants?.sizes);
-  document.getElementById('form-pots').value = variantsToText(p.variants?.pots);
-  document.getElementById('form-desc').value = p.description || '';
-  document.getElementById('form-pet').checked = !!p.pet_friendly;
-  document.getElementById('form-hardy').checked = !!p.lahore_hardy;
-  document.getElementById('form-featured').checked = !!p.featured;
-  document.getElementById('form-active').checked = !!p.active;
-}
-
-async function savePlantForm(e) {
-  e.preventDefault();
-  const id = document.getElementById('form-plant-id').value;
-  const errEl = document.getElementById('plant-form-error');
-  errEl.classList.add('hidden');
-  const existing = adminPlants.find(p => String(p.id) === String(id));
-  const payload = {
-    name: document.getElementById('form-name').value.trim(),
-    urdu_name: document.getElementById('form-urdu').value.trim(),
-    botanical_name: document.getElementById('form-botanical').value.trim(),
-    category: document.getElementById('form-category').value,
-    price: parseInt(document.getElementById('form-price').value, 10),
-    stock: parseInt(document.getElementById('form-stock').value, 10),
-    sunlight: document.getElementById('form-sunlight').value,
-    water: document.getElementById('form-water').value,
-    difficulty: existing?.difficulty || 'Easy',
-    description: document.getElementById('form-desc').value.trim(),
-    pet_friendly: document.getElementById('form-pet').checked,
-    lahore_hardy: document.getElementById('form-hardy').checked,
-    featured: document.getElementById('form-featured').checked,
-    active: document.getElementById('form-active').checked,
-    images: document.getElementById('form-images').value.split(/[\n,]/).map(s => s.trim()).filter(Boolean),
-    variants: {
-      sizes: textToVariants(document.getElementById('form-sizes').value),
-      pots: textToVariants(document.getElementById('form-pots').value)
-    }
+  const LEAD_STATUSES = ['New Lead', 'Contacted', 'Site Visit Scheduled', 'Proposal Sent', 'Won', 'In Progress', 'Completed', 'Lost'];
+  const SOURCE_LABELS = {
+    consultation: 'Site visit form', estimator: 'Cost estimator', calculator: 'Cost estimator', maintenance: 'Maintenance',
+    institutional: 'Institution', membership: 'Membership', city_page: 'City page', whatsapp: 'WhatsApp', other: 'Other'
   };
-  try {
-    await adminApi(id ? `/api/plants/${id}` : '/api/plants', { method: id ? 'PUT' : 'POST', body: JSON.stringify(payload) });
-    closeAddPlantModal();
-    fetchAdminPlants();
-    fetchAdminStats();
-  } catch (err) {
-    errEl.textContent = err.message;
-    errEl.classList.remove('hidden');
+  const CATEGORY_LABELS = {
+    residential: 'Residential', farmhouse: 'Farmhouse', commercial: 'Commercial', society: 'Society & Parks',
+    institutional: 'Institutional', rooftop: 'Rooftop & Vertical', maintenance: 'Maintenance'
+  };
+  const STATUS_COLORS = {
+    'New Lead': 'bg-red-100 text-red-700', 'Contacted': 'bg-amber-100 text-amber-800', 'Site Visit Scheduled': 'bg-blue-100 text-blue-800',
+    'Proposal Sent': 'bg-indigo-100 text-indigo-800', 'Won': 'bg-emerald-100 text-emerald-800', 'In Progress': 'bg-teal-100 text-teal-800',
+    'Completed': 'bg-emerald-200 text-emerald-900', 'Lost': 'bg-slate-200 text-slate-600'
+  };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const esc = v => String(v === null || v === undefined ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const rs = n => `Rs. ${Number(n || 0).toLocaleString('en-PK')}`;
+  const fmtDate = d => {
+    if (!d) return '';
+    const dt = new Date(d);
+    return `${dt.toLocaleDateString('en-PK', { day: 'numeric', month: 'short' })}, ${dt.toLocaleTimeString('en-PK', { hour: 'numeric', minute: '2-digit' })}`;
+  };
+  const waLink = (phone, text) => `https://wa.me/${String(phone || '').replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
+
+  let settings = { store_name: 'The Living Garden' };
+  let leads = [], projects = [], reviews = [];
+
+  async function api(url, options = {}) {
+    const res = await fetch(url, { credentials: 'same-origin', ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401) { showLogin(); throw new Error(data.error || 'Login required'); }
+    if (!res.ok || data.success === false) throw new Error(data.error || `Error ${res.status}`);
+    return data;
   }
-}
 
-async function deletePlant(id) {
-  const p = adminPlants.find(x => x.id === id);
-  if (!confirm(`"${p ? p.name : 'Plant'}" ko hamesha ke liye delete karna hai? (Sirf chhupane ke liye Edit → "Website par show" hata dein)`)) return;
-  try {
-    await adminApi(`/api/plants/${id}`, { method: 'DELETE' });
-    fetchAdminPlants();
-    fetchAdminStats();
-  } catch (err) { alert(err.message); }
-}
-
-// ---------- orders ----------
-async function fetchAdminOrders() {
-  try {
-    adminOrders = (await adminApi('/api/orders')).orders;
-    renderAdminOrdersTable();
-  } catch (err) {
-    document.getElementById('admin-orders-tbody').innerHTML = `<tr><td colspan="8" class="p-6 text-center text-red-600">${esc(err.message)}</td></tr>`;
+  // ---------- auth ----------
+  function showLogin() {
+    $('#admin-login-gate').classList.remove('hidden');
+    $('#admin-content').classList.add('hidden');
+    setTimeout(() => $('#admin-password')?.focus(), 50);
   }
-}
-
-function renderAdminOrdersTable() {
-  const tbody = document.getElementById('admin-orders-tbody');
-  const q = (document.getElementById('orders-search')?.value || '').toLowerCase().trim();
-  const f = document.getElementById('orders-filter')?.value || '';
-  const list = adminOrders.filter(o =>
-    (!f || o.status === f) &&
-    (!q || [o.order_number, o.customer_name, o.customer_phone, o.city_area].join(' ').toLowerCase().includes(q))
-  );
-  if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="p-6 text-center text-slate-400">Koi order nahi mila.</td></tr>';
-    return;
+  function showContent() {
+    $('#admin-login-gate').classList.add('hidden');
+    $('#admin-content').classList.remove('hidden');
   }
-  tbody.innerHTML = list.map(o => {
-    const items = o.items.map(i => `${i.quantity}x ${i.name} (${i.size})`).join(', ');
-    const msg = `Assalam-o-Alaikum ${o.customer_name}, ${storeName()} se. Aapka order ${o.order_number} (${rs(o.total)}) ka status: ${o.status}.`;
-    return `
-      <tr class="hover:bg-slate-50 align-top">
-        <td class="p-3"><div class="font-mono font-bold text-forest-900">${esc(o.order_number)}</div><div class="text-[10px] text-slate-400">${esc(fmtDate(o.created_at))}</div></td>
-        <td class="p-3"><div class="font-bold text-slate-900">${esc(o.customer_name)}</div><div class="text-[10px] text-slate-500">${esc(o.customer_phone)}</div></td>
-        <td class="p-3 max-w-[180px]"><div class="font-semibold text-slate-700">${esc(o.city_area)}</div><div class="text-[10px] text-slate-500">${esc(o.customer_address)}</div>${o.notes ? `<div class="text-[10px] text-amber-700 mt-1">📝 ${esc(o.notes)}</div>` : ''}</td>
-        <td class="p-3 text-[11px] text-slate-600 max-w-[220px]">${esc(items)}</td>
-        <td class="p-3 font-bold text-forest-900 whitespace-nowrap">${rs(o.total)}${o.delivery_fee ? `<div class="text-[10px] text-slate-400 font-normal">incl. ${rs(o.delivery_fee)} delivery</div>` : ''}</td>
-        <td class="p-3 uppercase text-[10px] font-bold text-slate-500">${esc(o.payment_method)}</td>
-        <td class="p-3">
-          <select onchange="updateOrderStatus(${o.id}, this.value)" class="text-[11px] font-bold p-1 rounded-lg border border-slate-200 ${STATUS_COLORS[o.status] || ''}">
-            ${ORDER_STATUSES.map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s}</option>`).join('')}
-          </select>
-        </td>
-        <td class="p-3"><a href="${esc(waLink(o.customer_phone, msg))}" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold hover:bg-emerald-200 whitespace-nowrap">WhatsApp</a></td>
-      </tr>`;
-  }).join('');
-}
 
-async function updateOrderStatus(id, status) {
-  let note = '';
-  if (status === 'Dispatched') note = prompt('Rider ka naam / note (optional):') || '';
-  try {
-    await adminApi(`/api/orders/${id}`, { method: 'PUT', body: JSON.stringify({ status, note }) });
-  } catch (err) { alert(err.message); }
-  fetchAdminOrders();
-  fetchAdminStats();
-  if (status === 'Cancelled') fetchAdminPlants();
-}
+  $('#login-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const err = $('#admin-login-error');
+    err.classList.add('hidden');
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: $('#admin-password').value })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) throw new Error(data.error || 'Login failed');
+      $('#admin-password').value = '';
+      start();
+    } catch (ex) {
+      err.textContent = ex.message === 'Failed to fetch' ? 'Server se rabta nahi ho saka' : ex.message;
+      err.classList.remove('hidden');
+    }
+  });
 
-// ---------- leads CRM ----------
-async function fetchAdminLeads() {
-  try {
-    adminLeads = (await adminApi('/api/leads')).leads;
-    renderAdminLeadsTable();
-  } catch (err) {
-    document.getElementById('admin-leads-tbody').innerHTML = `<tr><td colspan="8" class="p-6 text-center text-red-600">${esc(err.message)}</td></tr>`;
+  // ---------- tabs & actions ----------
+  function switchTab(name) {
+    $$('.admin-tab-btn').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+    $$('.admin-tab').forEach(t => t.classList.toggle('hidden', t.id !== `tab-${name}`));
+    history.replaceState(null, '', `#${name}`);
   }
-}
+  $$('.admin-tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
 
-function renderAdminLeadsTable() {
-  const tbody = document.getElementById('admin-leads-tbody');
-  const q = (document.getElementById('leads-search')?.value || '').toLowerCase().trim();
-  const f = document.getElementById('leads-filter')?.value || '';
-  const closed = ['Completed', 'Lost'];
-  const list = adminLeads.filter(l =>
-    (!f || (f === 'open' ? !closed.includes(l.status) : l.status === f)) &&
-    (!q || [l.client_name, l.client_phone, l.location, l.project_type].join(' ').toLowerCase().includes(q))
-  );
-  if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="p-6 text-center text-slate-400">Koi lead nahi mili.</td></tr>';
-    return;
+  document.addEventListener('click', async e => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const { action, id } = btn.dataset;
+    if (action === 'refresh') loadAll();
+    if (action === 'logout') { await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => {}); showLogin(); }
+    if (action === 'new-project') openEditor();
+    if (action === 'edit-project') openEditor(projects.find(p => String(p.id) === id));
+    if (action === 'delete-project') deleteProject(Number(id));
+    if (action === 'close-editor') closeEditor();
+    if (action === 'delete-lead') deleteLead(Number(id));
+    if (action === 'approve-review') moderate(Number(id), true);
+    if (action === 'hide-review') moderate(Number(id), false);
+    if (action === 'delete-review') deleteReview(Number(id));
+  });
+
+  // ---------- stats ----------
+  async function loadStats() {
+    try {
+      const { stats } = await api('/api/stats');
+      $('#stat-new-leads').textContent = stats.new_leads;
+      $('#stat-total-leads').textContent = `${stats.total_leads} total leads`;
+      $('#stat-pipeline').textContent = rs(stats.pipeline_value);
+      $('#stat-won').textContent = stats.won_leads;
+      $('#stat-won-value').textContent = rs(stats.won_value);
+      $('#stat-projects').textContent = stats.total_projects;
+      $('#stat-reviews').textContent = `${stats.pending_reviews} reviews pending`;
+      const badge = $('#badge-reviews');
+      badge.textContent = stats.pending_reviews;
+      badge.classList.toggle('hidden', !stats.pending_reviews);
+    } catch (e) { console.error(e); }
   }
-  tbody.innerHTML = list.map(l => {
-    const msg = `Assalam-o-Alaikum ${l.client_name}, ${storeName()} team se. Aapki ${l.project_type || 'landscaping'} inquiry ke silsile mein rabta kar rahe hain. Site visit ke liye kab munasib rahega?`;
-    return `
-      <tr class="hover:bg-slate-50 align-top">
-        <td class="p-3 text-[10px] text-slate-500 whitespace-nowrap">${esc(fmtDate(l.created_at))}<div class="mt-1 inline-block px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">${esc(LEAD_SOURCE_LABELS[l.source] || l.source)}</div></td>
-        <td class="p-3"><div class="font-bold text-slate-900">${esc(l.client_name)}</div><div class="font-mono text-[10px] text-slate-500">${esc(l.client_phone)}</div></td>
-        <td class="p-3"><div class="font-bold text-forest-900">${esc(l.project_type)}</div><div class="text-[10px] text-slate-500">${esc(l.area_size)} • ${esc(l.location)}</div>${l.preferred_date ? `<div class="text-[10px] text-blue-700">📅 ${esc(l.preferred_date)}</div>` : ''}</td>
-        <td class="p-3 text-[11px] text-slate-600 max-w-[220px] whitespace-pre-line">${esc(l.message) || '<span class="text-slate-400">—</span>'}</td>
-        <td class="p-3"><input type="number" min="0" value="${Number(l.estimate) || ''}" placeholder="0" onchange="updateLead(${l.id}, { estimate: this.value })" class="w-24 p-1 rounded border border-slate-200 text-[11px]"></td>
-        <td class="p-3">
-          <select onchange="updateLead(${l.id}, { status: this.value }, true)" class="text-[11px] font-bold p-1 rounded-lg border border-slate-200 ${STATUS_COLORS[l.status] || ''}">
-            ${LEAD_STATUSES.map(s => `<option value="${esc(s)}" ${l.status === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}
-          </select>
-        </td>
-        <td class="p-3"><textarea rows="2" placeholder="Follow-up notes..." onchange="updateLead(${l.id}, { admin_notes: this.value })" class="w-40 p-1 rounded border border-slate-200 text-[11px]">${esc(l.admin_notes)}</textarea></td>
+
+  // ---------- leads ----------
+  const lf = $('#leads-filter');
+  lf.innerHTML = '<option value="open">Open (active)</option><option value="">All statuses</option>' +
+    LEAD_STATUSES.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+  lf.addEventListener('change', renderLeads);
+  $('#leads-search').addEventListener('input', renderLeads);
+
+  async function loadLeads() {
+    try { leads = (await api('/api/leads')).leads; renderLeads(); }
+    catch (e) { $('#leads-tbody').innerHTML = `<tr><td colspan="8" class="p-6 text-center text-red-600">${esc(e.message)}</td></tr>`; }
+  }
+
+  function renderLeads() {
+    const q = $('#leads-search').value.toLowerCase().trim();
+    const f = lf.value;
+    const closed = ['Completed', 'Lost'];
+    const list = leads.filter(l =>
+      (!f || (f === 'open' ? !closed.includes(l.status) : l.status === f)) &&
+      (!q || [l.client_name, l.client_phone, l.location, l.project_type].join(' ').toLowerCase().includes(q)));
+    const tbody = $('#leads-tbody');
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-400">Koi lead nahi mili.</td></tr>'; return; }
+    tbody.innerHTML = list.map(l => {
+      const msg = `Assalam-o-Alaikum ${l.client_name}, ${settings.store_name} se baat kar rahe hain. Aapki ${l.project_type || 'landscaping'} ki request mili hai. Site visit ke liye kab munasib rahega?`;
+      const details = [l.area_size && `📐 ${l.area_size}`, l.budget && `💰 ${l.budget}`, l.timeline && `⏱ ${l.timeline}`, l.preferred_date && `📅 Visit: ${l.preferred_date}`]
+        .filter(Boolean).map(esc).join('<br>');
+      return `<tr class="align-top hover:bg-slate-50">
+        <td class="p-3 text-[10px] text-slate-500 whitespace-nowrap">${esc(fmtDate(l.created_at))}<div class="mt-1 inline-block px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">${esc(SOURCE_LABELS[l.source] || l.source)}</div></td>
+        <td class="p-3"><div class="font-bold">${esc(l.client_name)}</div><div class="font-mono text-[10px] text-slate-500">${esc(l.client_phone)}</div>${l.email ? `<div class="text-[10px] text-slate-500">${esc(l.email)}</div>` : ''}</td>
+        <td class="p-3"><div class="font-bold text-forest-900">${esc(l.project_type) || '—'}</div><div class="text-[10px] text-slate-500">${esc(l.location)}</div></td>
+        <td class="p-3 text-[11px] text-slate-600 max-w-[240px]">${details}${l.message ? `<div class="mt-1 whitespace-pre-line">${esc(l.message)}</div>` : ''}</td>
+        <td class="p-3"><input type="number" min="0" value="${Number(l.estimate) || ''}" placeholder="0" data-lead="${l.id}" data-field="estimate" class="lead-input w-24 p-1 rounded border border-slate-200 text-[11px]"></td>
+        <td class="p-3"><select data-lead="${l.id}" data-field="status" class="lead-input text-[11px] font-bold p-1 rounded-lg border border-slate-200 ${STATUS_COLORS[l.status] || ''}">
+          ${LEAD_STATUSES.map(s => `<option value="${esc(s)}" ${l.status === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select></td>
+        <td class="p-3"><textarea rows="2" data-lead="${l.id}" data-field="admin_notes" placeholder="Follow-up notes…" class="lead-input w-40 p-1 rounded border border-slate-200 text-[11px]">${esc(l.admin_notes)}</textarea></td>
         <td class="p-3 space-y-1 whitespace-nowrap">
-          <a href="${esc(waLink(l.client_phone, msg))}" target="_blank" rel="noopener" class="block text-center px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold hover:bg-emerald-200">WhatsApp</a>
-          <a href="tel:+${esc(String(l.client_phone).replace(/\D/g, ''))}" class="block text-center px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold hover:bg-slate-200">Call</a>
-          <button onclick="deleteLead(${l.id})" class="block w-full text-center text-[10px] text-red-500 hover:text-red-700">Delete</button>
-        </td>
-      </tr>`;
-  }).join('');
-}
-
-async function updateLead(id, changes, rerender = false) {
-  try {
-    await adminApi(`/api/leads/${id}`, { method: 'PUT', body: JSON.stringify(changes) });
-    const lead = adminLeads.find(l => l.id === id);
-    if (lead) Object.assign(lead, changes);
-    if (rerender) renderAdminLeadsTable();
-    fetchAdminStats();
-  } catch (err) { alert(err.message); }
-}
-
-async function deleteLead(id) {
-  if (!confirm('Yeh lead hamesha ke liye delete karni hai?')) return;
-  try {
-    await adminApi(`/api/leads/${id}`, { method: 'DELETE' });
-    adminLeads = adminLeads.filter(l => l.id !== id);
-    renderAdminLeadsTable();
-    fetchAdminStats();
-  } catch (err) { alert(err.message); }
-}
-
-// ---------- reviews ----------
-async function fetchAdminReviews() {
-  try {
-    adminReviews = (await adminApi('/api/reviews?all=1')).reviews;
-    renderAdminReviews();
-  } catch (err) { console.error(err); }
-}
-
-function renderAdminReviews() {
-  const box = document.getElementById('admin-reviews-list');
-  if (!adminReviews.length) {
-    box.innerHTML = '<div class="p-6 text-center text-xs text-slate-400">Abhi koi review nahi.</div>';
-    return;
+          <a href="${esc(waLink(l.client_phone, msg))}" target="_blank" rel="noopener" class="block text-center px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold">WhatsApp</a>
+          <a href="tel:+${esc(String(l.client_phone).replace(/\D/g, ''))}" class="block text-center px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold">Call</a>
+          <button type="button" data-action="delete-lead" data-id="${l.id}" class="block w-full text-center text-[10px] text-red-500">Delete</button>
+        </td></tr>`;
+    }).join('');
+    $$('.lead-input', tbody).forEach(el => el.addEventListener('change', () => updateLead(Number(el.dataset.lead), { [el.dataset.field]: el.value }, el.dataset.field === 'status')));
   }
-  box.innerHTML = adminReviews.map(r => `
-    <div class="p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3 text-xs ${r.approved ? '' : 'bg-amber-50/50'}">
-      <div>
-        <div class="font-bold text-slate-900">${esc(r.name)} <span class="font-normal text-slate-500">• ${esc(r.area)}</span> <span class="text-amber-500">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span></div>
-        <p class="mt-1 text-slate-700">${esc(r.comment)}</p>
-        <div class="mt-1 text-[10px] text-slate-400">${esc(fmtDate(r.created_at))}</div>
-      </div>
-      <div class="flex gap-2 shrink-0">
-        ${r.approved
-          ? `<button onclick="moderateReview(${r.id}, false)" class="px-3 py-1.5 rounded-lg bg-slate-100 font-bold text-slate-700">Hide</button>`
-          : `<button onclick="moderateReview(${r.id}, true)" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold">Approve</button>`}
-        <button onclick="deleteReview(${r.id})" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 font-bold">Delete</button>
-      </div>
-    </div>`).join('');
-}
 
-async function moderateReview(id, approved) {
-  try {
-    await adminApi(`/api/reviews/${id}`, { method: 'PUT', body: JSON.stringify({ approved }) });
-    fetchAdminReviews();
-    fetchAdminStats();
-  } catch (err) { alert(err.message); }
-}
+  async function updateLead(id, changes, rerender) {
+    try {
+      await api(`/api/leads/${id}`, { method: 'PUT', body: JSON.stringify(changes) });
+      Object.assign(leads.find(l => l.id === id) || {}, changes);
+      if (rerender) renderLeads();
+      loadStats();
+    } catch (e) { alert(e.message); }
+  }
+  async function deleteLead(id) {
+    if (!confirm('Yeh lead hamesha ke liye delete karni hai?')) return;
+    try { await api(`/api/leads/${id}`, { method: 'DELETE' }); leads = leads.filter(l => l.id !== id); renderLeads(); loadStats(); }
+    catch (e) { alert(e.message); }
+  }
 
-async function deleteReview(id) {
-  if (!confirm('Review delete karna hai?')) return;
-  try {
-    await adminApi(`/api/reviews/${id}`, { method: 'DELETE' });
-    fetchAdminReviews();
-    fetchAdminStats();
-  } catch (err) { alert(err.message); }
-}
+  // ---------- projects ----------
+  async function loadProjects() {
+    try { projects = (await api('/api/projects?all=1')).projects; renderProjects(); }
+    catch (e) { $('#projects-list').innerHTML = `<div class="p-6 text-center text-red-600 text-xs">${esc(e.message)}</div>`; }
+  }
+  function renderProjects() {
+    const box = $('#projects-list');
+    if (!projects.length) {
+      box.innerHTML = '<div class="p-8 text-center text-xs text-slate-500">Abhi koi project nahi. "+ Add Project" se apna pehla mukammal project daalein. Jab tak koi project nahi hota, website par sirf misaal ke taur par stock images dikhti hain.</div>';
+      return;
+    }
+    box.innerHTML = projects.map(p => `
+      <div class="p-3 sm:p-4 flex items-center gap-4 text-xs ${p.active ? '' : 'opacity-50'}">
+        <img src="${esc(p.images[0] || '/icons/icon-192.png')}" alt="" class="w-20 h-16 rounded-xl object-cover bg-slate-100 shrink-0">
+        <div class="flex-1 min-w-0">
+          <div class="font-bold text-sm truncate">${esc(p.title)} ${p.featured ? '⭐' : ''}</div>
+          <div class="text-slate-500">${esc([CATEGORY_LABELS[p.category], p.location, p.year, p.area].filter(Boolean).join(' · '))}</div>
+          <div class="text-slate-400">${p.images.length} photo(s) · ${p.active ? 'Live' : 'Hidden'}</div>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <button type="button" data-action="edit-project" data-id="${p.id}" class="admin-btn">Edit</button>
+          <button type="button" data-action="delete-project" data-id="${p.id}" class="admin-btn !text-red-600">Delete</button>
+        </div>
+      </div>`).join('');
+  }
 
-// ---------- settings ----------
-async function fillSettingsForm() {
-  try {
-    const { settings } = await adminApi('/api/settings');
-    const form = document.getElementById('admin-settings-form');
-    Object.entries(settings).forEach(([k, v]) => { if (form.elements[k]) form.elements[k].value = v; });
-  } catch (err) { console.error(err); }
-}
+  const editor = $('#project-editor');
+  const pform = $('#project-form');
+  function openEditor(p) {
+    pform.reset();
+    $('#project-form-error').classList.add('hidden');
+    $('#project-form-title').textContent = p ? 'Edit project' : 'Add project';
+    pform.elements.id.value = p ? p.id : '';
+    if (p) {
+      ['title', 'category', 'location', 'year', 'area', 'scope', 'description', 'sort_order'].forEach(k => { pform.elements[k].value = p[k] ?? ''; });
+      pform.elements.images.value = (p.images || []).join('\n');
+      pform.elements.active.checked = !!p.active;
+      pform.elements.featured.checked = !!p.featured;
+    }
+    editor.classList.add('modal-open');
+    pform.elements.title.focus();
+  }
+  function closeEditor() { editor.classList.remove('modal-open'); }
+  editor.addEventListener('click', e => { if (e.target === editor) closeEditor(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeEditor(); });
 
-async function saveSettings(e) {
-  e.preventDefault();
-  const form = e.target;
-  const payload = {};
-  Array.from(form.elements).forEach(el => { if (el.name) payload[el.name] = el.value; });
-  try {
-    await adminApi('/api/settings', { method: 'PUT', body: JSON.stringify(payload) });
-    const msg = document.getElementById('settings-saved-msg');
-    msg.classList.remove('hidden');
-    setTimeout(() => msg.classList.add('hidden'), 2500);
-    if (typeof loadSiteSettings === 'function') loadSiteSettings();
-    fillSettingsForm();
-  } catch (err) { alert(err.message); }
-}
+  pform.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = pform.elements;
+    const payload = {
+      title: f.title.value.trim(), category: f.category.value, location: f.location.value.trim(), year: f.year.value.trim(),
+      area: f.area.value.trim(), scope: f.scope.value.trim(), description: f.description.value.trim(),
+      images: f.images.value.split(/\n|,/).map(s => s.trim()).filter(Boolean),
+      sort_order: parseInt(f.sort_order.value, 10) || 0, active: f.active.checked, featured: f.featured.checked
+    };
+    const bad = payload.images.filter(u => !/^(https:\/\/|\/)/.test(u));
+    if (bad.length) {
+      $('#project-form-error').textContent = `Yeh photo links sahi nahi (https:// se shuru hone chahiyein): ${bad.join(', ')}`;
+      $('#project-form-error').classList.remove('hidden');
+      return;
+    }
+    try {
+      const id = f.id.value;
+      await api(id ? `/api/projects/${id}` : '/api/projects', { method: id ? 'PUT' : 'POST', body: JSON.stringify(payload) });
+      closeEditor();
+      loadProjects();
+      loadStats();
+    } catch (ex) {
+      $('#project-form-error').textContent = ex.message;
+      $('#project-form-error').classList.remove('hidden');
+    }
+  });
+
+  async function deleteProject(id) {
+    const p = projects.find(x => x.id === id);
+    if (!confirm(`"${p ? p.title : 'Project'}" delete karna hai? (Sirf chhupane ke liye Edit → "Live" hata dein)`)) return;
+    try { await api(`/api/projects/${id}`, { method: 'DELETE' }); loadProjects(); loadStats(); }
+    catch (e) { alert(e.message); }
+  }
+
+  // ---------- reviews ----------
+  async function loadReviews() {
+    try { reviews = (await api('/api/reviews?all=1')).reviews; renderReviews(); } catch (e) { console.error(e); }
+  }
+  function renderReviews() {
+    const box = $('#reviews-list');
+    if (!reviews.length) { box.innerHTML = '<div class="p-8 text-center text-xs text-slate-400">Abhi koi review nahi.</div>'; return; }
+    box.innerHTML = reviews.map(r => `
+      <div class="p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3 text-xs ${r.approved ? '' : 'bg-amber-50/60'}">
+        <div>
+          <div class="font-bold">${esc(r.name)} <span class="font-normal text-slate-500">· ${esc(r.area)}</span> <span class="text-amber-500">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span></div>
+          <p class="mt-1 text-slate-700">${esc(r.comment)}</p>
+          <div class="mt-1 text-[10px] text-slate-400">${esc(fmtDate(r.created_at))}</div>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          ${r.approved ? `<button type="button" data-action="hide-review" data-id="${r.id}" class="admin-btn">Hide</button>`
+            : `<button type="button" data-action="approve-review" data-id="${r.id}" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold">Approve</button>`}
+          <button type="button" data-action="delete-review" data-id="${r.id}" class="admin-btn !text-red-600">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+  async function moderate(id, approved) {
+    try { await api(`/api/reviews/${id}`, { method: 'PUT', body: JSON.stringify({ approved }) }); loadReviews(); loadStats(); }
+    catch (e) { alert(e.message); }
+  }
+  async function deleteReview(id) {
+    if (!confirm('Review delete karna hai?')) return;
+    try { await api(`/api/reviews/${id}`, { method: 'DELETE' }); loadReviews(); loadStats(); }
+    catch (e) { alert(e.message); }
+  }
+
+  // ---------- settings ----------
+  async function loadSettings() {
+    try {
+      settings = Object.assign(settings, (await api('/api/settings')).settings);
+      const form = $('#settings-form');
+      Object.entries(settings).forEach(([k, v]) => { if (form.elements[k]) form.elements[k].value = v; });
+      $$('[data-setting]').forEach(el => { if (settings[el.dataset.setting]) el.textContent = settings[el.dataset.setting]; });
+    } catch (e) { console.error(e); }
+  }
+  $('#settings-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const payload = {};
+    Array.from(e.target.elements).forEach(el => { if (el.name) payload[el.name] = el.value; });
+    try {
+      await api('/api/settings', { method: 'PUT', body: JSON.stringify(payload) });
+      $('#settings-saved').classList.remove('hidden');
+      setTimeout(() => $('#settings-saved').classList.add('hidden'), 2500);
+      loadSettings();
+    } catch (ex) { alert(ex.message); }
+  });
+
+  // ---------- boot ----------
+  function loadAll() {
+    fetch('/api/health').then(r => r.json()).then(h => $('#admin-db-warning').classList.toggle('hidden', !!h.durable)).catch(() => {});
+    return Promise.allSettled([loadStats(), loadLeads(), loadProjects(), loadReviews(), loadSettings()]);
+  }
+  function start() {
+    showContent();
+    const tab = location.hash.slice(1);
+    switchTab(['leads', 'projects', 'reviews', 'settings'].includes(tab) ? tab : 'leads');
+    loadAll();
+  }
+  fetch('/api/admin/me', { credentials: 'same-origin' })
+    .then(r => r.json()).then(d => (d.admin ? start() : showLogin()))
+    .catch(showLogin);
+})();

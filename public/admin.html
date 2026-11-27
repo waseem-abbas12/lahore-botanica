@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin | The Living Garden</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/tailwind.css">
+  <link rel="stylesheet" href="/site.css">
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+  <!-- Login -->
+  <div id="admin-login-gate" class="hidden min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-sm w-full bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-8">
+      <div class="text-center mb-5">
+        <img src="/icons/icon-192.png" alt="" class="w-12 h-12 mx-auto rounded-2xl">
+        <h1 class="mt-3 text-xl font-serif-luxury font-bold">The Living Garden</h1>
+        <p class="text-xs text-slate-500 mt-1">Staff login</p>
+      </div>
+      <form id="login-form" class="space-y-3 text-sm">
+        <input type="password" id="admin-password" required autocomplete="current-password" placeholder="Password" class="w-full p-3 rounded-xl border border-slate-300 focus:outline-none focus:border-forest-700">
+        <p id="admin-login-error" class="hidden text-red-600 font-semibold text-xs" role="alert"></p>
+        <button type="submit" class="w-full py-3 rounded-xl bg-forest-800 hover:bg-forest-700 text-white font-bold">Login</button>
+        <a href="/" class="block text-center text-xs text-slate-500 font-semibold py-1">← Back to website</a>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="admin-content" class="hidden max-w-7xl mx-auto px-3 sm:px-6 py-6 space-y-5">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+      <div>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-forest-700">Management Portal</span>
+        <h1 class="text-2xl sm:text-3xl font-serif-luxury font-bold"><span data-setting="store_name">The Living Garden</span></h1>
+        <p id="admin-db-warning" class="hidden mt-1 text-[11px] font-bold text-red-600">⚠️ Database temporary hai (DATABASE_URL set nahi). Data save nahi rahega.</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" data-action="refresh" class="admin-btn">↻ Refresh</button>
+        <a href="/" target="_blank" class="admin-btn">View Website</a>
+        <button type="button" data-action="logout" class="admin-btn !text-red-600 !border-red-200">Logout</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="stat-tile"><div class="stat-label">New leads</div><div id="stat-new-leads" class="stat-value text-terracotta">0</div><div id="stat-total-leads" class="stat-sub">0 total</div></div>
+      <div class="stat-tile"><div class="stat-label">Open pipeline</div><div id="stat-pipeline" class="stat-value">Rs. 0</div><div class="stat-sub">Estimates on active leads</div></div>
+      <div class="stat-tile"><div class="stat-label">Won projects</div><div id="stat-won" class="stat-value">0</div><div id="stat-won-value" class="stat-sub">Rs. 0</div></div>
+      <div class="stat-tile"><div class="stat-label">Portfolio</div><div id="stat-projects" class="stat-value">0</div><div id="stat-reviews" class="stat-sub">0 reviews pending</div></div>
+    </div>
+
+    <div class="flex gap-2 border-b border-slate-200 pb-2 overflow-x-auto" role="tablist">
+      <button type="button" class="admin-tab-btn" data-tab="leads">Leads CRM</button>
+      <button type="button" class="admin-tab-btn" data-tab="projects">Projects</button>
+      <button type="button" class="admin-tab-btn" data-tab="reviews">Reviews <span id="badge-reviews" class="hidden ml-1 px-1.5 rounded-full bg-terracotta text-white text-[10px]"></span></button>
+      <button type="button" class="admin-tab-btn" data-tab="settings">Settings</button>
+    </div>
+
+    <!-- Leads -->
+    <section id="tab-leads" class="admin-tab bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-3 sm:p-4 border-b border-slate-200 flex flex-wrap gap-2 items-center justify-between">
+        <h2 class="font-bold text-sm">Site visit requests &amp; enquiries</h2>
+        <div class="flex flex-wrap items-center gap-2">
+          <input id="leads-search" placeholder="Search name / phone / area" class="text-xs p-2 rounded-lg border border-slate-300 w-48">
+          <select id="leads-filter" class="text-xs p-2 rounded-lg border border-slate-300 bg-white"></select>
+          <a href="/api/export/leads.csv" class="admin-btn">⬇ CSV</a>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-3">Date</th><th class="p-3">Client</th><th class="p-3">Project</th><th class="p-3">Details</th><th class="p-3">Quote (Rs)</th><th class="p-3">Status</th><th class="p-3">Notes</th><th class="p-3">Action</th></tr>
+          </thead>
+          <tbody id="leads-tbody" class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="tab-projects" class="admin-tab hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-3 sm:p-4 border-b border-slate-200 flex items-center justify-between gap-2">
+        <div>
+          <h2 class="font-bold text-sm">Portfolio projects</h2>
+          <p class="text-[11px] text-slate-500">Jo projects yahan "Live" hon woh website ke Projects section mein dikhte hain.</p>
+        </div>
+        <button type="button" data-action="new-project" class="px-3.5 py-2 rounded-xl bg-forest-800 hover:bg-forest-700 text-white text-xs font-bold">+ Add Project</button>
+      </div>
+      <div id="projects-list" class="divide-y divide-slate-100"></div>
+    </section>
+
+    <!-- Reviews -->
+    <section id="tab-reviews" class="admin-tab hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="p-3 sm:p-4 border-b border-slate-200">
+        <h2 class="font-bold text-sm">Client reviews</h2>
+        <p class="text-[11px] text-slate-500">Approve karne ke baad hi review website par dikhta hai.</p>
+      </div>
+      <div id="reviews-list" class="divide-y divide-slate-100"></div>
+    </section>
+
+    <!-- Settings -->
+    <section id="tab-settings" class="admin-tab hidden bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+      <h2 class="font-bold text-sm mb-1">Business settings</h2>
+      <p class="text-[11px] text-slate-500 mb-4">Yahan ki tabdeeli poori website par lag jati hai. Stats khaali chhorein to website par nahi dikhenge.</p>
+      <form id="settings-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs max-w-3xl">
+        <label class="field"><span>Company name</span><input name="store_name"></label>
+        <label class="field"><span>Tagline</span><input name="tagline"></label>
+        <label class="field"><span>WhatsApp number (923XXXXXXXXX)</span><input name="whatsapp"></label>
+        <label class="field"><span>Display phone</span><input name="phone"></label>
+        <label class="field"><span>Email</span><input name="email" type="email"></label>
+        <label class="field"><span>Office hours</span><input name="office_hours"></label>
+        <label class="field sm:col-span-2"><span>Office address</span><input name="address"></label>
+        <label class="field"><span>Years of experience (e.g. 12+)</span><input name="stat_years"></label>
+        <label class="field"><span>Projects completed (e.g. 350+)</span><input name="stat_projects"></label>
+        <label class="field"><span>Acres landscaped (e.g. 120+)</span><input name="stat_acres"></label>
+        <label class="field"><span>Instagram URL (https://…)</span><input name="instagram"></label>
+        <label class="field"><span>Facebook URL (https://…)</span><input name="facebook"></label>
+        <div class="sm:col-span-2 flex items-center gap-3 pt-2">
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-forest-800 hover:bg-forest-700 text-white font-bold">Save Settings</button>
+          <span id="settings-saved" class="hidden text-emerald-700 font-bold">✓ Saved</span>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- Project editor -->
+  <div id="project-editor" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3">
+    <form id="project-form" class="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 space-y-3 text-xs">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <h3 id="project-form-title" class="font-serif-luxury font-bold text-xl">Add project</h3>
+        <button type="button" data-action="close-editor" class="w-8 h-8 rounded-full bg-slate-100 font-bold" aria-label="Close">✕</button>
+      </div>
+      <input type="hidden" name="id">
+      <div class="grid sm:grid-cols-2 gap-3">
+        <label class="field sm:col-span-2"><span>Project title *</span><input name="title" required placeholder="e.g. 2 Kanal villa landscape, DHA Phase 6"></label>
+        <label class="field"><span>Category</span>
+          <select name="category">
+            <option value="residential">Residential</option><option value="farmhouse">Farmhouse</option>
+            <option value="commercial">Commercial</option><option value="society">Society &amp; Parks</option>
+            <option value="institutional">Institutional</option><option value="rooftop">Rooftop &amp; Vertical</option>
+            <option value="maintenance">Maintenance</option>
+          </select>
+        </label>
+        <label class="field"><span>Location</span><input name="location" placeholder="DHA Phase 6, Lahore"></label>
+        <label class="field"><span>Year</span><input name="year" placeholder="2026"></label>
+        <label class="field"><span>Area / size</span><input name="area" placeholder="2 Kanal / 4 acres"></label>
+        <label class="field sm:col-span-2"><span>Scope (short)</span><input name="scope" placeholder="Bermuda lawn, palms, pergola, lighting, sprinklers"></label>
+        <label class="field sm:col-span-2"><span>Photo URLs (har line par aik, https:// ya /images/…)</span><textarea name="images" rows="4" class="font-mono"></textarea></label>
+        <label class="field sm:col-span-2"><span>Description</span><textarea name="description" rows="4"></textarea></label>
+        <label class="field"><span>Sort order (chhota pehle)</span><input name="sort_order" type="number" value="0"></label>
+        <div class="flex items-end gap-4 font-semibold text-slate-700 pb-2">
+          <label class="flex items-center gap-2"><input type="checkbox" name="active" checked> Live</label>
+          <label class="flex items-center gap-2"><input type="checkbox" name="featured"> ⭐ Featured</label>
+        </div>
+      </div>
+      <p id="project-form-error" class="hidden text-red-600 font-semibold" role="alert"></p>
+      <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
+        <button type="button" data-action="close-editor" class="admin-btn">Cancel</button>
+        <button type="submit" class="px-5 py-2.5 rounded-xl bg-forest-800 hover:bg-forest-700 text-white font-bold">Save Project</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="/admin.js" defer></script>
+</body>
+</html>

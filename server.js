@@ -73,7 +73,7 @@ const server = http.createServer(async (req, res) => {
 
 getDb().then(db => {
   server.listen(PORT, () => {
-    console.log(`🌿 Lahore Botanica running at http://localhost:${PORT}`);
+    console.log(`🌿 The Living Garden running at http://localhost:${PORT}`);
     console.log(`   Database: ${db.kind === 'postgres' ? 'Postgres (DATABASE_URL)' : 'embedded PGlite (.data/pglite)'}`);
     console.log(`   Admin:    http://localhost:${PORT}/#admin`);
     if (!process.env.ADMIN_PASSWORD && adminPassword()) {
