@@ -58,6 +58,36 @@ Key facts:
 - [Vertical Gardens in Rawalpindi](https://lahore-botanica.vercel.app/vertical-gardens-rawalpindi)
 - [Sprinkler Systems in Rawalpindi](https://lahore-botanica.vercel.app/irrigation-sprinkler-systems-rawalpindi)
 - [Garden Maintenance in Rawalpindi](https://lahore-botanica.vercel.app/garden-maintenance-rawalpindi)
+- [Lawn Grass Installation in Faisalabad](https://lahore-botanica.vercel.app/lawn-grass-installation-faisalabad)
+- [Villa & Farmhouse Landscaping in Faisalabad](https://lahore-botanica.vercel.app/villa-farmhouse-landscaping-faisalabad)
+- [Rooftop Gardens in Faisalabad](https://lahore-botanica.vercel.app/rooftop-terrace-gardens-faisalabad)
+- [Vertical Gardens in Faisalabad](https://lahore-botanica.vercel.app/vertical-gardens-faisalabad)
+- [Sprinkler Systems in Faisalabad](https://lahore-botanica.vercel.app/irrigation-sprinkler-systems-faisalabad)
+- [Garden Maintenance in Faisalabad](https://lahore-botanica.vercel.app/garden-maintenance-faisalabad)
+- [Lawn Grass Installation in Multan](https://lahore-botanica.vercel.app/lawn-grass-installation-multan)
+- [Villa & Farmhouse Landscaping in Multan](https://lahore-botanica.vercel.app/villa-farmhouse-landscaping-multan)
+- [Rooftop Gardens in Multan](https://lahore-botanica.vercel.app/rooftop-terrace-gardens-multan)
+- [Vertical Gardens in Multan](https://lahore-botanica.vercel.app/vertical-gardens-multan)
+- [Sprinkler Systems in Multan](https://lahore-botanica.vercel.app/irrigation-sprinkler-systems-multan)
+- [Garden Maintenance in Multan](https://lahore-botanica.vercel.app/garden-maintenance-multan)
+- [Lawn Grass Installation in Peshawar](https://lahore-botanica.vercel.app/lawn-grass-installation-peshawar)
+- [Villa & Farmhouse Landscaping in Peshawar](https://lahore-botanica.vercel.app/villa-farmhouse-landscaping-peshawar)
+- [Rooftop Gardens in Peshawar](https://lahore-botanica.vercel.app/rooftop-terrace-gardens-peshawar)
+- [Vertical Gardens in Peshawar](https://lahore-botanica.vercel.app/vertical-gardens-peshawar)
+- [Sprinkler Systems in Peshawar](https://lahore-botanica.vercel.app/irrigation-sprinkler-systems-peshawar)
+- [Garden Maintenance in Peshawar](https://lahore-botanica.vercel.app/garden-maintenance-peshawar)
+- [Lawn Grass Installation in Sialkot](https://lahore-botanica.vercel.app/lawn-grass-installation-sialkot)
+- [Villa & Farmhouse Landscaping in Sialkot](https://lahore-botanica.vercel.app/villa-farmhouse-landscaping-sialkot)
+- [Rooftop Gardens in Sialkot](https://lahore-botanica.vercel.app/rooftop-terrace-gardens-sialkot)
+- [Vertical Gardens in Sialkot](https://lahore-botanica.vercel.app/vertical-gardens-sialkot)
+- [Sprinkler Systems in Sialkot](https://lahore-botanica.vercel.app/irrigation-sprinkler-systems-sialkot)
+- [Garden Maintenance in Sialkot](https://lahore-botanica.vercel.app/garden-maintenance-sialkot)
+- [Lawn Grass Installation in Gujranwala](https://lahore-botanica.vercel.app/lawn-grass-installation-gujranwala)
+- [Villa & Farmhouse Landscaping in Gujranwala](https://lahore-botanica.vercel.app/villa-farmhouse-landscaping-gujranwala)
+- [Rooftop Gardens in Gujranwala](https://lahore-botanica.vercel.app/rooftop-terrace-gardens-gujranwala)
+- [Vertical Gardens in Gujranwala](https://lahore-botanica.vercel.app/vertical-gardens-gujranwala)
+- [Sprinkler Systems in Gujranwala](https://lahore-botanica.vercel.app/irrigation-sprinkler-systems-gujranwala)
+- [Garden Maintenance in Gujranwala](https://lahore-botanica.vercel.app/garden-maintenance-gujranwala)
 
 ## Prices, areas and farmhouses
 - [Landscaping Price in Pakistan (2026)](https://lahore-botanica.vercel.app/landscaping-price-pakistan): Landscaping price in Pakistan: lawn rates per sq ft, 5 marla to 1 kanal packages, rooftop, sprinkler, lighting and rockery costs. Indicative 2026 rates from The Living Garden.
@@ -72,6 +102,11 @@ Key facts:
 - [Landscaping in DHA Islamabad](https://lahore-botanica.vercel.app/landscaping-dha-islamabad): Landscaping in DHA Islamabad Phase 1 to 5: lawns, sloped-plot terracing, drainage, rooftop gardens and lighting suited to Islamabad's rain and winters.
 - [Landscaping in Bahria Town Islamabad](https://lahore-botanica.vercel.app/landscaping-bahria-town-islamabad): Landscaping in Bahria Town Islamabad and Rawalpindi (Phase 1–8) and Bahria Enclave: lawns, terraces on slopes, rooftops, vertical gardens and maintenance.
 - [Coastal Gardens in DHA Karachi & Clifton](https://lahore-botanica.vercel.app/landscaping-dha-karachi-clifton): Coastal landscaping in DHA Karachi and Clifton: salt-tolerant grass and plants, soil improvement, water-wise drip irrigation, rooftop and courtyard gardens.
+- [Landscaping in Faisalabad](https://lahore-botanica.vercel.app/landscaping-faisalabad-canal-road): Landscaping in Faisalabad for Canal Road, Peoples Colony, Madina Town, Susan Road, Wapda City and Citi Housing: lawns, hardscape, rooftops, irrigation and maintenance.
+- [Landscaping in Multan & DHA Multan](https://lahore-botanica.vercel.app/landscaping-dha-multan): Landscaping in Multan and DHA Multan, Bosan Road, Gulgasht and Buch Villas: heat-tolerant lawns, shade trees, windbreak hedges, drip irrigation and maintenance.
+- [Landscaping in Peshawar & Hayatabad](https://lahore-botanica.vercel.app/landscaping-hayatabad-peshawar): Landscaping in Peshawar for Hayatabad, University Town, DHA Peshawar and Regi Model Town: lawns, terraces, hedges, irrigation and gardens for hot summers and cold winters.
+- [Landscaping in Sialkot](https://lahore-botanica.vercel.app/landscaping-sialkot-cantt): Landscaping in Sialkot for Cantt, Defence Road, Model Town, Paris Road and Citi Housing: lawns with proper drainage, hedges, rooftops, lighting and maintenance.
+- [Landscaping in Gujranwala](https://lahore-botanica.vercel.app/landscaping-dha-gujranwala): Landscaping in Gujranwala for DHA Gujranwala, Citi Housing, Model Town and Satellite Town: lawn installation, rooftops, vertical gardens, sprinklers and maintenance.
 
 ## Guides
 - [Best Lawn Grass in Pakistan: Bermuda vs Dhaka vs Korean (Zoysia)](https://lahore-botanica.vercel.app/blog/best-lawn-grass-pakistan): For full sun and heavy use, choose American Bermuda. For a soft, deep green front lawn, choose Fine Dhaka. For a dense carpet with less mowing and some shade, choose Korean (Zoysia). In salty or sandy coastal soil, consider Paspalum.

@@ -249,5 +249,98 @@ export const TOPICS = [
     ],
     sources: [['Zameen: Home gardening tips for Karachi', 'https://www.zameen.com/blog/home-gardening-tips-karachi-city.html']],
     services: ['lawn-grass-installation', 'irrigation-sprinkler-systems', 'vertical-gardens']
+  },
+
+  // ---------- MORE CITIES: AREA KEYWORDS ----------
+  {
+    slug: 'landscaping-faisalabad-canal-road', kw: 'landscaping Faisalabad / garden design Canal Road / lawn Peoples Colony', city: 'faisalabad',
+    title: 'Landscaping in Faisalabad | Canal Road, Peoples Colony, Madina Town & Wapda City',
+    desc: 'Landscaping in Faisalabad for Canal Road, Peoples Colony, Madina Town, Susan Road, Wapda City and Citi Housing: lawns, hardscape, rooftops, irrigation and maintenance.',
+    badge: '📍 Faisalabad', h1a: 'Landscaping in', h1b: 'Faisalabad',
+    lead: 'Faisalabad ke gharon, farmhouses aur factories ke liye lawn, pathways, rooftop aur sprinkler, yahan ki garmi aur paani ko dekhte hue.',
+    image: 'images/projects/villa-landscaping.jpg',
+    sections: [
+      { h: 'Gardens for Faisalabad homes', list: ['Front lawns for 5 marla to 2 kanal homes', 'Back gardens with seating and BBQ corners', 'Rooftop gardens with waterproofing checks', 'Factory and office green belts', 'Canal Road farmhouse landscaping', 'Sprinkler and drip irrigation'] },
+      { h: 'Check the water first', p: ['Faisalabad ke kuch ilaqon me boring ka paani khara ho sakta hai. We check water before choosing grass and plants, and use salt-tolerant options where needed.'] },
+      { h: 'Industrial and commercial sites', p: ['Faisalabad is an industrial city, and factory frontages, offices and housing schemes need durable, low-maintenance landscaping. We design hardy green belts with efficient irrigation and offer annual maintenance contracts.'] }
+    ],
+    areas: ['Canal Road', 'Peoples Colony', 'Madina Town', 'Susan Road', 'D Ground', 'Wapda City', 'Citi Housing', 'Jaranwala Road'],
+    faqs: [
+      { q: 'Faisalabad me lawn banwane ka kharcha kitna hai?', a: 'Hamare 5 se 10 marla front lawn packages Rs. 45,000 se 85,000 aur 1 kanal garden Rs. 140,000 se 260,000 tak hain. Lahore se bahar ke projects me transport shamil ho sakta hai.' },
+      { q: 'Do you landscape factories in Faisalabad?', a: 'Yes. We design and maintain factory frontages, green belts and office grounds, with annual maintenance contracts available.' }
+    ],
+    services: ['lawn-grass-installation', 'commercial-society-landscaping', 'irrigation-sprinkler-systems']
+  },
+  {
+    slug: 'landscaping-dha-multan', kw: 'landscaping Multan / DHA Multan garden / heat tolerant lawn Multan', city: 'multan',
+    title: 'Landscaping in Multan & DHA Multan | Heat-Proof Lawns and Gardens',
+    desc: 'Landscaping in Multan and DHA Multan, Bosan Road, Gulgasht and Buch Villas: heat-tolerant lawns, shade trees, windbreak hedges, drip irrigation and maintenance.',
+    badge: '📍 Multan', h1a: 'Landscaping in', h1b: 'Multan & DHA Multan',
+    lead: 'Multan ki shadeed garmi aur aandhi me bhi hara bhara garden: garmi bardasht karne wali grass, chhaon dene wale darakht aur paani bachane wali drip.',
+    image: 'images/projects/resort-patio.jpg',
+    sections: [
+      { h: 'Designing for extreme heat', list: ['Bermuda or Paspalum lawns for full sun', 'Shade trees on the west and south sides', 'Pergolas over seating areas', 'Windbreak hedges against dust storms', 'Mulched beds and drip irrigation', 'Smaller lawns with stone and gravel zones'] },
+      { h: 'Watering that works in Multan', p: ['Garmi me dopahar ka paani zyada tar bhaap ban kar ur jata hai. Water before sunrise, deeply and less often, with timers so it happens every day without fail.'] }
+    ],
+    areas: ['DHA Multan', 'Bosan Road', 'Gulgasht Colony', 'Cantt', 'Wapda Town', 'Royal Orchard', 'Buch Villas', 'Shershah Road farmhouses'],
+    faqs: [
+      { q: 'Multan ki garmi me konsi grass zinda rehti hai?', a: 'American Bermuda sab se zyada garmi bardasht karti hai. Khare paani wali jagah par Paspalum behtar hai. Dono ko subah sawere paani dena zaroori hai.' },
+      { q: 'Which trees give quick shade in Multan?', a: 'Neem, sukh chain and date palms handle the heat well. Neem and sukh chain give dense shade relatively quickly.' }
+    ],
+    services: ['lawn-grass-installation', 'pergolas-gazebos', 'irrigation-sprinkler-systems']
+  },
+  {
+    slug: 'landscaping-hayatabad-peshawar', kw: 'landscaping Peshawar / Hayatabad garden / DHA Peshawar lawn', city: 'peshawar',
+    title: 'Landscaping in Peshawar | Hayatabad, University Town & DHA Peshawar',
+    desc: 'Landscaping in Peshawar for Hayatabad, University Town, DHA Peshawar and Regi Model Town: lawns, terraces, hedges, irrigation and gardens for hot summers and cold winters.',
+    badge: '📍 Peshawar', h1a: 'Landscaping in', h1b: 'Peshawar & Hayatabad',
+    lead: 'Hayatabad, University Town aur DHA Peshawar ke gharon ke liye lawn aur garden, jo garmi aur sardi dono me khoobsurat rahein.',
+    image: 'images/projects/cobblestone-walkway.jpg',
+    sections: [
+      { h: 'Gardens for Peshawar\'s two seasons', list: ['Grass that recovers after cold winters', 'Frost-tolerant shrubs and hedges', 'Privacy hedges and boundary greening', 'Stone pathways and courtyards', 'Fruit trees and kitchen gardens', 'Tank-fed drip irrigation on timers'] },
+      { h: 'Improving hard ground', p: ['Naye sectors me mitti aksar sakht aur kankar wali hoti hai. We remove gravel and debris, add sweet soil and compost, and level the lawn with a drainage slope.'] }
+    ],
+    areas: ['Hayatabad Phase 1 – 7', 'University Town', 'DHA Peshawar', 'Regi Model Town', 'Cantt', 'Warsak Road'],
+    faqs: [
+      { q: 'Peshawar me sardi me grass kyun peeli hoti hai?', a: 'Warm-season grasses thand me dormant ho jati hain. Bahar me dhoop aur garmi ke saath dobara hari ho jati hain. Sardi me paani kam dein.' },
+      { q: 'Do you take projects in Peshawar?', a: 'Yes. We work across Pakistan. Book a site visit and we schedule the team for your location.' }
+    ],
+    services: ['lawn-grass-installation', 'hardscape-paving', 'garden-maintenance']
+  },
+  {
+    slug: 'landscaping-sialkot-cantt', kw: 'landscaping Sialkot / garden Sialkot Cantt / Defence Road lawn', city: 'sialkot',
+    title: 'Landscaping in Sialkot | Cantt, Defence Road, Model Town & Citi Housing',
+    desc: 'Landscaping in Sialkot for Cantt, Defence Road, Model Town, Paris Road and Citi Housing: lawns with proper drainage, hedges, rooftops, lighting and maintenance.',
+    badge: '📍 Sialkot', h1a: 'Landscaping in', h1b: 'Sialkot',
+    lead: 'Sialkot me barish zyada hoti hai, is liye hum garden me drainage pehle banate hain, phir lawn aur plants lagate hain.',
+    image: 'images/projects/swimming-pool-garden.jpg',
+    sections: [
+      { h: 'Built for a wetter climate', list: ['Drainage slope under every lawn', 'Raised beds where water collects', 'Fungus-resistant plant choices', 'Strong privacy hedges', 'Garden and facade lighting', 'Office and factory frontages for exporters'] },
+      { h: 'Corporate and export-house greening', p: ['Sialkot ke export units aur offices ke liye saaf suthre entrance gardens, green belts aur vertical gardens, annual maintenance ke saath.'] }
+    ],
+    areas: ['Sialkot Cantt', 'Defence Road', 'Model Town', 'Paris Road', 'Citi Housing Sialkot', 'Sambrial Road'],
+    faqs: [
+      { q: 'Barish me lawn me paani kyun khara rehta hai?', a: 'Leveling ke waqt drainage slope na dene ki wajah se. Hum lawn ko halka dhalwan dete hain aur zaroorat ho to drain ya soak pit banate hain.' },
+      { q: 'Do you landscape offices and factories in Sialkot?', a: 'Yes, including entrance gardens, green belts and annual maintenance.' }
+    ],
+    services: ['lawn-grass-installation', 'commercial-society-landscaping', 'landscape-lighting']
+  },
+  {
+    slug: 'landscaping-dha-gujranwala', kw: 'landscaping Gujranwala / DHA Gujranwala garden / Citi Housing lawn', city: 'gujranwala',
+    title: 'Landscaping in Gujranwala & DHA Gujranwala | Lawns, Rooftops & Care',
+    desc: 'Landscaping in Gujranwala for DHA Gujranwala, Citi Housing, Model Town and Satellite Town: lawn installation, rooftops, vertical gardens, sprinklers and maintenance.',
+    badge: '📍 Gujranwala', h1a: 'Landscaping in', h1b: 'Gujranwala',
+    lead: 'DHA Gujranwala, Citi Housing aur Model Town ke naye aur purane gharon ke liye lawn, rooftop aur garden care, Lahore jaisi quality ke saath.',
+    image: 'images/projects/carpet-grass-turf.jpg',
+    sections: [
+      { h: 'What Gujranwala homes need', list: ['New-house lawns with proper soil replacement', 'Front gardens matched to the elevation', 'Rooftop seating gardens', 'Vertical gardens on boundary walls', 'Sprinklers and lighting', 'Monthly maintenance plans'] },
+      { h: 'New schemes, new soil', p: ['DHA aur Citi Housing ke naye plots me upar ki mitti ke neeche aksar malba hota hai. Grass lagane se pehle yeh nikalna aur sweet soil dalna lawn ki umar barhata hai.'] }
+    ],
+    areas: ['DHA Gujranwala', 'Citi Housing', 'Model Town', 'Satellite Town', 'Peoples Colony', 'Wapda Town', 'GT Road farmhouses'],
+    faqs: [
+      { q: 'Gujranwala Lahore ke qareeb hai, kya site visit jaldi ho sakti hai?', a: 'Ji haan. Lahore se qareeb hone ki wajah se Gujranwala ki site visits aasani se schedule ho jati hain.' },
+      { q: 'Which grass is best in Gujranwala?', a: 'Bermuda for sunny lawns and heavy use, Dhaka for soft front lawns, and Zoysia for lightly shaded areas.' }
+    ],
+    services: ['lawn-grass-installation', 'rooftop-terrace-gardens', 'vertical-gardens']
   }
 ];

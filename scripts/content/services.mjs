@@ -349,7 +349,7 @@ export const SERVICES = [
 ];
 
 // Service × city pages (top cities, core services)
-export const CITY_SERVICE_CITIES = ['lahore', 'islamabad', 'karachi', 'rawalpindi'];
+export const CITY_SERVICE_CITIES = ['lahore', 'islamabad', 'karachi', 'rawalpindi', 'faisalabad', 'multan', 'peshawar', 'sialkot', 'gujranwala'];
 export const CITY_SERVICE_SLUGS = ['lawn-grass-installation', 'villa-farmhouse-landscaping', 'rooftop-terrace-gardens', 'vertical-gardens', 'irrigation-sprinkler-systems', 'garden-maintenance'];
 
 // Local angle per city, used to make service×city pages specific
@@ -377,5 +377,35 @@ export const CITY_ANGLES = {
     water: 'Water supply can be unreliable in some areas, so storage, timers and drip lines help keep a garden alive through dry spells.',
     tips: ['Level uneven plots and add proper drainage before planting', 'Use drip irrigation to cope with irregular water supply', 'Pick hardy plants that handle both summer heat and winter cold'],
     areas: 'Bahria Town, DHA Phase 1 and 2, Chaklala Scheme III, Westridge, Satellite Town, Askari and the Gulraiz area'
+  },
+  faisalabad: {
+    challenge: 'Faisalabad has very hot, dry summers, cool winters and a short monsoon. Soil is mostly fertile canal-irrigated loam, but new housing schemes often have compacted fill and construction waste.',
+    water: 'Groundwater in parts of the district can be brackish, so we check water before choosing grass and drip lines. Early-morning watering and mulched beds cut summer losses.',
+    tips: ['Test boring water before planting salt-sensitive plants', 'Lay new lawns in spring or late summer', 'Use shade trees on west-facing lawns to beat the heat'],
+    areas: 'Canal Road, Peoples Colony, Madina Town, Susan Road, D Ground, Wapda City and Citi Housing'
+  },
+  multan: {
+    challenge: 'Multan is one of the hottest cities in Pakistan, with long, very hot summers, dust storms and little rain. Plants must be heat-hardy, and lawns need careful watering and some shade.',
+    water: 'Evaporation is extreme in summer, so drip lines, mulch, timers and smaller lawn areas make a big difference. Water quality varies and should be checked before installation.',
+    tips: ['Choose Bermuda or Paspalum for full-sun lawns', 'Plant windbreak hedges against dust storms', 'Water before sunrise, never at midday'],
+    areas: 'DHA Multan, Bosan Road, Gulgasht Colony, Cantt, Wapda Town, Royal Orchard and Buch Villas'
+  },
+  peshawar: {
+    challenge: 'Peshawar has hot summers, cold winters with occasional frost and moderate rain. Soil ranges from fertile valley loam to hard, gravelly ground on newer schemes.',
+    water: 'Tube-well water is common; pressure and supply can vary, so storage tanks with timers and drip lines keep gardens reliable.',
+    tips: ['Pick plants that handle both summer heat and winter frost', 'Improve gravelly soil with sweet soil and compost', 'Plant trees in spring or monsoon'],
+    areas: 'Hayatabad, University Town, DHA Peshawar, Regi Model Town, Cantt and Warsak Road'
+  },
+  sialkot: {
+    challenge: 'Sialkot is greener and wetter than most of Punjab, with hot humid summers, a strong monsoon and cool winters. Drainage and fungus control matter as much as watering.',
+    water: 'Rainfall is relatively high, so lawns need a drainage slope and beds must not stay waterlogged. Irrigation can be lighter outside the dry months.',
+    tips: ['Build a drainage slope before laying grass', 'Watch for fungus in humid monsoon weeks', 'Use the rains for tree planting'],
+    areas: 'Cantt, Defence Road, Model Town, Paris Road, Citi Housing Sialkot and Sambrial Road'
+  },
+  gujranwala: {
+    challenge: 'Gujranwala shares Lahore\'s plains climate: very hot summers, a humid monsoon and winter smog. New schemes often have filled plots with debris under the topsoil.',
+    water: 'Groundwater is generally usable for gardens, but summer evaporation is high, so early watering and drip lines in beds help.',
+    tips: ['Replace debris-filled topsoil before laying grass', 'Wash smog dust off leaves in winter', 'Plant hedges early for privacy'],
+    areas: 'DHA Gujranwala, Citi Housing, Model Town, Satellite Town, Peoples Colony and Wapda Town'
   }
 };
