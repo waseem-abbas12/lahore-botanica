@@ -302,3 +302,20 @@ body {
   transform: translateY(-4px);
   box-shadow: 0 12px 28px -6px rgba(19, 62, 43, 0.15), 0 8px 12px -6px rgba(0, 0, 0, 0.06);
 }
+
+/* Nationwide cities ticker */
+.city-ticker-track {
+  animation: city-ticker 45s linear infinite;
+}
+.city-ticker:hover .city-ticker-track,
+.city-ticker:focus-within .city-ticker-track {
+  animation-play-state: paused;
+}
+@keyframes city-ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .city-ticker { overflow-x: auto; }
+  .city-ticker-track { animation: none; }
+}

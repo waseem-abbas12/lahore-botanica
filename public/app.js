@@ -2075,7 +2075,7 @@ function renderCitiesDirectory(filtered) {
         <div class="text-4xl mb-3">📍</div>
         <h3 class="font-serif-luxury text-xl font-bold text-forest-900">Shehr Ya Society Nahi Mili</h3>
         <p class="text-xs text-charcoal-500 mt-1">Lekin hum pure Pakistan me serve karte hain! WhatsApp par direct rabta karein.</p>
-        <a href="https://wa.me/${waNumber()}?text=Hello%20Lahore%20Botanica,%20I%20want%20landscaping%20in%20my%20city" target="_blank" class="mt-4 inline-flex btn-whatsapp px-5 py-2.5 rounded-xl text-xs font-bold">Inquire on WhatsApp</a>
+        <a href="https://wa.me/${waNumber()}?text=Hello%20The%20Living%20Garden,%20I%20want%20landscaping%20in%20my%20city" target="_blank" class="mt-4 inline-flex btn-whatsapp px-5 py-2.5 rounded-xl text-xs font-bold">Inquire on WhatsApp</a>
       </div>
     `;
     return;
