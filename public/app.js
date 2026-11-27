@@ -2160,9 +2160,9 @@ function renderCityDetailPage(slug) {
     <!-- Breadcrumb -->
     <div class="bg-cream-100 border-b border-cream-200 py-2.5 px-4 sm:px-8">
       <div class="max-w-7xl mx-auto flex items-center gap-2 text-xs text-charcoal-500 font-medium flex-wrap">
-        <a href="#shop" onclick="navigateToPage('shop'); return false;" class="hover:text-forest-800">Home</a>
+        <a href="#landscaping" onclick="navigateToPage('landscaping'); return false;" class="py-2 hover:text-forest-800">Home</a>
         <span>/</span>
-        <a href="#cities" onclick="navigateToPage('cities'); return false;" class="hover:text-forest-800">Pakistan Cities Hub</a>
+        <a href="#cities" onclick="navigateToPage('cities'); return false;" class="py-2 hover:text-forest-800">Pakistan Cities Hub</a>
         <span>/</span>
         <span class="text-forest-900 font-bold">${city.name} Landscaping Architecture</span>
       </div>

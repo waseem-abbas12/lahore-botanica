@@ -319,3 +319,23 @@ body {
   .city-ticker { overflow-x: auto; }
   .city-ticker-track { animation: none; }
 }
+
+/* Mobile: long card lists become swipeable rows (same cards, less scrolling) */
+@media (max-width: 639px) {
+  .mobile-swipe {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 14px;
+    margin: 0 -12px;
+    padding: 4px 12px 14px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mobile-swipe::-webkit-scrollbar { display: none; }
+  .mobile-swipe > * {
+    flex: 0 0 84%;
+    scroll-snap-align: center;
+  }
+}
+.portfolio-filter-pill { min-height: 36px; }
