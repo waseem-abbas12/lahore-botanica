@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "build:css": "tailwindcss -c tailwind/main.config.js -i tailwind/input.css -o public/tailwind.css --minify && tailwindcss -c tailwind/city.config.js -i tailwind/input.css -o public/city.css --minify"
+    "build:css": "tailwindcss -c tailwind/main.config.js -i tailwind/input.css -o public/tailwind.css --minify && tailwindcss -c tailwind/city.config.js -i tailwind/input.css -o public/city.css --minify",
+    "build:pages": "node scripts/build-pages.mjs",
+    "build": "node scripts/build-pages.mjs && npm run build:css"
   },
   "keywords": [
     "plants",

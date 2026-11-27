@@ -47,7 +47,7 @@
     <span>🇵🇰 <strong>Nationwide Turnkey Landscaping</strong><span class="hidden md:inline">: Serving Lahore, Islamabad, Rawalpindi, Karachi, Faisalabad, Multan, Gujranwala, Peshawar & Sialkot</span></span>
     <span class="hidden sm:inline text-terracotta">•</span>
     <!-- Live Smog AQI Badge -->
-    <button onclick="navigateToPage('care-guide')" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-0.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/40 hover:bg-amber-500/30 transition text-[10px] sm:text-xs cursor-pointer shadow-xs">
+    <button onclick="location.href='/plant-care-guide'" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-0.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/40 hover:bg-amber-500/30 transition text-[10px] sm:text-xs cursor-pointer shadow-xs">
       <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
       <span>Lahore AQI: <strong class="text-white">268 (Smog Alert)</strong></span>
       <span class="underline text-emerald-300 ml-1 font-bold">Smog Care Tips →</span>
@@ -64,7 +64,7 @@
       <div class="flex items-center gap-2 sm:gap-3">
 
         <!-- Brand Logo -->
-        <a href="#landscaping" onclick="navigateToPage('landscaping'); return false;" class="flex items-center gap-2.5 sm:gap-3 group">
+        <a href="/" class="flex items-center gap-2.5 sm:gap-3 group">
           <img src="/brand/logo-mark.svg" alt="" width="48" height="48" class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 group-hover:rotate-6 transition-transform duration-300">
           <div>
             <div class="font-serif-luxury text-[19px] sm:text-[26px] tracking-tight text-forest-900 leading-none whitespace-nowrap"><span class="font-bold">The</span> <span class="italic font-normal text-terracotta">Living Garden</span></div>
@@ -75,10 +75,10 @@
 
       <!-- Desktop Nav Links (Pages) -->
       <nav class="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-semibold text-charcoal-700 whitespace-nowrap">
-        <a href="#landscaping" onclick="navigateToPage('landscaping'); return false;" class="nav-page-link text-forest-800 font-bold hover:text-forest-800 transition" data-page="landscaping">Landscaping Architecture</a>
-        <a href="#care-guide" onclick="navigateToPage('care-guide'); return false;" class="nav-page-link hover:text-forest-800 transition" data-page="care-guide">Lahore Plant Care</a>
-        <a href="#cities" onclick="navigateToPage('cities'); return false;" class="nav-page-link hover:text-forest-800 transition" data-page="cities">🇵🇰 Pakistan Cities</a>
-        <a href="#about" onclick="navigateToPage('about'); return false;" class="nav-page-link hover:text-forest-800 transition" data-page="about">About & Green Pakistan</a>
+        <a href="/services" class="nav-page-link hover:text-forest-800 transition" data-page="services">Landscaping Architecture</a>
+        <a href="/plant-care-guide" class="nav-page-link hover:text-forest-800 transition" data-page="care-guide">Lahore Plant Care</a>
+        <a href="/cities" class="nav-page-link hover:text-forest-800 transition" data-page="cities">🇵🇰 Pakistan Cities</a>
+        <a href="/about" class="nav-page-link hover:text-forest-800 transition" data-page="about">About & Green Pakistan</a>
       </nav>
 
       <!-- Right Header Actions -->
@@ -101,8 +101,8 @@
               <!-- Rendered via JS -->
             </div>
             <div class="border-t border-cream-200 pt-1.5 mt-1 px-2">
-              <button onclick="navigateToPage('cities'); toggleCityDropdown(false);" class="w-full text-center text-[10px] font-bold text-forest-800 hover:underline py-1">
-                Explore All 10 Cities Directory &rarr;
+              <button onclick="location.href='/cities'" class="w-full text-center text-[10px] font-bold text-forest-800 hover:underline py-1">
+                Explore All Cities Directory &rarr;
               </button>
             </div>
           </div>
@@ -1099,7 +1099,7 @@
     </section>
 
       <!-- Consultation Booking Form -->
-      <section class="py-12 sm:py-16 bg-forest-900 text-cream-50 px-3 sm:px-6 lg:px-8">
+      <section id="consultation" class="py-12 sm:py-16 bg-forest-900 text-cream-50 px-3 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto bg-white text-charcoal-900 rounded-3xl p-5 sm:p-10 shadow-2xl border border-cream-200">
           <div class="text-center mb-6">
             <span class="text-[10px] sm:text-xs font-bold text-terracotta uppercase tracking-wider">Free Site Inspection</span>
@@ -1166,562 +1166,6 @@
       </section>
     </div> <!-- END PAGE 2: page-landscaping -->
 
-    <!-- ==================== PAGE 3: LAHORE CLIMATE PLANT CARE & SMOG GUIDE ==================== -->
-    <div id="page-care-guide" class="page-view hidden">
-      <section class="bg-gradient-to-b from-cream-100 to-cream-50 py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-b border-cream-200 text-center">
-        <div class="max-w-4xl mx-auto space-y-3">
-          <span class="text-terracotta text-[10px] sm:text-xs font-bold uppercase tracking-widest">Horticulture Science</span>
-          <h1 class="font-serif-luxury text-3xl sm:text-5xl font-bold text-forest-900">Lahore Climate <span class="italic font-normal text-terracotta">Plant Survival Guide</span></h1>
-          <p class="text-charcoal-600 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
-            Lahore ke mausam me 47°C ki shadeed garmi aur November ki zahreeli smog se paudon ko taza aur sar-sabz rakhne ke certified tareeqay.
-          </p>
-        </div>
-      </section>
-
-      <!-- Seasonal Calendar -->
-      <section class="py-10 sm:py-14 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12">
-          <div class="card-elevation p-5 sm:p-6 rounded-2xl">
-            <div class="text-2xl mb-2">🔥</div>
-            <h3 class="font-bold text-sm text-forest-900">Summer Heatwaves (May - July)</h3>
-            <p class="text-xs text-charcoal-500 mt-1.5 leading-relaxed">
-              Dopehar ki dhoop (12 PM se 4 PM) ke waqt indoor plants ko khirki se 3 feet door rakhein. Paani hamesha subah 7 AM se pehle ya maghrib ke baad dein. Root burn se bachane ke liye mulch istemal karein.
-            </p>
-          </div>
-          <div class="card-elevation p-5 sm:p-6 rounded-2xl">
-            <div class="text-2xl mb-2">🌫️</div>
-            <h3 class="font-bold text-sm text-forest-900">Smog & Dust Protection (Oct - Dec)</h3>
-            <p class="text-xs text-charcoal-500 mt-1.5 leading-relaxed">
-              Haftay mein ek martaba foliage (patton) ko fresh paani se spray karein taake dhoop absorb karne ke pores khulay rahein aur smog ka toxic PM2.5 asar na ho. Indoor air purifier plants room me rakhein.
-            </p>
-          </div>
-          <div class="card-elevation p-5 sm:p-6 rounded-2xl">
-            <div class="text-2xl mb-2">🪱</div>
-            <h3 class="font-bold text-sm text-forest-900">Organic Lahore Soil Mix (Bhal Mitti)</h3>
-            <p class="text-xs text-charcoal-500 mt-1.5 leading-relaxed">
-              Hamare tmam pauday canal silt (Bhal mitti), cow-dung compost aur perlite ke balanced ratio me lagaye gaye hain jo jaron ko rot nahi hone dete aur dhoop me mitti ko sakht pathar nahi banate.
-            </p>
-          </div>
-        </div>
-
-        <!-- Interactive Plant Care Calculator -->
-        <div class="bg-forest-900 text-cream-50 p-6 sm:p-10 rounded-3xl max-w-3xl mx-auto shadow-2xl">
-          <div class="text-center mb-6">
-            <span class="text-[10px] sm:text-xs font-bold text-terracotta uppercase tracking-wider">Smart Tool</span>
-            <h3 class="font-serif-luxury text-xl sm:text-3xl font-bold text-white mt-1">Lahore Plant Care & <span class="italic font-normal text-terracotta">Watering Calculator</span></h3>
-            <p class="text-cream-100/70 text-xs mt-1">Apne pauday ki location select karein aur customized paani aur dhoop ka schedule haasil karein.</p>
-          </div>
-
-          <div class="space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-charcoal-900">
-              <div>
-                <label class="block text-cream-100 font-bold mb-1">Select Plant:</label>
-                <select id="calc-plant" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white">
-                  <option value="ficus">Fiddle Leaf Fig / Ficus</option>
-                  <option value="monstera">Monstera Deliciosa</option>
-                  <option value="motia">Desi Motia / Jasmine</option>
-                  <option value="snake">Snake Plant / Sansevieria</option>
-                  <option value="bougainvillea">Bougainvillea Bel</option>
-                  <option value="palm">Date Palm / Areca Palm</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-cream-100 font-bold mb-1">Where is it placed in Lahore?</label>
-                <select id="calc-env" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white">
-                  <option value="ac_room">Air Conditioned Indoor Room (24-26°C)</option>
-                  <option value="balcony">Balcony with Morning Sun</option>
-                  <option value="hot_lawn">Outdoor Lawn / Full Afternoon Sun (40°C+)</option>
-                  <option value="shaded_porch">Shaded Veranda / Porch</option>
-                </select>
-              </div>
-            </div>
-
-            <button onclick="calculatePlantCare()" class="w-full bg-terracotta hover:bg-terracotta-dark text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-md">
-              Calculate Watering & Sunlight Schedule
-            </button>
-
-            <div id="calc-result" class="hidden bg-white/10 border border-white/20 p-4 rounded-2xl text-xs text-cream-100 space-y-1.5">
-              <div id="calc-result-text" class="leading-relaxed"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dr. Botanica: Lahore Plant Doctor & Diagnostic Tool -->
-        <div class="mt-12 sm:mt-16 bg-white border border-cream-200 rounded-3xl p-5 sm:p-10 shadow-lg">
-          <div class="text-center max-w-2xl mx-auto mb-8">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-200">
-              <span>🩺 Lahore Plant Doctor Diagnostics</span>
-            </div>
-            <h3 class="font-serif-luxury text-2xl sm:text-3xl font-bold text-forest-900 mt-2">Pauday Ka Masla & Ilaaj (Symptom Checker)</h3>
-            <p class="text-charcoal-500 text-xs sm:text-sm mt-1">Apne pauday ki halat select karein aur Lahore ke mausam ke mutabiq ilaaj dekhein:</p>
-          </div>
-
-          <!-- Symptom Selector Buttons -->
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
-            <button onclick="diagnosePlantIssue('yellow_leaves')" class="doctor-symptom-card active p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1" data-symptom="yellow_leaves">
-              <span class="text-2xl sm:text-3xl">🍂</span>
-              <span class="text-xs font-bold text-forest-900 leading-tight">Peele Pattay</span>
-              <span class="text-[10px] text-charcoal-500">Yellow Leaves</span>
-            </button>
-            <button onclick="diagnosePlantIssue('drooping')" class="doctor-symptom-card p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1" data-symptom="drooping">
-              <span class="text-2xl sm:text-3xl">🥀</span>
-              <span class="text-xs font-bold text-forest-900 leading-tight">Murjhaye Pattay</span>
-              <span class="text-[10px] text-charcoal-500">Drooping Stems</span>
-            </button>
-            <button onclick="diagnosePlantIssue('mealybugs')" class="doctor-symptom-card p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1" data-symptom="mealybugs">
-              <span class="text-2xl sm:text-3xl">⚪</span>
-              <span class="text-xs font-bold text-forest-900 leading-tight">Safed Keeray</span>
-              <span class="text-[10px] text-charcoal-500">Mealybugs</span>
-            </button>
-            <button onclick="diagnosePlantIssue('brown_tips')" class="doctor-symptom-card p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1" data-symptom="brown_tips">
-              <span class="text-2xl sm:text-3xl">🟫</span>
-              <span class="text-xs font-bold text-forest-900 leading-tight">Jali Hui Nokain</span>
-              <span class="text-[10px] text-charcoal-500">Brown Tips</span>
-            </button>
-            <button onclick="diagnosePlantIssue('bud_drop')" class="doctor-symptom-card p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1 col-span-2 sm:col-span-1" data-symptom="bud_drop">
-              <span class="text-2xl sm:text-3xl">🌺</span>
-              <span class="text-xs font-bold text-forest-900 leading-tight">Kaliyon Ka Girna</span>
-              <span class="text-[10px] text-charcoal-500">Bud Drop</span>
-            </button>
-          </div>
-
-          <!-- Dynamic Diagnosis Result Card -->
-          <div id="doctor-diagnosis-box" class="mt-6 p-5 sm:p-7 rounded-2xl bg-cream-50 border border-cream-200 space-y-4">
-            <!-- Content populated dynamically via app.js -->
-          </div>
-        </div>
-      </section>
-    </div> <!-- END PAGE 3: page-care-guide -->
-
-
-    <!-- ==================== PAGE 5: ABOUT US, LEADERSHIP & GREEN PAKISTAN INITIATIVE ==================== -->
-    <div id="page-about" class="page-view hidden">
-      <!-- About Hero -->
-      <section class="bg-gradient-to-b from-forest-900 via-forest-800 to-forest-900 text-cream-50 py-12 sm:py-20 px-4 sm:px-6 lg:px-8 border-b border-forest-700 text-center relative overflow-hidden">
-        <div class="max-w-4xl mx-auto space-y-4 relative z-10">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] sm:text-xs font-bold border border-emerald-400/30">
-            <span>🌿 "Let's Make Pakistan Green!" — Official Environmental Mission</span>
-          </div>
-          <h1 class="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-            The Living Garden <br class="hidden sm:inline">
-            <span class="italic font-normal text-terracotta">Landscape Architecture</span>
-          </h1>
-          <p class="text-cream-100/80 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">
-            12 Acres of certified botanical nurseries on Bedian Road & central boutique display studio in Gulberg III, Lahore. Dedicated to premium flora, turnkey villa landscapes, and nationwide free plant distribution.
-          </p>
-        </div>
-      </section>
-
-      <section class="py-12 sm:py-16 px-3 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-12 sm:space-y-16">
-        
-        <!-- Story & Living Heritage -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white relative group">
-            <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=1200&auto=format&fit=crop" alt="Lahore Nursery Farm" class="w-full h-72 sm:h-96 object-cover transition-transform duration-700 group-hover:scale-105">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
-              <span class="text-white font-serif-luxury text-lg font-bold">12-Acre Certified Mother Nursery, Bedian Road</span>
-            </div>
-          </div>
-          <div class="space-y-4 text-xs sm:text-sm text-charcoal-700 leading-relaxed">
-            <span class="text-terracotta text-xs font-bold uppercase tracking-widest">Our Heritage & Methodology</span>
-            <h2 class="font-serif-luxury text-2xl sm:text-3xl font-bold text-forest-900 leading-snug">Cultivating <span class="italic font-normal text-terracotta">Living Green Sanctuaries</span> Since 2012</h2>
-            <p>
-              The Living Garden stands as Punjab's certified horticultural nursery and premier landscape architecture practice. Hum roadside plants bechne wali aam nursery nahi hain — hamara har pauda certified canal-silt soil (Bhal mitti), balanced organic cow compost, aur Lahore climate root-training ke baad supply kiya jata hai.
-            </p>
-            <p>
-              DHA Phase 1-9 villas se le kar Bedian Road ke 8-Kanal luxury farmhouses tak, hamare architects ne 350+ private gardens aur lawns ko green luxury sanctuaries me tabdeel kiya hai.
-            </p>
-            <div class="grid grid-cols-3 gap-3 pt-2 text-center">
-              <div class="p-3 rounded-2xl bg-cream-100 border border-cream-200">
-                <div class="font-serif-luxury text-lg sm:text-2xl font-bold text-forest-900">350+</div>
-                <div class="text-[10px] text-charcoal-500 font-semibold mt-0.5">Completed Estates</div>
-              </div>
-              <div class="p-3 rounded-2xl bg-cream-100 border border-cream-200">
-                <div class="font-serif-luxury text-lg sm:text-2xl font-bold text-forest-900">12 Acres</div>
-                <div class="text-[10px] text-charcoal-500 font-semibold mt-0.5">Mother Farm</div>
-              </div>
-              <div class="p-3 rounded-2xl bg-cream-100 border border-cream-200">
-                <div class="font-serif-luxury text-lg sm:text-2xl font-bold text-forest-900">25,000+</div>
-                <div class="text-[10px] text-charcoal-500 font-semibold mt-0.5">Plants Distributed</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== EXECUTIVE LEADERSHIP (BOARD OF DIRECTORS) ==================== -->
-        <div>
-          <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-            <span class="text-terracotta text-[10px] sm:text-xs font-bold uppercase tracking-widest">Corporate Governance</span>
-            <h2 class="font-serif-luxury text-2xl sm:text-4xl font-bold text-forest-900 mt-1">Executive <span class="italic font-normal text-terracotta">Board of Directors</span></h2>
-            <p class="text-charcoal-500 text-xs sm:text-sm mt-1">Horticulture science, estate architecture aur operational governance ki maahir qiyadat.</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <!-- Director 1: Jahangir Alam -->
-            <div class="card-elevation p-6 sm:p-7 rounded-3xl bg-white border border-cream-200 flex flex-col justify-between">
-              <div>
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="w-16 h-16 rounded-2xl bg-forest-800 text-white font-serif-luxury font-bold text-2xl flex items-center justify-center shadow-md flex-shrink-0">
-                    JA
-                  </div>
-                  <div>
-                    <h3 class="font-serif-luxury text-xl font-bold text-forest-900">Jahangir Alam</h3>
-                    <div class="text-xs font-bold text-emerald-700 mt-0.5">Managing Director — Nursery & Horticulture Operations</div>
-                    <div class="text-[10px] text-charcoal-400 mt-0.5">14+ Years Botanical Expertise</div>
-                  </div>
-                </div>
-                <p class="text-xs text-charcoal-600 leading-relaxed">
-                  Former Army officer (Single Core) bringing military discipline, logistical precision, and strategic execution. 25+ years deep expertise in soil biotechnology, Bhal mitti canal-silt balancing, 47°C heatwave species acclimatization, and executive directorship of our 12-acre mother farm.
-                </p>
-              </div>
-              <div class="mt-4 pt-4 border-t border-cream-200 flex items-center justify-between text-[11px]">
-                <span class="text-charcoal-500 font-medium">Focus: Plant Health & Soil Bio-chemistry</span>
-                <span class="font-bold text-forest-800">Board Member</span>
-              </div>
-            </div>
-
-            <!-- Director 2: Balaj Ahmad -->
-            <div class="card-elevation p-6 sm:p-7 rounded-3xl bg-white border border-cream-200 flex flex-col justify-between">
-              <div>
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="w-16 h-16 rounded-2xl bg-forest-900 text-white font-serif-luxury font-bold text-2xl flex items-center justify-center shadow-md flex-shrink-0">
-                    BA
-                  </div>
-                  <div>
-                    <h3 class="font-serif-luxury text-xl font-bold text-forest-900">Balaj Ahmad</h3>
-                    <div class="text-xs font-bold text-emerald-700 mt-0.5">Director — General Operations & Turnkey Architecture</div>
-                    <div class="text-[10px] text-charcoal-400 mt-0.5">Estate Master Planning & Logistics</div>
-                  </div>
-                </div>
-                <p class="text-xs text-charcoal-600 leading-relaxed">
-                  Leads full-scale villa landscaping projects across DHA, Raya, Lake City and Bedian Road farmhouses, managing 3D CAD visualization, nationwide distribution fleets, and corporate CSR partnerships.
-                </p>
-              </div>
-              <div class="mt-4 pt-4 border-t border-cream-200 flex items-center justify-between text-[11px]">
-                <span class="text-charcoal-500 font-medium">Focus: Architecture & Project Delivery</span>
-                <span class="font-bold text-forest-800">Board Member</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== "GREEN PAKISTAN" CSR & FREE PLANT DISTRIBUTION INITIATIVE ==================== -->
-        <div class="bg-forest-900 text-cream-50 p-6 sm:p-12 rounded-3xl shadow-2xl relative overflow-hidden">
-          <div class="relative z-10 max-w-4xl mx-auto space-y-8">
-            <div class="text-center space-y-2">
-              <span class="text-xs font-bold text-terracotta uppercase tracking-widest">National Sustainability Initiative</span>
-              <h2 class="font-serif-luxury text-2xl sm:text-4xl font-bold text-white">Green Pakistan: <span class="italic font-normal text-terracotta">Free Plants for a Sustainable Future</span></h2>
-              <p class="text-cream-100/70 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
-                The Living Garden provides free certified plants to schools, colleges, universities, hospitals, government buildings, community centers, and rural belts to create a cleaner, greener Pakistan.
-              </p>
-            </div>
-
-            <!-- 4 Certified Impacts -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-              <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
-                <div class="text-2xl">🍃</div>
-                <div class="font-bold text-white">Oxygen & Air Quality</div>
-                <p class="text-cream-100/70 text-[11px] leading-relaxed">
-                  Plants filter harmful toxic PM2.5 smog pollutants and generate continuous fresh oxygen in urban density centers.
-                </p>
-              </div>
-              <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
-                <div class="text-2xl">🌍</div>
-                <div class="font-bold text-white">Carbon Sequestration</div>
-                <p class="text-cream-100/70 text-[11px] leading-relaxed">
-                  Trees act as permanent natural carbon sinks, mitigating global climate change and lowering ambient temperatures by 3-5°C.
-                </p>
-              </div>
-              <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
-                <div class="text-2xl">🏥</div>
-                <div class="font-bold text-white">Hospital Healing Sanctuaries</div>
-                <p class="text-cream-100/70 text-[11px] leading-relaxed">
-                  Green healing gardens in hospitals reduce patient stress, lower blood pressure, and accelerate convalescence recovery.
-                </p>
-              </div>
-              <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
-                <div class="text-2xl">💼</div>
-                <div class="font-bold text-white">Green Job Creation</div>
-                <p class="text-cream-100/70 text-[11px] leading-relaxed">
-                  Direct employment for local nursery gardeners, transport drivers, logistics handlers, and eco-agriculture workers.
-                </p>
-              </div>
-            </div>
-
-            <!-- Target Beneficiaries Badges -->
-            <div class="pt-4 border-t border-forest-700">
-              <div class="text-xs font-bold uppercase tracking-wider text-emerald-300 text-center mb-3">Target Beneficiaries Across Pakistan</div>
-              <div class="flex flex-wrap items-center justify-center gap-2 text-[11px]">
-                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/15">🏫 Schools & Colleges</span>
-                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/15">🎓 Public Universities</span>
-                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/15">🏥 Hospitals & Health Centers</span>
-                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/15">🏛️ Government Complexes</span>
-                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/15">🤝 NGOs & Charities</span>
-                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/15">🕌 Religious Centers</span>
-                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/15">🌳 Public Parks & Greenbelts</span>
-                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/15">🚜 Rural Communities</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== GREEN PATRON & MEMBERSHIP LEVELS ==================== -->
-        <div>
-          <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-            <span class="text-terracotta text-[10px] sm:text-xs font-bold uppercase tracking-widest">Community Philanthropy</span>
-            <h2 class="font-serif-luxury text-2xl sm:text-4xl font-bold text-forest-900 mt-1">Green Patron & <span class="italic font-normal text-terracotta">Donor Membership</span></h2>
-            <p class="text-charcoal-500 text-xs sm:text-sm mt-1">Pakistan ko sar-sabz banane ke mission me hamara sath dein aur certified recognition hasil karein.</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Bronze -->
-            <div class="card-elevation p-5 rounded-2xl bg-white flex flex-col justify-between border-t-4 border-amber-700">
-              <div>
-                <span class="text-[10px] font-bold uppercase text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">Bronze Patron</span>
-                <div class="font-serif-luxury text-xl font-bold text-forest-900 mt-2">Rs. 5,000 - 15,000</div>
-                <div class="text-[10px] text-charcoal-400 mb-3">Community Supporter</div>
-                <ul class="space-y-1.5 text-[11px] text-charcoal-600 border-t border-cream-200 pt-3">
-                  <li>✓ Recognition on website & socials</li>
-                  <li>✓ Quarterly environmental newsletter</li>
-                  <li>✓ Invitation to Annual Green Meeting</li>
-                </ul>
-              </div>
-              <button onclick="pledgeMembership('Bronze')" class="mt-4 w-full py-2 bg-cream-100 hover:bg-forest-800 hover:text-white text-forest-900 font-bold rounded-xl text-xs transition">
-                Pledge Bronze
-              </button>
-            </div>
-
-            <!-- Silver -->
-            <div class="card-elevation p-5 rounded-2xl bg-white flex flex-col justify-between border-t-4 border-slate-400">
-              <div>
-                <span class="text-[10px] font-bold uppercase text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full">Silver Patron</span>
-                <div class="font-serif-luxury text-xl font-bold text-forest-900 mt-2">Rs. 15,000 - 30,000</div>
-                <div class="text-[10px] text-charcoal-400 mb-3">Active Green Champion</div>
-                <ul class="space-y-1.5 text-[11px] text-charcoal-600 border-t border-cream-200 pt-3">
-                  <li>✓ All Bronze privileges included</li>
-                  <li>✓ Exclusive updates on plantation drives</li>
-                  <li>✓ Volunteer leadership opportunities</li>
-                  <li>✓ Special event recognition plaque</li>
-                </ul>
-              </div>
-              <button onclick="pledgeMembership('Silver')" class="mt-4 w-full py-2 bg-cream-100 hover:bg-forest-800 hover:text-white text-forest-900 font-bold rounded-xl text-xs transition">
-                Pledge Silver
-              </button>
-            </div>
-
-            <!-- Gold -->
-            <div class="card-elevation p-5 rounded-2xl bg-white flex flex-col justify-between border-t-4 border-amber-400">
-              <div>
-                <span class="text-[10px] font-bold uppercase text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">Gold Patron</span>
-                <div class="font-serif-luxury text-xl font-bold text-forest-900 mt-2">Rs. 30,000 - 45,000</div>
-                <div class="text-[10px] text-charcoal-400 mb-3">Institutional Pillar</div>
-                <ul class="space-y-1.5 text-[11px] text-charcoal-600 border-t border-cream-200 pt-3">
-                  <li>✓ All Silver privileges included</li>
-                  <li>✓ Name on Physical & Virtual Donor Wall</li>
-                  <li>✓ Dedicated institutional plant grove</li>
-                  <li>✓ Direct briefing from Directorate</li>
-                </ul>
-              </div>
-              <button onclick="pledgeMembership('Gold')" class="mt-4 w-full py-2 bg-forest-800 text-white font-bold rounded-xl text-xs transition shadow-sm">
-                Pledge Gold
-              </button>
-            </div>
-
-            <!-- Diamond -->
-            <div class="card-elevation p-5 rounded-2xl bg-white flex flex-col justify-between border-t-4 border-emerald-600 shadow-md">
-              <div>
-                <span class="text-[10px] font-bold uppercase text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">Diamond Benefactor</span>
-                <div class="font-serif-luxury text-xl font-bold text-forest-900 mt-2">Rs. 50,000+</div>
-                <div class="text-[10px] text-charcoal-400 mb-3">Key Strategic Partner</div>
-                <ul class="space-y-1.5 text-[11px] text-charcoal-600 border-t border-cream-200 pt-3">
-                  <li>✓ All Gold privileges included</li>
-                  <li>✓ Private consultation with Directors</li>
-                  <li>✓ VIP access to high-level summits</li>
-                  <li>✓ Corporate CSR partner certification</li>
-                </ul>
-              </div>
-              <button onclick="pledgeMembership('Diamond')" class="mt-4 w-full py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs transition shadow">
-                Pledge Diamond
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== INSTITUTIONAL FREE PLANT REQUEST APPLICATION ==================== -->
-        <div class="bg-white rounded-3xl p-6 sm:p-10 border border-cream-200 shadow-lg">
-          <div class="max-w-2xl mx-auto text-center mb-6">
-            <span class="text-terracotta text-[10px] sm:text-xs font-bold uppercase tracking-wider">Free Plants Application</span>
-            <h3 class="font-serif-luxury text-xl sm:text-3xl font-bold text-forest-900 mt-1">Apply for <span class="italic font-normal text-terracotta">Free Plants Distribution</span></h3>
-            <p class="text-charcoal-500 text-xs sm:text-sm mt-1">
-              Schools, colleges, universities, hospitals, aur public institutions apne campus ke liye free plants ki application darj karein.
-            </p>
-          </div>
-
-          <form id="institution-plant-form" onsubmit="submitInstitutionalRequest(event)" class="max-w-2xl mx-auto space-y-4 text-xs">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-charcoal-700 mb-1">Institution / Organization Name *</label>
-                <input type="text" id="inst-name" required placeholder="e.g. Government Degree College, Lahore" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
-              </div>
-              <div>
-                <label class="block font-bold text-charcoal-700 mb-1">Institution Category *</label>
-                <select id="inst-type" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
-                  <option value="school_college">School / College</option>
-                  <option value="university">University Campus</option>
-                  <option value="hospital">Hospital / Health Center</option>
-                  <option value="community_center">Community Center / Public Park</option>
-                  <option value="ngo_charity">NGO / Environmental Group</option>
-                  <option value="government">Government Secretariat</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-charcoal-700 mb-1">Contact Officer Name *</label>
-                <input type="text" id="inst-contact" required placeholder="e.g. Prof. Tariq Mahmood" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
-              </div>
-              <div>
-                <label class="block font-bold text-charcoal-700 mb-1">WhatsApp / Phone Number *</label>
-                <input type="tel" id="inst-phone" required placeholder="0300 1234567" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block font-bold text-charcoal-700 mb-1">City / Region in Pakistan *</label>
-                <input type="text" id="inst-city" required placeholder="e.g. Lahore / Sheikhupura / Kasur" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
-              </div>
-              <div>
-                <label class="block font-bold text-charcoal-700 mb-1">Estimated Quantity Needed</label>
-                <select id="inst-qty" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
-                  <option value="25-50">25 to 50 Plants</option>
-                  <option value="50-100">50 to 100 Plants</option>
-                  <option value="100-250">100 to 250 Plants</option>
-                  <option value="250+">250+ Plants (Large Campus)</option>
-                </select>
-              </div>
-            </div>
-
-            <button type="submit" class="w-full bg-forest-800 hover:bg-forest-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-2">
-              <span>Submit Free Plant Distribution Application</span>
-            </button>
-            <div id="inst-success-msg" class="hidden text-center text-xs font-bold text-emerald-800 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
-              Shukriya! Aapki institutional free plants application Directorate of Operations ko mosool ho chuki hai.
-            </div>
-          </form>
-        </div>
-
-        <!-- 7-Day Guarantee Badge -->
-        <div class="bg-emerald-50 border-2 border-emerald-300 p-5 sm:p-6 rounded-2xl flex items-start gap-4">
-          <div class="text-3xl flex-shrink-0">🛡️</div>
-          <div>
-            <h4 class="font-bold text-sm sm:text-base text-forest-900">100% Certified Plant Health & Replacement Warranty</h4>
-            <p class="text-xs text-charcoal-600 mt-1 leading-relaxed">
-              Hamara har pauda certified healthy soil (Bhal mitti), balanced compost, aur Lahore climate root-training ke baad supply hota hai. Agar delivery ke baad 7 din ke andar nursery issue se pauda mutasir ho, free replacement deliver ki jayegi.
-            </p>
-          </div>
-        </div>
-
-        <!-- Physical Location & Timings -->
-        <div class="card-elevation p-5 sm:p-6 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div>
-            <div class="font-bold text-forest-900">📍 Mother Farm & Nursery:</div>
-            <div class="text-charcoal-500 mt-0.5">12 Acres Main Bedian Road, Near DHA Phase 9 Prism, Lahore.</div>
-          </div>
-          <div>
-            <div class="font-bold text-forest-900">🏢 Display Studio & Office:</div>
-            <div class="text-charcoal-500 mt-0.5">Gulberg III, Near Hussain Chowk, Lahore.</div>
-          </div>
-          <div>
-            <div class="font-bold text-forest-900">🕒 Timings:</div>
-            <div class="text-charcoal-500 mt-0.5">Open 7 Days a week (8:00 AM to 9:00 PM)</div>
-          </div>
-        </div>
-      </section>
-    </div> <!-- END PAGE 5: page-about -->
-
-    
-    <!-- ==================== PAGE 6: NATIONWIDE PAKISTAN CITIES HUB ==================== -->
-    <div id="page-cities" class="page-view hidden">
-      <!-- National Cities Hero -->
-      <section class="relative bg-gradient-to-b from-forest-900 via-forest-800 to-forest-900 text-cream-50 pt-10 sm:pt-16 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8 border-b border-forest-700 text-center">
-        <div class="max-w-5xl mx-auto space-y-4">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] sm:text-xs font-bold border border-emerald-400/30">
-            <span>🇵🇰 Nationwide Turnkey Landscape Architecture & Certified Plant Cargo</span>
-          </div>
-          <h1 class="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-            Transforming Outdoor Spaces <br class="hidden sm:inline">
-            <span class="italic font-normal text-terracotta">Across All Major Cities of Pakistan</span>
-          </h1>
-          <p class="text-cream-100/80 text-xs sm:text-base max-w-3xl mx-auto leading-relaxed">
-            Hum sirf Lahore tak mehdood nahi hain — Lahore ke 12-acre mother farm se Islamabad, Rawalpindi, Karachi, Faisalabad, Multan, Gujranwala, Peshawar aur Sialkot tak turnkey villa lawns, steel pergolas, rockeries, Bermuda grass rolls aur climate-controlled plants deliver aur install kiye jate hain.
-          </p>
-          
-          <!-- Search City or Society Input -->
-          <div class="max-w-xl mx-auto pt-4">
-            <div class="relative">
-              <input type="text" id="city-search-box" onkeyup="filterCitiesDirectory(this.value)" placeholder="Apna Shehr ya Society search karein (e.g. Islamabad, DHA, Bahria, Clifton, Bedian)..." class="w-full text-xs sm:text-sm py-3.5 pl-11 pr-4 rounded-2xl border border-forest-600 bg-white/10 text-white placeholder-cream-200/50 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:bg-white/20 transition">
-              <span class="absolute left-3.5 top-3.5 text-base sm:text-lg">🔍</span>
-            </div>
-            <div class="text-[11px] text-cream-200/70 mt-2 flex items-center justify-center gap-2 flex-wrap">
-              <span>Quick jump:</span>
-              <button onclick="navigateToCity('islamabad')" class="underline hover:text-white py-2 px-0.5">Islamabad</button> •
-              <button onclick="navigateToCity('karachi')" class="underline hover:text-white py-2 px-0.5">Karachi</button> •
-              <button onclick="navigateToCity('rawalpindi')" class="underline hover:text-white py-2 px-0.5">Rawalpindi</button> •
-              <button onclick="navigateToCity('faisalabad')" class="underline hover:text-white py-2 px-0.5">Faisalabad</button> •
-              <button onclick="navigateToCity('multan')" class="underline hover:text-white py-2 px-0.5">Multan</button> •
-              <button onclick="navigateToCity('lahore')" class="underline hover:text-white py-2 px-0.5">Lahore</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- National Coverage Highlights Bar -->
-      <section class="py-6 bg-cream-100 border-b border-cream-200 px-3 sm:px-6">
-        <div class="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-          <div class="p-3 bg-white rounded-2xl border border-cream-200 shadow-xs">
-            <div class="font-serif-luxury text-xl sm:text-2xl font-bold text-forest-900">10+ Metros</div>
-            <div class="text-[10px] sm:text-xs text-charcoal-500 font-semibold mt-0.5">Cities Covered</div>
-          </div>
-          <div class="p-3 bg-white rounded-2xl border border-cream-200 shadow-xs">
-            <div class="font-serif-luxury text-xl sm:text-2xl font-bold text-forest-900">700+</div>
-            <div class="text-[10px] sm:text-xs text-charcoal-500 font-semibold mt-0.5">National Estates</div>
-          </div>
-          <div class="p-3 bg-white rounded-2xl border border-cream-200 shadow-xs">
-            <div class="font-serif-luxury text-xl sm:text-2xl font-bold text-forest-900">24-48 Hrs</div>
-            <div class="text-[10px] sm:text-xs text-charcoal-500 font-semibold mt-0.5">Express Plant Cargo</div>
-          </div>
-          <div class="p-3 bg-white rounded-2xl border border-cream-200 shadow-xs">
-            <div class="font-serif-luxury text-xl sm:text-2xl font-bold text-forest-900">100%</div>
-            <div class="text-[10px] sm:text-xs text-charcoal-500 font-semibold mt-0.5">Survival Warranty</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- All Cities Interactive Grid -->
-      <section class="py-12 sm:py-16 bg-cream-50 px-3 sm:px-6 lg:px-8 border-b border-cream-200">
-        <div class="max-w-7xl mx-auto">
-          <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-            <span class="text-terracotta text-[10px] sm:text-xs font-bold uppercase tracking-widest">Select Your Region</span>
-            <h2 class="font-serif-luxury text-2xl sm:text-4xl font-bold text-forest-900 mt-1">Pakistan City <span class="italic font-normal text-terracotta">Landscaping Hubs</span></h2>
-            <p class="text-charcoal-600 text-xs sm:text-sm mt-1">Har shehr ke local mausam, mitti, aur societies ke mutabiq tailored portfolio aur package details dekhne ke liye click karein.</p>
-          </div>
-
-          <div id="cities-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Dynamic city cards rendered via JavaScript -->
-          </div>
-        </div>
-      </section>
-    </div> <!-- END PAGE 6: page-cities -->
-
-    <!-- ==================== PAGE 7: DYNAMIC CITY DETAIL SEO LANDING PAGE ==================== -->
-    <div id="page-city-detail" class="page-view hidden">
-      <div id="city-detail-content">
-        <!-- Rendered dynamically via renderCityDetailPage(slug) -->
-      </div>
-    </div> <!-- END PAGE 7: page-city-detail -->
-
   </main> <!-- END MAIN APPLICATION CONTENT -->
 
   <!-- ==================== LEAVE A REVIEW MODAL ==================== -->
@@ -1780,30 +1224,30 @@
 
   <!-- ==================== FIXED MOBILE BOTTOM FLOATING NAVIGATION BAR ==================== -->
   <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 glass-nav-bar px-1 pt-1 pb-[max(4px,env(safe-area-inset-bottom))] flex items-stretch justify-around border-t border-cream-200 shadow-lg">
-    <button onclick="navigateToPage('landscaping')" id="bnav-landscaping" class="bnav-btn flex-1 min-h-[52px] justify-center flex flex-col items-center text-forest-800 font-bold hover:text-forest-800 active:scale-95 transition">
+    <a href="/" id="bnav-landscaping" class="bnav-btn flex-1 min-h-[52px] justify-center flex flex-col items-center text-forest-800 font-bold hover:text-forest-800 active:scale-95 transition">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
       <span class="text-[10px] mt-0.5">Home</span>
-    </button>
+    </a>
 
-    <button onclick="navigateToPage('care-guide')" id="bnav-care-guide" class="bnav-btn flex-1 min-h-[52px] justify-center flex flex-col items-center text-charcoal-700 hover:text-forest-800 active:scale-95 transition">
+    <a href="/plant-care-guide" id="bnav-care-guide" class="bnav-btn flex-1 min-h-[52px] justify-center flex flex-col items-center text-charcoal-700 hover:text-forest-800 active:scale-95 transition">
       <div class="w-5 h-5 flex items-center justify-center text-sm">🌡️</div>
       <span class="text-[10px] mt-0.5">Care</span>
-    </button>
+    </a>
 
-    <button onclick="navigateToPage('cities')" id="bnav-cities" class="bnav-btn flex-1 min-h-[52px] justify-center flex flex-col items-center text-charcoal-700 hover:text-forest-800 active:scale-95 transition">
+    <a href="/cities" id="bnav-cities" class="bnav-btn flex-1 min-h-[52px] justify-center flex flex-col items-center text-charcoal-700 hover:text-forest-800 active:scale-95 transition">
       <div class="w-5 h-5 flex items-center justify-center text-sm">🇵🇰</div>
       <span class="text-[10px] mt-0.5">Cities</span>
-    </button>
+    </a>
 
-    <button onclick="goToConsultation()" class="flex-1 min-h-[52px] justify-center flex flex-col items-center text-terracotta font-bold active:scale-95 transition">
+    <a href="#consultation" onclick="goToConsultation(); return false;" class="flex-1 min-h-[52px] justify-center flex flex-col items-center text-terracotta font-bold active:scale-95 transition">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
       <span class="text-[10px] mt-0.5">Site Visit</span>
-    </button>
+    </a>
 
-    <button onclick="navigateToPage('about')" id="bnav-about" class="bnav-btn flex-1 min-h-[52px] justify-center flex flex-col items-center text-charcoal-700 hover:text-forest-800 active:scale-95 transition">
+    <a href="/about" id="bnav-about" class="bnav-btn flex-1 min-h-[52px] justify-center flex flex-col items-center text-charcoal-700 hover:text-forest-800 active:scale-95 transition">
       <div class="w-5 h-5 flex items-center justify-center text-sm">📍</div>
       <span class="text-[10px] mt-0.5">About</span>
-    </button>
+    </a>
   </div>
 
   <!-- Footer -->
@@ -1824,10 +1268,13 @@
       <div>
         <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-2.5">Our Services</h4>
         <ul class="space-y-1.5 text-xs text-cream-200/70">
-          <li><a href="#landscaping" onclick="navigateToPage('landscaping'); return false;" class="hover:text-white">Turnkey Villa & Farmhouse Landscaping</a></li>
-          <li><a href="#landscaping" onclick="navigateToPage('landscaping'); return false;" class="hover:text-white">Hardscape, Pergolas & Water Features</a></li>
-          <li><a href="#landscaping" onclick="navigateToPage('landscaping'); return false;" class="hover:text-white">Rooftop & Vertical Gardens</a></li>
-          <li><a href="#care-guide" onclick="navigateToPage('care-guide'); return false;" class="hover:text-white">Garden Care & Maintenance</a></li>
+          <li><a href="/services/villa-farmhouse-landscaping" class="hover:text-white">Turnkey Villa & Farmhouse Landscaping</a></li>
+          <li><a href="/services/lawn-grass-installation" class="hover:text-white">Lawn & Grass Installation</a></li>
+          <li><a href="/services/hardscape-paving" class="hover:text-white">Hardscape, Pergolas & Water Features</a></li>
+          <li><a href="/services/rooftop-terrace-gardens" class="hover:text-white">Rooftop & Vertical Gardens</a></li>
+          <li><a href="/services/irrigation-sprinkler-systems" class="hover:text-white">Irrigation & Sprinklers</a></li>
+          <li><a href="/services/garden-maintenance" class="hover:text-white">Garden Care & Maintenance</a></li>
+          <li><a href="/services" class="hover:text-white font-semibold text-terracotta">All Services &rarr;</a></li>
         </ul>
       </div>
 
@@ -1849,7 +1296,7 @@
           <div>💬 WhatsApp: <a href="https://wa.me/923008456789" target="_blank" rel="noopener" class="font-bold hover:text-white inline-block py-1">0300 8456789</a></div>
           <div>🕒 Office Hours: 7 Days (8 AM - 9 PM)</div>
           <div class="pt-1.5">
-            <button onclick="goToConsultation()" class="bg-terracotta hover:bg-terracotta-dark text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition">Book Free Site Visit</button>
+            <a href="#consultation" onclick="goToConsultation(); return false;" class="inline-block bg-terracotta hover:bg-terracotta-dark text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition">Book Free Site Visit</a>
           </div>
         </div>
       </div>
@@ -1857,7 +1304,7 @@
     </div>
 
     <div class="max-w-7xl mx-auto pt-6 mt-6 border-t border-forest-800 text-center text-[10px] sm:text-[11px] text-cream-200/50 flex flex-col sm:flex-row items-center justify-between gap-1.5">
-      <div>© 2026 The Living Garden. All Rights Reserved. · <a href="/admin" class="hover:text-white">Staff Login</a></div>
+      <div>© 2026 The Living Garden. All Rights Reserved. · <a href="/faq" class="hover:text-white">FAQ</a> · <a href="/blog" class="hover:text-white">Guides</a> · <a href="/contact" class="hover:text-white">Contact</a> · <a href="/admin" class="hover:text-white">Staff Login</a></div>
       <div>Designed with Botanical Elegance & Mobile Ergonomics</div>
     </div>
   </footer>

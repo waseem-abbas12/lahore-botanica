@@ -1,0 +1,66 @@
+      <!-- Consultation Booking Form -->
+      <section id="consultation" class="py-12 sm:py-16 bg-forest-900 text-cream-50 px-3 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto bg-white text-charcoal-900 rounded-3xl p-5 sm:p-10 shadow-2xl border border-cream-200">
+          <div class="text-center mb-6">
+            <span class="text-[10px] sm:text-xs font-bold text-terracotta uppercase tracking-wider">Free Site Inspection</span>
+            <h3 class="font-serif-luxury text-xl sm:text-3xl font-bold text-forest-900 mt-1">Book a Site Inspection <span class="italic font-normal text-terracotta">Anywhere in Pakistan</span></h3>
+            <p class="text-charcoal-500 text-xs sm:text-sm mt-1">Hamari landscape architect team aapki location visit kar ke 3D design aur exact quotation tayyar karegi.</p>
+          </div>
+
+          <form id="lead-form-page" onsubmit="submitLandscapingLead(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">Your Full Name *</label>
+                <input type="text" id="lead-name" required placeholder="e.g. Usman Chaudhry" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">WhatsApp / Phone Number *</label>
+                <input type="tel" id="lead-phone" required placeholder="e.g. 0300-1234567" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">Project Type</label>
+                <select id="lead-project" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+                  <option value="Villa Lawn">Villa Lawn</option>
+                  <option value="Rooftop Garden">Rooftop Garden</option>
+                  <option value="Farmhouse Estate">Farmhouse Estate</option>
+                  <option value="Commercial Turf">Commercial Area</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">Area Size</label>
+                <select id="lead-size" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+                  <option value="5 Marla">5 Marla</option>
+                  <option value="10 Marla">10 Marla</option>
+                  <option value="1 Kanal">1 Kanal</option>
+                  <option value="2+ Kanals / Farmhouse">2+ Kanals / Farmhouse</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-charcoal-700 mb-1">City / Area</label>
+                <input type="text" id="lead-location" required placeholder="e.g. DHA Phase 6, Lahore" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-charcoal-700 mb-1">Requirements (Optional)</label>
+              <textarea id="lead-message" rows="2" placeholder="Details about grass type, palms, water fountain..." class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-charcoal-700 mb-1">Preferred Site Visit Date (Optional)</label>
+              <input type="date" id="lead-date" class="w-full text-xs p-3 rounded-xl border border-cream-200 bg-cream-50 focus:outline-none focus:border-forest-700">
+            </div>
+            <input type="text" id="lead-website" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+
+            <button type="submit" class="w-full bg-forest-800 hover:bg-forest-700 text-white font-bold py-3.5 rounded-xl text-xs tracking-wider uppercase transition shadow-md flex items-center justify-center gap-2">
+              <span>Schedule Free Site Consultation</span>
+            </button>
+            <div id="lead-success-msg" class="hidden text-xs text-center font-bold text-forest-700 bg-sage-100 p-3 rounded-xl border border-sage-200">
+              Shukriya! Aapki consultation request darj ho chuki hai. Hamari team jald WhatsApp/call karegi.
+            </div>
+          </form>
+        </div>
+      </section>

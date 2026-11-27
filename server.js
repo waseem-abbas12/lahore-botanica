@@ -66,7 +66,10 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         return res.end('Not found');
       }
-      serveFile(res, path.join(PUBLIC_DIR, 'index.html'));
+      fs.readFile(path.join(PUBLIC_DIR, '404.html'), (e3, buf) => {
+        res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(e3 ? 'Not found' : buf);
+      });
     });
   });
 });

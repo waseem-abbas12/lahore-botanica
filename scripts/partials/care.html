@@ -1,0 +1,123 @@
+      <section class="bg-gradient-to-b from-cream-100 to-cream-50 py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-b border-cream-200 text-center">
+        <div class="max-w-4xl mx-auto space-y-3">
+          <span class="text-terracotta text-[10px] sm:text-xs font-bold uppercase tracking-widest">Horticulture Science</span>
+          <h1 class="font-serif-luxury text-3xl sm:text-5xl font-bold text-forest-900">Lahore Climate <span class="italic font-normal text-terracotta">Plant Survival Guide</span></h1>
+          <p class="text-charcoal-600 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
+            Lahore ke mausam me 47°C ki shadeed garmi aur November ki zahreeli smog se paudon ko taza aur sar-sabz rakhne ke certified tareeqay.
+          </p>
+        </div>
+      </section>
+
+      <!-- Seasonal Calendar -->
+      <section class="py-10 sm:py-14 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12">
+          <div class="card-elevation p-5 sm:p-6 rounded-2xl">
+            <div class="text-2xl mb-2">🔥</div>
+            <h3 class="font-bold text-sm text-forest-900">Summer Heatwaves (May - July)</h3>
+            <p class="text-xs text-charcoal-500 mt-1.5 leading-relaxed">
+              Dopehar ki dhoop (12 PM se 4 PM) ke waqt indoor plants ko khirki se 3 feet door rakhein. Paani hamesha subah 7 AM se pehle ya maghrib ke baad dein. Root burn se bachane ke liye mulch istemal karein.
+            </p>
+          </div>
+          <div class="card-elevation p-5 sm:p-6 rounded-2xl">
+            <div class="text-2xl mb-2">🌫️</div>
+            <h3 class="font-bold text-sm text-forest-900">Smog & Dust Protection (Oct - Dec)</h3>
+            <p class="text-xs text-charcoal-500 mt-1.5 leading-relaxed">
+              Haftay mein ek martaba foliage (patton) ko fresh paani se spray karein taake dhoop absorb karne ke pores khulay rahein aur smog ka toxic PM2.5 asar na ho. Indoor air purifier plants room me rakhein.
+            </p>
+          </div>
+          <div class="card-elevation p-5 sm:p-6 rounded-2xl">
+            <div class="text-2xl mb-2">🪱</div>
+            <h3 class="font-bold text-sm text-forest-900">Organic Lahore Soil Mix (Bhal Mitti)</h3>
+            <p class="text-xs text-charcoal-500 mt-1.5 leading-relaxed">
+              Hamare tmam pauday canal silt (Bhal mitti), cow-dung compost aur perlite ke balanced ratio me lagaye gaye hain jo jaron ko rot nahi hone dete aur dhoop me mitti ko sakht pathar nahi banate.
+            </p>
+          </div>
+        </div>
+
+        <!-- Interactive Plant Care Calculator -->
+        <div class="bg-forest-900 text-cream-50 p-6 sm:p-10 rounded-3xl max-w-3xl mx-auto shadow-2xl">
+          <div class="text-center mb-6">
+            <span class="text-[10px] sm:text-xs font-bold text-terracotta uppercase tracking-wider">Smart Tool</span>
+            <h3 class="font-serif-luxury text-xl sm:text-3xl font-bold text-white mt-1">Lahore Plant Care & <span class="italic font-normal text-terracotta">Watering Calculator</span></h3>
+            <p class="text-cream-100/70 text-xs mt-1">Apne pauday ki location select karein aur customized paani aur dhoop ka schedule haasil karein.</p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-charcoal-900">
+              <div>
+                <label class="block text-cream-100 font-bold mb-1">Select Plant:</label>
+                <select id="calc-plant" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white">
+                  <option value="ficus">Fiddle Leaf Fig / Ficus</option>
+                  <option value="monstera">Monstera Deliciosa</option>
+                  <option value="motia">Desi Motia / Jasmine</option>
+                  <option value="snake">Snake Plant / Sansevieria</option>
+                  <option value="bougainvillea">Bougainvillea Bel</option>
+                  <option value="palm">Date Palm / Areca Palm</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-cream-100 font-bold mb-1">Where is it placed in Lahore?</label>
+                <select id="calc-env" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white">
+                  <option value="ac_room">Air Conditioned Indoor Room (24-26°C)</option>
+                  <option value="balcony">Balcony with Morning Sun</option>
+                  <option value="hot_lawn">Outdoor Lawn / Full Afternoon Sun (40°C+)</option>
+                  <option value="shaded_porch">Shaded Veranda / Porch</option>
+                </select>
+              </div>
+            </div>
+
+            <button onclick="calculatePlantCare()" class="w-full bg-terracotta hover:bg-terracotta-dark text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-md">
+              Calculate Watering & Sunlight Schedule
+            </button>
+
+            <div id="calc-result" class="hidden bg-white/10 border border-white/20 p-4 rounded-2xl text-xs text-cream-100 space-y-1.5">
+              <div id="calc-result-text" class="leading-relaxed"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dr. Botanica: Lahore Plant Doctor & Diagnostic Tool -->
+        <div class="mt-12 sm:mt-16 bg-white border border-cream-200 rounded-3xl p-5 sm:p-10 shadow-lg">
+          <div class="text-center max-w-2xl mx-auto mb-8">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-200">
+              <span>🩺 Lahore Plant Doctor Diagnostics</span>
+            </div>
+            <h3 class="font-serif-luxury text-2xl sm:text-3xl font-bold text-forest-900 mt-2">Pauday Ka Masla & Ilaaj (Symptom Checker)</h3>
+            <p class="text-charcoal-500 text-xs sm:text-sm mt-1">Apne pauday ki halat select karein aur Lahore ke mausam ke mutabiq ilaaj dekhein:</p>
+          </div>
+
+          <!-- Symptom Selector Buttons -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
+            <button onclick="diagnosePlantIssue('yellow_leaves')" class="doctor-symptom-card active p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1" data-symptom="yellow_leaves">
+              <span class="text-2xl sm:text-3xl">🍂</span>
+              <span class="text-xs font-bold text-forest-900 leading-tight">Peele Pattay</span>
+              <span class="text-[10px] text-charcoal-500">Yellow Leaves</span>
+            </button>
+            <button onclick="diagnosePlantIssue('drooping')" class="doctor-symptom-card p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1" data-symptom="drooping">
+              <span class="text-2xl sm:text-3xl">🥀</span>
+              <span class="text-xs font-bold text-forest-900 leading-tight">Murjhaye Pattay</span>
+              <span class="text-[10px] text-charcoal-500">Drooping Stems</span>
+            </button>
+            <button onclick="diagnosePlantIssue('mealybugs')" class="doctor-symptom-card p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1" data-symptom="mealybugs">
+              <span class="text-2xl sm:text-3xl">⚪</span>
+              <span class="text-xs font-bold text-forest-900 leading-tight">Safed Keeray</span>
+              <span class="text-[10px] text-charcoal-500">Mealybugs</span>
+            </button>
+            <button onclick="diagnosePlantIssue('brown_tips')" class="doctor-symptom-card p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1" data-symptom="brown_tips">
+              <span class="text-2xl sm:text-3xl">🟫</span>
+              <span class="text-xs font-bold text-forest-900 leading-tight">Jali Hui Nokain</span>
+              <span class="text-[10px] text-charcoal-500">Brown Tips</span>
+            </button>
+            <button onclick="diagnosePlantIssue('bud_drop')" class="doctor-symptom-card p-3 sm:p-4 rounded-2xl bg-cream-50 text-center flex flex-col items-center justify-center space-y-1 col-span-2 sm:col-span-1" data-symptom="bud_drop">
+              <span class="text-2xl sm:text-3xl">🌺</span>
+              <span class="text-xs font-bold text-forest-900 leading-tight">Kaliyon Ka Girna</span>
+              <span class="text-[10px] text-charcoal-500">Bud Drop</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Diagnosis Result Card -->
+          <div id="doctor-diagnosis-box" class="mt-6 p-5 sm:p-7 rounded-2xl bg-cream-50 border border-cream-200 space-y-4">
+            <!-- Content populated dynamically via app.js -->
+          </div>
+        </div>
+      </section>

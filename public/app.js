@@ -399,32 +399,28 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('hashchange', handleRoute);
 window.addEventListener('popstate', handleRoute);
 
+// Real URLs for the content pages (they used to be #hash views inside index.html)
+const PAGE_URLS = { 'care-guide': '/plant-care-guide', about: '/about', cities: '/cities', services: '/services' };
+const IS_HOME = () => !!document.getElementById('page-landscaping');
+
 function handleRoute() {
-  let rawHash = window.location.hash.replace('#', '') || 'landscaping';
-  // Old links from the plant-shop version of the site
+  if (!IS_HOME()) return; // static content pages have no hash views
+  let rawHash = window.location.hash.replace('#', '');
+  if (!rawHash) return;
   if (rawHash === 'admin') { window.location.replace('/admin'); return; }
-  if (['shop', 'wishlist', 'track-order', 'landscape-packages', 'plants-section'].includes(rawHash)) rawHash = 'landscaping';
-  
+  if (PAGE_URLS[rawHash]) { window.location.replace(PAGE_URLS[rawHash]); return; }
   if (rawHash.startsWith('city-')) {
-    const slug = rawHash.replace('city-', '').toLowerCase();
-    renderCityDetailPage(slug);
-    navigateToPage('city-detail', false);
-    return;
+    const slug = rawHash.replace('city-', '').toLowerCase().replace(/[^a-z]/g, '');
+    window.location.replace('/' + slug);
   }
-  
-  if (rawHash === 'cities') {
-    renderCitiesDirectory();
-    navigateToPage('cities', false);
-    return;
-  }
-  
-  navigateToPage(rawHash, false);
 }
 
 function navigateToPage(pageId, updateHash = true) {
   if (pageId === 'admin') { window.location.href = '/admin'; return; }
-  const validPages = ['landscaping', 'care-guide', 'about', 'cities', 'city-detail'];
-  if (!validPages.includes(pageId)) pageId = 'landscaping';
+  if (PAGE_URLS[pageId]) { window.location.href = PAGE_URLS[pageId]; return; }
+  if (!IS_HOME()) { window.location.href = '/'; return; }
+  const validPages = ['landscaping'];
+  pageId = 'landscaping';
 
   // Toggle page visibility
   validPages.forEach(p => {
@@ -474,12 +470,10 @@ function navigateToPage(pageId, updateHash = true) {
 
 // Opens the home page and scrolls to the free site visit form
 function goToConsultation() {
-  const onHome = !document.getElementById('page-landscaping')?.classList.contains('hidden');
-  if (!onHome) navigateToPage('landscaping');
-  setTimeout(() => {
-    document.getElementById('lead-form-page')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    document.getElementById('lead-name')?.focus({ preventScroll: true });
-  }, onHome ? 0 : 350);
+  const form = document.getElementById('lead-form-page');
+  if (!form) { window.location.href = '/#consultation'; return; }
+  form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  document.getElementById('lead-name')?.focus({ preventScroll: true });
 }
 
 function toggleMobileSideMenu(open) {
@@ -2056,7 +2050,7 @@ document.addEventListener('click', (e) => {
 });
 
 function navigateToCity(slug) {
-  window.location.hash = `#city-${slug}`;
+  window.location.href = '/' + String(slug).replace(/[^a-z]/gi, '').toLowerCase();
 }
 
 function selectCityFilter(slug) {
@@ -2346,9 +2340,7 @@ function renderCityDetailPage(slug) {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   initCityDropdown();
-  if (window.location.hash === '#cities') {
-    renderCitiesDirectory();
-  }
+  if (document.getElementById('cities-cards-container')) renderCitiesDirectory();
 });
 
 
