@@ -7,6 +7,7 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { SERVICES, CITY_SERVICE_CITIES, CITY_SERVICE_SLUGS, CITY_ANGLES } from './content/services.mjs';
 import { GUIDES, FAQ_GROUPS } from './content/guides.mjs';
+import { TOPICS } from './content/topics.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUB = path.join(ROOT, 'public');
@@ -196,7 +197,7 @@ page({
   body: hero({ list: [['Home', '/'], ['Services', '/services']], badge: '🇵🇰 Turnkey Landscaping — Nationwide', h1a: 'Landscaping Services', h1b: 'Under One Roof', lead: 'Design se le kar build aur maintenance tak. Choose a service below, or book a free site visit and we will plan the complete garden for you.' })
     + wrap(sectionHead('Scope of Work', '12 Services,', 'One Accountable Team', 'Every service can be booked on its own or combined into a turnkey project.') + `
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">${SERVICES.map(s => serviceCard(s)).join('')}
-        </div>${cityPills()}`)
+        </div>${linkPills('Popular Searches', TOPICS.map(x => [x.h1a.replace(/^Landscaping in$/, 'Landscaping') + ' ' + x.h1b, '/' + x.slug]))}${cityPills()}`)
 });
 
 // /services/<slug>
@@ -387,6 +388,45 @@ page({ url: '/404', noindex: true, title: 'Page Not Found | The Living Garden', 
   body: hero({ badge: '404', h1a: 'This Path Is', h1b: 'Overgrown', lead: 'Yeh page nahi mila. Try one of these instead:', cta: false })
     + wrap(linkPills('Popular Pages', [['Home', '/'], ['Services', '/services'], ['Cities', '/cities'], ['Guides', '/blog'], ['FAQ', '/faq'], ['Contact', '/contact']])) });
 
+
+// ---------- keyword landing pages (price, area, farmhouse, niche) ----------
+for (const t of TOPICS) {
+  const url = '/' + t.slug;
+  const city = t.city ? cityBy[t.city] : null;
+  const trail = city ? [['Home', '/'], [city.name, '/' + city.slug], [t.h1b.replace(/^in /, ''), url]] : [['Home', '/'], ['Services', '/services'], [t.h1a + ' ' + t.h1b, url]];
+  const table = t.table ? `
+        <div class="overflow-x-auto rounded-2xl border border-cream-200 card-elevation bg-white mb-8">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-forest-900 text-cream-50"><tr>${t.table.head.map(h => `<th class="px-3 sm:px-4 py-3 font-bold">${esc(h)}</th>`).join('')}</tr></thead>
+            <tbody>${t.table.rows.map((r, i) => `<tr class="${i % 2 ? 'bg-cream-50' : 'bg-white'} border-t border-cream-200">${r.map((c, j) => `<td class="px-3 sm:px-4 py-2.5 ${j === 1 ? 'font-bold text-terracotta-dark whitespace-nowrap' : 'text-charcoal-700'}">${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+          </table>
+        </div>
+        <p class="text-[11px] text-charcoal-500 -mt-5 mb-8">Indicative rates. Final price is confirmed in an itemised quote after the free site visit.</p>` : '';
+  const ld = [crumbs(trail), faqLd(t.faqs),
+    { '@type': 'Service', name: t.h1a + ' ' + t.h1b, description: t.desc, provider: { '@id': SITE + '/#business' }, url: SITE + url,
+      areaServed: city ? { '@type': 'City', name: city.name } : { '@type': 'Country', name: 'Pakistan' } }];
+  if (t.table) ld.push({ '@type': 'Table', about: t.h1a + ' ' + t.h1b });
+  page({ url, image: '/' + t.image, priority: 0.85, title: t.metaTitle || t.title, desc: t.desc, active: 'services', ld,
+    body: hero({ list: trail, badge: t.badge, h1a: t.h1a, h1b: t.h1b, lead: esc(t.lead) })
+      + `
+    <section class="py-10 sm:py-14 bg-white px-4 sm:px-6 lg:px-8 border-b border-cream-200">
+      <div class="max-w-4xl mx-auto">${table}
+        <img src="/${t.image}" alt="${esc(t.h1a + ' ' + t.h1b)}" class="w-full h-56 sm:h-80 object-cover rounded-3xl card-elevation mb-6">
+        ${t.sections.map(sec => `
+        <h2 class="font-serif-luxury text-xl sm:text-2xl font-bold text-forest-900 mt-8 mb-3">${esc(sec.h)}</h2>
+        ${(sec.p || []).map(p => `<p class="text-sm sm:text-base text-charcoal-700 leading-relaxed mb-3">${esc(p)}</p>`).join('')}
+        ${sec.list ? ticks(sec.list) : ''}`).join('')}
+        ${t.areas ? `<h2 class="font-serif-luxury text-xl sm:text-2xl font-bold text-forest-900 mt-8 mb-3">Areas <span class="italic font-normal text-terracotta">We Serve</span></h2><div class="flex flex-wrap gap-2">${t.areas.map(a => `<span class="px-3 py-1.5 rounded-full bg-cream-100 border border-cream-200 text-xs font-semibold text-forest-800">📍 ${esc(a)}</span>`).join('')}</div>` : ''}
+        ${t.sources ? `<p class="text-[11px] text-charcoal-500 mt-8">Market price references: ${t.sources.map(([n, u]) => `<a href="${u}" target="_blank" rel="noopener nofollow" class="underline hover:text-forest-800">${esc(n)}</a>`).join(' · ')}</p>` : ''}
+      </div>
+    </section>`
+      + faqBlock(t.faqs)
+      + wrap(sectionHead('Related', 'Services', 'We Provide') + `<div class="grid grid-cols-1 sm:grid-cols-3 gap-5">${t.services.map(x => serviceCard(svcBy[x])).join('')}</div>`
+        + linkPills('Popular Searches', TOPICS.filter(x => x !== t).map(x => [x.h1a.replace(/^Landscaping in$/, 'Landscaping') + ' ' + x.h1b, '/' + x.slug]))
+        + (city ? linkPills(`More in ${city.name}`, [[`Landscaping in ${city.name}`, '/' + city.slug], ...(CITY_SERVICE_CITIES.includes(city.slug) ? CITY_SERVICE_SLUGS.map(x => [`${shortName(x)} in ${city.name}`, `/${x}-${city.slug}`]) : [])]) : cityPills()))
+  });
+}
+
 // ---------- sitemap, robots, llms.txt ----------
 const all = [{ url: '/', priority: 1.0 }, ...CITIES.map(c => ({ url: '/' + c.slug, priority: 0.85 })), ...PAGES];
 fs.writeFileSync(path.join(PUB, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
@@ -423,6 +463,9 @@ ${CITIES.map(c => `- [Landscaping in ${c.name}](${SITE}/${c.slug}): ${c.tagline}
 ## Local service pages
 ${CITY_SERVICE_CITIES.flatMap(c => CITY_SERVICE_SLUGS.map(s => `- [${shortName(s)} in ${cityBy[c].name}](${SITE}/${s}-${c})`)).join('\n')}
 
+## Prices, areas and farmhouses
+${TOPICS.map(t => `- [${t.h1a} ${t.h1b}](${SITE}/${t.slug}): ${t.desc}`).join('\n')}
+
 ## Guides
 ${GUIDES.map(g => `- [${g.title}](${SITE}/blog/${g.slug}): ${g.summary}`).join('\n')}
 
@@ -447,7 +490,8 @@ for (const c of CITIES) {
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center">
       <h2 class="font-serif-luxury text-xl sm:text-3xl font-bold text-forest-900">Landscaping Services in <span class="italic font-normal text-terracotta">${esc(c.name)}</span></h2>
       <div class="flex flex-wrap justify-center gap-2 mt-5">${local.map(pill).join('')}</div>
-      <div class="flex flex-wrap justify-center gap-2 mt-3">${[['All Services', '/services'], ['Landscaping Cost Guide', '/blog/landscaping-cost-pakistan'], ['Best Lawn Grass', '/blog/best-lawn-grass-pakistan'], ['FAQ', '/faq'], ['Contact', '/contact']].map(pill).join('')}</div>
+      <div class="flex flex-wrap justify-center gap-2 mt-3">${TOPICS.filter(t => t.city === c.slug).map(t => [t.h1a.replace(/^Landscaping in$/, 'Landscaping') + ' ' + t.h1b, '/' + t.slug]).map(pill).join('')}</div>
+      <div class="flex flex-wrap justify-center gap-2 mt-3">${[['All Services', '/services'], ['Landscaping Price List', '/landscaping-price-pakistan'], ['Grass Price', '/lawn-grass-price-pakistan'], ['Best Lawn Grass', '/blog/best-lawn-grass-pakistan'], ['FAQ', '/faq'], ['Contact', '/contact']].map(pill).join('')}</div>
     </section>
     <!-- /tlg:links -->`;
   h = h.replace(/<!-- tlg:links -->[\s\S]*?<!-- \/tlg:links -->\n?\s*/, '');

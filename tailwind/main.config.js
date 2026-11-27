@@ -1,6 +1,6 @@
 // Styles for index.html (website) and admin.html — run `npm run build:css` after changing classes
 module.exports = {
-  content: ['./public/index.html', './public/services.html', './public/services/*.html', './public/blog.html', './public/blog/*.html', './public/*-*.html', './public/faq.html', './public/contact.html', './public/about.html', './public/cities.html', './public/plant-care-guide.html', './public/404.html', './scripts/build-pages.mjs', './public/admin.html', './public/app.js', './public/admin.js', './public/cities-data.js'],
+  content: ['./public/index.html', './public/services.html', './public/services/*.html', './public/blog.html', './public/blog/*.html', './public/*-*.html', './scripts/content/*.mjs', './public/faq.html', './public/contact.html', './public/about.html', './public/cities.html', './public/plant-care-guide.html', './public/404.html', './scripts/build-pages.mjs', './public/admin.html', './public/app.js', './public/admin.js', './public/cities-data.js'],
   theme: {
     extend: {
       colors: {
