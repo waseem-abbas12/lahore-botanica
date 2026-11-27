@@ -38,7 +38,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
   <link rel="apple-touch-icon" href="/icons/icon-180.png">
 </head>
-<body class="min-h-screen flex flex-col pb-20 md:pb-0">
+<body class="min-h-screen flex flex-col pb-20 lg:pb-0">
 
   <!-- Top Announcement Bar with Live Lahore AQI Smog Advisory -->
   <div class="bg-forest-900 text-cream-50 text-[11px] sm:text-xs py-2 px-3 text-center font-medium tracking-wide flex flex-wrap items-center justify-center gap-2 sm:gap-3">
@@ -60,10 +60,6 @@
       
       <!-- Left: Mobile Burger Menu Button & Brand Logo -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Hamburger Menu Button (Mobile & Tablet) -->
-        <button onclick="toggleMobileSideMenu(true)" class="xl:hidden p-2 -ml-1 rounded-xl text-forest-900 hover:bg-cream-200 active:scale-95 transition flex items-center justify-center" aria-label="Open Mobile Menu">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </button>
 
         <!-- Brand Logo -->
         <a href="#landscaping" onclick="navigateToPage('landscaping'); return false;" class="flex items-center gap-2.5 sm:gap-3 group">
@@ -78,7 +74,7 @@
       </div>
 
       <!-- Desktop Nav Links (Pages) -->
-      <nav class="hidden xl:flex items-center gap-6 text-sm font-semibold text-charcoal-700 whitespace-nowrap">
+      <nav class="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-semibold text-charcoal-700 whitespace-nowrap">
         <a href="#landscaping" onclick="navigateToPage('landscaping'); return false;" class="nav-page-link text-forest-800 font-bold hover:text-forest-800 transition" data-page="landscaping">Landscaping Architecture</a>
         <a href="#care-guide" onclick="navigateToPage('care-guide'); return false;" class="nav-page-link hover:text-forest-800 transition" data-page="care-guide">Lahore Plant Care</a>
         <a href="#cities" onclick="navigateToPage('cities'); return false;" class="nav-page-link hover:text-forest-800 transition" data-page="cities">🇵🇰 Pakistan Cities</a>
@@ -89,7 +85,7 @@
       <div class="flex items-center gap-2 sm:gap-3">
         <!-- WhatsApp Quick Connect -->
         <!-- Pakistan City Switcher Dropdown -->
-        <div class="relative" id="city-selector-wrapper">
+        <div class="relative lg:hidden xl:block" id="city-selector-wrapper">
           <button onclick="toggleCityDropdown()" id="city-selector-btn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-forest-800 hover:bg-forest-700 text-cream-50 text-[11px] sm:text-xs font-bold border border-emerald-400/40 shadow-xs transition">
             <span class="text-emerald-300">📍</span>
             <span id="header-city-name">Pakistan (All Cities)</span>
@@ -112,97 +108,13 @@
           </div>
         </div>
 
-        <a href="https://wa.me/923008456789?text=Hello%20The%20Living%20Garden,%20I%20am%20interested%20in%20your%20landscaping%20services" target="_blank" class="hidden sm:inline-flex btn-whatsapp text-xs font-bold px-3 py-2 rounded-full items-center gap-1 shadow-sm">
+        <a href="https://wa.me/923008456789?text=Hello%20The%20Living%20Garden,%20I%20am%20interested%20in%20your%20landscaping%20services" target="_blank" class="hidden sm:inline-flex lg:hidden xl:inline-flex btn-whatsapp text-xs font-bold px-3 py-2 rounded-full items-center gap-1 shadow-sm">
           <span>WhatsApp</span>
         </a>
       </div>
     </div>
   </header>
 
-  <!-- ==================== MOBILE SLIDE-OUT BURGER MENU DRAWER ==================== -->
-  <div id="mobile-menu-backdrop" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm hidden transition-opacity" onclick="toggleMobileSideMenu(false)"></div>
-  <aside id="mobile-side-menu" class="fixed inset-y-0 left-0 z-[70] w-72 sm:w-80 max-w-[85vw] bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between overflow-y-auto border-r border-cream-200">
-    
-    <!-- Drawer Content -->
-    <div>
-      <div class="p-4 sm:p-5 bg-gradient-to-br from-forest-900 via-forest-800 to-forest-900 text-cream-50 flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-full bg-cream-50 text-forest-900 flex items-center justify-center font-bold shadow text-lg">
-            🌿
-          </div>
-          <div>
-            <div class="font-serif-luxury font-bold text-base tracking-wide leading-tight text-white">THE LIVING GARDEN</div>
-            <div class="text-[9px] uppercase tracking-wider text-emerald-300 font-semibold">Landscape Design & Build</div>
-          </div>
-        </div>
-        <button onclick="toggleMobileSideMenu(false)" aria-label="Close menu" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-sm transition">
-          ✕
-        </button>
-      </div>
-
-      <!-- Main Navigation Pages -->
-      <nav class="p-3 space-y-1 text-xs font-semibold text-charcoal-700">
-        <div class="text-[10px] font-bold uppercase tracking-wider text-charcoal-400 px-3 py-1">Main Pages</div>
-        
-        <a href="#landscaping" onclick="navigateToPage('landscaping'); toggleMobileSideMenu(false); return false;" class="menu-link flex items-center justify-between p-2.5 rounded-xl hover:bg-cream-100 transition text-forest-900 font-bold bg-cream-50">
-          <span class="flex items-center gap-2.5">
-            <span class="text-base">🏛️</span>
-            <span>Landscaping Architecture</span>
-          </span>
-          <span class="text-[10px] font-bold text-terracotta bg-terracotta/10 px-2 py-0.5 rounded-full">Bespoke</span>
-        </a>
-
-        <a href="#care-guide" onclick="navigateToPage('care-guide'); toggleMobileSideMenu(false); return false;" class="menu-link flex items-center justify-between p-2.5 rounded-xl hover:bg-cream-100 transition">
-          <span class="flex items-center gap-2.5">
-            <span class="text-base">🌡️</span>
-            <span>Lahore Plant Care & Smog Guide</span>
-          </span>
-          <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Vital</span>
-        </a>
-
-        
-        <a href="#cities" onclick="navigateToPage('cities'); toggleMobileSideMenu(false); return false;" class="menu-link flex items-center justify-between p-2.5 rounded-xl hover:bg-cream-100 transition bg-emerald-50/60 border border-emerald-200/50">
-          <span class="flex items-center gap-2.5">
-            <span class="text-base">🇵🇰</span>
-            <span class="font-bold text-forest-900">Pakistan Cities Hub (SEO)</span>
-          </span>
-          <span class="text-[10px] font-bold text-emerald-700 bg-white px-2 py-0.5 rounded-full shadow-xs">10 Cities</span>
-        </a>
-
-        <a href="#about" onclick="navigateToPage('about'); toggleMobileSideMenu(false); return false;" class="menu-link flex items-center justify-between p-2.5 rounded-xl hover:bg-cream-100 transition">
-          <span class="flex items-center gap-2.5">
-            <span class="text-base">📍</span>
-            <span>About Us & Green Pakistan</span>
-          </span>
-          <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">CSR</span>
-        </a>
-
-        <a href="#consultation" onclick="goToConsultation(); toggleMobileSideMenu(false); return false;" class="menu-link flex items-center justify-between p-2.5 rounded-xl hover:bg-cream-100 transition">
-          <span class="flex items-center gap-2.5">
-            <span class="text-base">📅</span>
-            <span>Book Free Site Visit</span>
-          </span>
-          <span class="text-[10px] font-bold text-terracotta bg-terracotta/10 px-2 py-0.5 rounded-full">Free</span>
-        </a>
-      </nav>
-    </div>
-
-    <!-- Drawer Footer Quick Contact -->
-    <div class="p-4 bg-cream-50 border-t border-cream-200 space-y-2">
-      <div class="text-[11px] text-charcoal-600">
-        <div class="font-bold text-forest-900">The Living Garden</div>
-        <div>Gulberg III & Bedian Road Farmhouses</div>
-        <div class="text-emerald-700 font-semibold mt-0.5">Open: Mon-Sun (8 AM - 9 PM)</div>
-      </div>
-      <a href="https://wa.me/923008456789?text=Hello%20The%20Living%20Garden" target="_blank" class="w-full btn-whatsapp py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm">
-        <span>Chat on WhatsApp</span>
-      </a>
-      <a href="tel:+923008456789" class="w-full bg-forest-800 text-white py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm">
-        <span>Call: 0300 8456789</span>
-      </a>
-    </div>
-
-  </aside>
 
   <!-- ==================== MAIN APPLICATION CONTENT (MULTI-PAGE SPA) ==================== -->
   <main id="main-content" class="flex-grow">
@@ -1837,7 +1749,7 @@
   </div>
 
   <!-- ==================== FIXED MOBILE BOTTOM FLOATING NAVIGATION BAR ==================== -->
-  <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 glass-nav-bar px-3 py-2 flex items-center justify-around border-t border-cream-200 shadow-lg">
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 glass-nav-bar px-3 py-2 flex items-center justify-around border-t border-cream-200 shadow-lg">
     <button onclick="navigateToPage('landscaping')" id="bnav-landscaping" class="bnav-btn flex flex-col items-center text-forest-800 font-bold hover:text-forest-800 active:scale-95 transition">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
       <span class="text-[10px] mt-0.5">Home</span>
@@ -1858,9 +1770,9 @@
       <span class="text-[10px] mt-0.5">Site Visit</span>
     </button>
 
-    <button onclick="toggleMobileSideMenu(true)" class="flex flex-col items-center text-charcoal-700 hover:text-forest-800 active:scale-95 transition">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-      <span class="text-[10px] font-semibold mt-0.5">Menu</span>
+    <button onclick="navigateToPage('about')" id="bnav-about" class="bnav-btn flex flex-col items-center text-charcoal-700 hover:text-forest-800 active:scale-95 transition">
+      <div class="w-5 h-5 flex items-center justify-center text-sm">📍</div>
+      <span class="text-[10px] mt-0.5">About</span>
     </button>
   </div>
 
