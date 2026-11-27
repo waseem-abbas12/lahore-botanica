@@ -265,9 +265,9 @@ body {
   transition: all 0.2s ease;
 }
 .calc-option-card input:checked + div {
-  border-color: #133E2B;
-  background-color: #F6F2EA;
-  box-shadow: 0 0 0 2px #133E2B;
+  border-color: #C86D51;
+  background-color: #C86D51;
+  box-shadow: 0 0 0 2px #C86D51;
 }
 
 /* Star Ratings */
