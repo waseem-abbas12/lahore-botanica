@@ -18,6 +18,20 @@ Plant nursery e-commerce aur landscaping business ka web app: customer storefron
 - **Reviews:** approve / hide / delete
 - **Settings:** business details and homepage stats
 
+## Brand
+
+Logo: **Sprout Circle** (a leaf growing out of a garden circle). Files in `public/brand/`:
+
+| File | Use |
+|---|---|
+| `logo-mark.svg` / `logo-mark.png` | Mark on light backgrounds |
+| `logo-mark-light.svg` | Mark on dark (forest green) backgrounds |
+| `logo-horizontal.svg` / `.png` | Mark + wordmark (letterheads, social, print) |
+| `app-icon.svg` | Favicon / app icon source (`public/icons/*.png` are rendered from it) |
+| `og-image.png` | 1200×630 link preview image |
+
+Colors: forest `#133E2B`, terracotta `#C86D51`, cream `#FCFAF6`. Fonts: Playfair Display (wordmark), Plus Jakarta Sans.
+
 ## Project structure
 
 ```
